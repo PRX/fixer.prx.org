@@ -18,6 +18,18 @@ class Job < BaseModel
   scope :incomplete, -> { where(:status => [CREATED, ERROR]) }
   scope :failed, -> { where(:status => ERROR) }
 
+  def ended?
+    tasks(true).all?{|t| t.ended?}
+  end
+
+  def success?
+    tasks(true).all?{|t| t.success?}
+  end
+
+  def retry?
+    retry_count < retry_max
+  end
+
   def self.create_from_message(h, client=nil)
     raise 'Message must specify job' unless h['job']
 
