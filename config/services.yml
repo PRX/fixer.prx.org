@@ -1,0 +1,14 @@
+aws:
+  provider: AWS
+  path_style: true
+  aws_access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  aws_secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
+ia:
+  provider: InternetArchive
+  ia_access_key_id: <%= ENV["IA_ACCESS_KEY_ID"] %>
+  ia_secret_access_key: <%= ENV["IA_SECRET_ACCESS_KEY"] %>
+open_calais:
+  api_key: <%= ENV["OPEN_CALAIS_API_KEY"] %>
+yahoo_content_analysis:
+  api_key: <%= ENV["YAHOO_CONTENT_ANALYSIS_API_KEY"] %>
+  api_secret: <%= ENV["YAHOO_CONTENT_ANALYSIS_API_SECRET"] %>

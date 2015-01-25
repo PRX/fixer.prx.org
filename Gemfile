@@ -41,6 +41,9 @@ gem 'acts_as_list'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+  # env vars for config and credentials
+  gem 'dotenv-rails'
+
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
@@ -53,6 +56,7 @@ group :development, :test do
   gem 'guard'
   gem 'guard-minitest'
   gem 'guard-bundler'
+
 end
 
 group :test do
