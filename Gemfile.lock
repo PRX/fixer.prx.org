@@ -39,7 +39,7 @@ GEM
     acts_as_list (0.6.0)
       activerecord (>= 3.0)
     arel (6.0.0)
-    audio_monster (1.0.0)
+    audio_monster (1.0.1)
       activesupport
       mimemagic
       mp3info
