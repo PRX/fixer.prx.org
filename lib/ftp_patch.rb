@@ -1,6 +1,7 @@
 require 'ipaddr'
 require 'net/ftp'
 
+# N.B. look at Socket AddrInfo stdlib, might be a better way to do this
 class IPAddr
 
   IP4_PRIVATE_RANGES = [
@@ -60,8 +61,6 @@ module Net
       sock = TCPServer.open(@sock.addr[3], 0)
       port = sock.addr[1]
       host = local_host ? local_host : sock.addr[3]
-
-      # puts "makeport host:#{host}, port:#{port}"
 
       sendport(host, port)
 
