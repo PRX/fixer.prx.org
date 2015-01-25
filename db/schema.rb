@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20150114201902) do
     t.integer  "status"
     t.integer  "client_application_id"
     t.text     "call_back"
-    t.string   "priority"
+    t.integer  "priority"
     t.integer  "retry_max",             default: 0
     t.integer  "retry_count",           default: 0
     t.integer  "retry_delay",           default: 0
