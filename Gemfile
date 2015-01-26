@@ -24,6 +24,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # View layer
 gem 'bootstrap-sass'
+gem 'kaminari'
+gem 'bootstrap-kaminari-views'
 
 # Processing
 gem 'audio_monster'
@@ -31,6 +33,7 @@ gem 'audio_monster'
 # For lists of tasks
 gem 'acts_as_list'
 
+# Auth
 # for login
 gem 'devise'
 

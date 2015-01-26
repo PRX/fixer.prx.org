@@ -47,6 +47,9 @@ GEM
     bcrypt (3.1.9)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootstrap-kaminari-views (0.0.5)
+      kaminari (>= 0.13)
+      rails (>= 3.1)
     bootstrap-sass (3.3.1.0)
       sass (~> 3.2)
     builder (3.2.2)
@@ -111,6 +114,9 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.2)
+    kaminari (0.16.2)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     listen (2.8.5)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -226,6 +232,7 @@ DEPENDENCIES
   acts_as_list
   audio_monster
   bcrypt (~> 3.1.7)
+  bootstrap-kaminari-views
   bootstrap-sass
   byebug
   coffee-rails (~> 4.1.0)
@@ -237,6 +244,7 @@ DEPENDENCIES
   guard-minitest
   jbuilder (~> 2.0)
   jquery-rails
+  kaminari
   minitest-spec-rails
   pg
   rails (= 4.2.0)

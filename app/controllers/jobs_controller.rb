@@ -4,7 +4,11 @@ class JobsController < ApplicationController
   respond_to :html
 
   def index
-    @jobs = Job.all
+    @jobs = Job.order('created_at DESC').page(params[:page])
+    @jobs = @jobs.where(client_application_id: params[:app_id]) if params[:app_id]
+    @jobs = @jobs.incomplete if params[:status] == 'incomplete'
+    @jobs = @jobs.failed if params[:status] == 'failed'
+
     respond_with(@jobs)
   end
 
