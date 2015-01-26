@@ -103,8 +103,21 @@ GEM
     guard-minitest (2.3.2)
       guard (~> 2.0)
       minitest (>= 3.0)
+    haml (4.0.6)
+      tilt
+    haml-rails (0.7.0)
+      actionpack (>= 4.0.1)
+      activesupport (>= 4.0.1)
+      haml (>= 3.1, < 5.0)
+      html2haml (>= 1.0.1)
+      railties (>= 4.0.1)
     hike (1.2.3)
     hitimes (1.2.2)
+    html2haml (2.0.0)
+      erubis (~> 2.7.0)
+      haml (~> 4.0.0)
+      nokogiri (~> 1.6.0)
+      ruby_parser (~> 3.5)
     i18n (0.7.0)
     jbuilder (2.2.6)
       activesupport (>= 3.0.0, < 5)
@@ -184,6 +197,8 @@ GEM
     responders (2.0.2)
       railties (>= 4.2.0.alpha, < 5)
     ruby-mp3info (0.8.5)
+    ruby_parser (3.6.4)
+      sexp_processor (~> 4.1)
     sass (3.4.9)
     sass-rails (5.0.1)
       railties (>= 4.0.0, < 5.0)
@@ -194,6 +209,7 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    sexp_processor (4.4.5)
     slop (3.6.0)
     spring (1.2.0)
     sprockets (2.12.3)
@@ -242,6 +258,7 @@ DEPENDENCIES
   guard
   guard-bundler
   guard-minitest
+  haml-rails
   jbuilder (~> 2.0)
   jquery-rails
   kaminari

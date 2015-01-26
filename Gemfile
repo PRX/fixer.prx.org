@@ -26,6 +26,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bootstrap-sass'
 gem 'kaminari'
 gem 'bootstrap-kaminari-views'
+gem 'haml-rails'
 
 # Processing
 gem 'audio_monster'

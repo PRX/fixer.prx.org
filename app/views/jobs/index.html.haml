@@ -1,0 +1,27 @@
+- model_class = Job.new.class
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human.pluralize
+
+Filter:
+= link_to 'incomplete', jobs_path(status: :incomplete), class: 'btn btn-default'
+= link_to 'failed', jobs_path(status: :failed), class: 'btn btn-default'
+= link_to 'all', jobs_path, class: 'btn btn-default'
+
+= paginate @jobs
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th= model_class.human_attribute_name(:created_at)
+      %th= model_class.human_attribute_name(:original)
+      %th= model_class.human_attribute_name(:status)
+      %th= model_class.human_attribute_name(:client_application_id)
+      %th= model_class.human_attribute_name(:job_type)
+  %tbody
+    - @jobs.each do |job|
+      %tr
+        %td= link_to l(job.created_at, :format => :short), job_path(job)
+        %td= job.original
+        %td= job.status
+        / %td= link_to(job.client_application.name, jobs_path(params.merge(:app_id => job.client_application.id)))
+        %td= job.job_type
