@@ -31,8 +31,14 @@ gem 'audio_monster'
 # For lists of tasks
 gem 'acts_as_list'
 
+# for login
+gem 'devise'
+
+# for oauth2 API auth
+gem 'doorkeeper'
+
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use Unicorn as the app server
 # gem 'unicorn'

@@ -4,10 +4,11 @@ require 'rails/test_help'
 
 require 'minitest/spec'
 require 'minitest/autorun'
+require 'devise'
 
 class ActiveSupport::TestCase
-  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-  fixtures :all
+end
 
-  # Add more helper methods to be used by all tests here...
+class ActionController::TestCase
+  include Devise::TestHelpers
 end
