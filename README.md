@@ -10,6 +10,7 @@ Application providing asynchronous media file processing.
 * gems: bundler, rake
 
 ### Install media tools
+Fixer uses the [audio_monster](https://github.com/PRX/audio_monster) gem which relies on many command line tools to process media. Below is the list of tools to install:
 ```
 brew install lame
 brew install flac
@@ -30,42 +31,29 @@ rake db:migrate
 ```
 
 ### Services
-Fixer requires credentials to the following:
+Fixer requires credentials to the following, provided as environment variables:
 * Internet Archive (S3-like API)
 * Open Calais
 * Yahoo Content Analysis
 * AWS S3 (via credentials or EC2 IAM role)
 
 ### Update .env
+In development, environment variables provided using the dotenv gem:
 ```
 cp env-example .env
 vi .env
 ```
 
-# Development notes
+## Copyright
+&copy; Copyright PRX, Public Radio Exchange https://www.prx.org
 
-## Changes from the original app
-Done
-* Use uuid for jobs, allow them to be submitted when jobs created
-* Use an enum for status
-* remove client application based service/storage credentials - unused
+## License
+Fixer is offered under the [AGPL 3.0](http://opensource.org/licenses/AGPL-3.0)
 
-Planned
-* Submit jobs via messages, not HTTP/API calls
-* Fix reliance on serialized task status update
-
-
-## Stuff that needs addressing still
-
-* Authentication
-  oauth against prx.org with omniauth
-  2-legged-oauth for the API (client credentials flow, basically)
-
-* Messaging
-  activemessaging and SQS, considering shoryuken
-
-* Worker Processes
-  using celluloid based processor for processing, single threaded poller for updates
-
-* Scheduling
-  say_when
+---------------------------------------
+### Development notes
+- [ ] Submit jobs via messages, not HTTP/API calls
+- [ ] Fix reliance on serialized task status update
+- [ ] Messaging - activemessaging and SQS, considering shoryuken
+- [ ] Worker Processes - celluloid based for processing, single threaded for updates
+- [ ] Scheduling - uses say_when
