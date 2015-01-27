@@ -15,7 +15,7 @@ Filter:
       %th= model_class.human_attribute_name(:created_at)
       %th= model_class.human_attribute_name(:original)
       %th= model_class.human_attribute_name(:status)
-      %th= model_class.human_attribute_name(:client_application_id)
+      %th= model_class.human_attribute_name(:application_id)
       %th= model_class.human_attribute_name(:job_type)
   %tbody
     - @jobs.each do |job|
@@ -23,5 +23,5 @@ Filter:
         %td= link_to l(job.created_at, :format => :short), job_path(job)
         %td= job.original
         %td= job.status
-        / %td= link_to(job.client_application.name, jobs_path(params.merge(:app_id => job.client_application.id)))
+        / %td= link_to(job.application.name, jobs_path(params.merge(:app_id => job.application.id)))
         %td= job.job_type

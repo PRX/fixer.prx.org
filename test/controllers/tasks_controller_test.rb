@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TasksControllerTest < ActionController::TestCase
   setup do
-    @job = Job.create(job_type: 'audio', priority: 1, client_application_id: 1)
+    @job = Job.create(job_type: 'audio', priority: 1, application_id: 1)
     @task = Task.create!(job_id: @job.id)
   end
 

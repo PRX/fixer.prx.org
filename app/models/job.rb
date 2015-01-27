@@ -7,12 +7,13 @@ class Job < BaseModel
 
   has_many :tasks
   has_one :web_hook, as: :informer
+  has_one :application, class_name: 'Doorkeeper::Application'
 
   serialize :original
 
   before_validation(on: :create) { self.status = CREATED }
 
-  validates_presence_of :job_type, :status, :client_application_id
+  validates_presence_of :job_type, :status, :application_id
   validates_inclusion_of :job_type, in: JOB_TYPES
 
   scope :incomplete, -> { where(status: [CREATED, ERROR]) }
@@ -100,11 +101,12 @@ class Job < BaseModel
     )
   end
 
-  def self.create_from_message(h, client=nil)
+  def self.create_from_message(h, application=nil)
     raise 'Message must specify job' unless h['job']
 
     tasks = h['job'].delete('tasks') || []
     job = Job.new(h['job'])
+    job.application = application
 
     raise 'Jobs must have at least one task' unless tasks && tasks.size > 0
 
@@ -127,5 +129,6 @@ class Job < BaseModel
       logger.error("Failed to create new job and tasks: #{$!.message}\n\t#{$!.backtrace.join("\n\t")}")
       raise $!
     end
+    job
   end
 end

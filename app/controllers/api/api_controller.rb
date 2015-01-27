@@ -9,5 +9,9 @@ module Api
     def current_resource_owner
       User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
     end
+
+    def current_application
+      doorkeeper_token.application if doorkeeper_token
+    end
   end
 end

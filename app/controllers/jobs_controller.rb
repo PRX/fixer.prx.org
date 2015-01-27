@@ -5,7 +5,7 @@ class JobsController < ApplicationController
 
   def index
     @jobs = Job.order('created_at DESC').page(params[:page])
-    @jobs = @jobs.where(client_application_id: params[:app_id]) if params[:app_id]
+    @jobs = @jobs.where(application_id: params[:app_id]) if params[:app_id]
     @jobs = @jobs.incomplete if params[:status] == 'incomplete'
     @jobs = @jobs.failed if params[:status] == 'failed'
 

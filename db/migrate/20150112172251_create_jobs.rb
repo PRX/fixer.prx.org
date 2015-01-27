@@ -5,7 +5,7 @@ class CreateJobs < ActiveRecord::Migration
       t.string  :job_type
       t.text    :original
       t.integer :status
-      t.integer :client_application_id
+      t.integer :application_id
       t.text    :call_back
       t.integer :priority
       t.integer :retry_max, default: 0

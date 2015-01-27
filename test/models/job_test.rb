@@ -2,7 +2,7 @@ require 'test_helper'
 
 class JobTest < ActiveSupport::TestCase
 
-  let(:job) { Job.create(job_type: 'audio', priority: 1, client_application_id: 1) }
+  let(:job) { Job.create(job_type: 'audio', priority: 1, application_id: 1) }
 
   it 'uses uuid for id' do
     job.must_be :valid?

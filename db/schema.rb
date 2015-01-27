@@ -21,14 +21,14 @@ ActiveRecord::Schema.define(version: 20150127041734) do
     t.string   "job_type"
     t.text     "original"
     t.integer  "status"
-    t.integer  "client_application_id"
+    t.integer  "application_id"
     t.text     "call_back"
     t.integer  "priority"
-    t.integer  "retry_max",             default: 0
-    t.integer  "retry_count",           default: 0
-    t.integer  "retry_delay",           default: 0
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.integer  "retry_max",      default: 0
+    t.integer  "retry_count",    default: 0
+    t.integer  "retry_delay",    default: 0
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|

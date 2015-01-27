@@ -2,7 +2,7 @@ require 'test_helper'
 
 class JobsControllerTest < ActionController::TestCase
   setup do
-    @job = Job.create(job_type: 'audio', priority: 1, client_application_id: 1)
+    @job = Job.create(job_type: 'audio', priority: 1, application_id: 1)
 
     @request.env["devise.mapping"] = Devise.mappings[:user]
     user = User.create!(email: 'test@prx.org', password: 'foobarpassword')
