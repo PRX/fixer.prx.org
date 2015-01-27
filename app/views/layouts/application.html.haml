@@ -25,9 +25,10 @@
           %ul.nav.navbar-nav
             - if user_signed_in?
               %li= link_to 'Jobs', jobs_path
+              %li= link_to 'Applications', oauth_applications_path
           %ul.nav.navbar-nav.pull-right
             - if user_signed_in?
-              %li= current_user.email
+              %li= link_to current_user.email, '#'
               %li= link_to 'Logout', destroy_user_session_path, method: :delete
             - else
               %li= link_to 'Login', new_user_session_path
