@@ -9,6 +9,13 @@ Rails.application.routes.draw do
   resources :jobs
   resources :tasks
 
+  namespace :api do
+    resources :jobs do
+      put 'retry', on: :member
+    end
+    resources :tasks
+  end
+
   root 'jobs#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
