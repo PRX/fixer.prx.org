@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class JobsController < ApplicationController
   before_action :set_job, only: [:show, :edit, :update, :destroy]
 

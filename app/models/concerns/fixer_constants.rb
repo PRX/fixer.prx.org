@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module FixerConstants
   CREATED     = 'created'     # When task first created
   PROCESSING  = 'processing'  # When task first picked up by a processor

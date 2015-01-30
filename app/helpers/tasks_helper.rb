@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module TasksHelper
 
   def format_log_info(task_log)
