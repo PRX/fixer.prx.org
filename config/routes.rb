@@ -6,8 +6,14 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :jobs
-  resources :tasks
+  resources :jobs do
+    post 'retry', on: :member
+    post 'inform', on: :member
+  end
+
+  resources :tasks do
+    post 'inform', on: :member
+  end
 
   namespace :api do
     resources :jobs do
