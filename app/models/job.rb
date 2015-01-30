@@ -7,7 +7,7 @@ class Job < BaseModel
 
   has_many :tasks
   has_one :web_hook, as: :informer
-  has_one :application, class_name: 'Doorkeeper::Application'
+  belongs_to :application, class_name: 'Doorkeeper::Application'
 
   serialize :original
 
