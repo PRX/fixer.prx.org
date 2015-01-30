@@ -1,18 +1,16 @@
 module Api
   class JobsController < Api::ApiController
 
-    before_filter :find_job, :only => [:retry, :update]
+    before_action :find_job, only: [:show, :retry, :update]
 
-    # shouuld build paging into this, oy vey
     def index
       logger.debug "JobsController::index start!"
-      @jobs = Job.where(application: current_application).order('id desc').limit(100)
+      @jobs = Job.where(application_id: current_application.id)
       respond_with @jobs
     end
 
-    def retry
-      logger.debug "JobsController::retry job: #{params[:id]}"
-      @job.retry(true)
+    def show
+      logger.debug "JobsController::show start!"
       respond_with @job
     end
 
@@ -26,6 +24,12 @@ module Api
     def create
       logger.debug "JobsController::create start: job: #{params[:job].inspect}"
       @job = Job.create_from_message(params, current_application)
+      respond_with @job
+    end
+
+    def retry
+      logger.debug "JobsController::retry job: #{params[:id]}"
+      @job.retry(true)
       respond_with @job
     end
 
