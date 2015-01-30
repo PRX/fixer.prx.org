@@ -1,6 +1,81 @@
 %p#notice= notice
 
+- model_class = @job.class
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human
 
-= link_to 'Edit', edit_job_path(@job)
-\|
-= link_to 'Back', jobs_path
+%p
+  %strong= model_class.human_attribute_name(:job_type) + ':'
+  %br
+  = @job.job_type
+%p
+  %strong= model_class.human_attribute_name(:application) + ':'
+  %br
+  = @job.application.name
+%p
+  %strong= model_class.human_attribute_name(:status) + ':'
+  %br
+  = @job.status
+%p
+  %strong= model_class.human_attribute_name(:original) + ':'
+  %br
+  = sanitize_uri @job.original
+%p
+  %strong= model_class.human_attribute_name(:call_back) + ':'
+  %br
+  = sanitize_uri @job.call_back
+  - if @job.call_back
+    %br
+    WebHook:
+    - if @job.web_hook
+      = "completed: #{@job.web_hook.completed_at || 'no'}, max: #{@job.web_hook.retry_max}, count: #{@job.web_hook.retry_count}"
+    - else
+      none
+    %br
+    = link_to t('.send', :default => t("helpers.links.send")), inform_job_path(@job), :method => "post", :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')), :class => 'btn btn-info'
+
+%p
+  %strong= model_class.human_attribute_name(:priority) + ':'
+  %br
+  = @job.priority
+%p
+  %strong Retry
+  %br
+  - if @job.retry_max > 0
+    = "max: #{@job.retry_max}, count: #{@job.retry_count}, delay: #{@job.retry_delay} secs"
+  - else
+    none
+
+%h2 Tasks
+%table.table.table-striped
+  %thead
+    %th{:colspan=>2} Type
+    %th Status
+    %th Updated
+    %th Label
+    %th Options
+    %th Result
+  %tbody
+    - @job.tasks.each do |task|
+      %tr
+        %td{:colspan=>2}= link_to task.task_type, task_path(task)
+        %td= task.status
+        %td= task.updated_at.to_s(:db)
+        %td= task.label
+        %td= hash_to_table(task.options)
+        %td= sanitize_uri task.result
+      - if task.is_a?(Sequence)
+        - task.tasks.each do |sub_task|
+          %tr
+            %td= sub_task.position
+            %td= link_to sub_task.task_type, task_path(sub_task)
+            %td= sub_task.status
+            %td= sub_task.updated_at.to_s(:db)
+            %td= sub_task.label
+            %td= hash_to_table(sub_task.options)
+            %td= sanitize_uri sub_task.result
+
+.form-actions
+  = link_to t('.back', :default => t("helpers.links.back")), jobs_path, :class => 'btn'
+  = link_to t('.edit', :default => t("helpers.links.edit")), edit_job_path(@job), :class => 'btn'
+  = link_to t('.retry', :default => t("helpers.links.retry")), retry_job_path(@job), :method => "post", :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')), :class => 'btn btn-danger'

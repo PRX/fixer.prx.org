@@ -1,3 +1,7 @@
+# encoding: utf-8
+
+require 'uri'
+
 module ApplicationHelper
 
   def paginate objects, options = {}
@@ -23,6 +27,16 @@ module ApplicationHelper
         end
       end.join(' ').html_safe
     end
+  end
+
+  def sanitize_uri(uri)
+    return unless uri
+    URI.parse(uri).tap do |u|
+      u.user = 'REDACTED' if u.user
+      u.password = 'REDACTED' if u.password
+    end.to_s
+  rescue
+    ''
   end
 
 end
