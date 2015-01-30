@@ -3,8 +3,8 @@
   %h1=t '.title', :default => model_class.model_name.human.pluralize
 
 Filter:
-= link_to 'incomplete', jobs_path(status: :incomplete), class: 'btn btn-default'
-= link_to 'failed', jobs_path(status: :failed), class: 'btn btn-default'
+= link_to 'incomplete', jobs_path(filter_params(status: :incomplete)), class: 'btn btn-default'
+= link_to 'failed', jobs_path(filter_params(status: :failed)), class: 'btn btn-default'
 = link_to 'all', jobs_path, class: 'btn btn-default'
 
 = paginate @jobs
@@ -23,5 +23,5 @@ Filter:
         %td= link_to l(job.created_at, :format => :short), job_path(job)
         %td= job.original
         %td= job.status
-        / %td= link_to(job.application.name, jobs_path(params.merge(:app_id => job.application.id)))
+        %td= link_to(job.application.name, jobs_path(filter_params(app_id: job.application.id)))
         %td= job.job_type
