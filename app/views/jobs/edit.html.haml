@@ -1,5 +1,6 @@
-%h1 Editing job
-
+- model_class = @job.class
+.page-header
+  %h1=t '.title', default: t('helpers.titles.edit', model: model_class.model_name.human, default: "Edit #{model_class.model_name.human}")
 = render 'form'
 
 = link_to 'Show', @job

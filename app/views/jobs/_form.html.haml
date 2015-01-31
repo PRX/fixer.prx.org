@@ -1,10 +1,50 @@
-= form_for @job do |f|
+- model_class = @job.class
+.row.offset1
+  .well.span3
+    %p
+      %strong= model_class.human_attribute_name(:job_type) + ':'
+      %br
+      = @job.job_type
+    %p
+      %strong= model_class.human_attribute_name(:status) + ':'
+      %br
+      = @job.status
+    %p
+      %strong= model_class.human_attribute_name(:client_application) + ':'
+      %br
+      = link_to(@job.client_application.name, oauth_client_path(@job.client_application))
+
+= form_for @job, :html => { :class => 'form-horizontal' } do |f|
   - if @job.errors.any?
     #error_explanation
       %h2= "#{pluralize(@job.errors.count, "error")} prohibited this job from being saved:"
       %ul
         - @job.errors.full_messages.each do |msg|
           %li= msg
-
-  .actions
-    = f.submit 'Save'
+  .control-group
+    = f.label :original, :class => 'control-label'
+    .controls
+      = f.text_field :original, :class => 'text_field'
+  .control-group
+    = f.label :call_back, :class => 'control-label'
+    .controls
+      = f.text_field :call_back, :class => 'text_field'
+  .control-group
+    = f.label :priority, :class => 'control-label'
+    .controls
+      = f.text_field :priority, :class => 'text_field'
+  .control-group
+    = f.label :retry_max, :class => 'control-label'
+    .controls
+      = f.number_field :retry_max, :class => 'number_field'
+  .control-group
+    = f.label :retry_count, :class => 'control-label'
+    .controls
+      = f.number_field :retry_count, :class => 'number_field'
+  .control-group
+    = f.label :retry_delay, :class => 'control-label'
+    .controls
+      = f.number_field :retry_delay, :class => 'number_field'
+  .form-actions
+    = f.submit nil, :class => 'btn btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), jobs_path, :class => 'btn'
