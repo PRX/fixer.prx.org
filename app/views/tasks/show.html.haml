@@ -1,6 +1,60 @@
-%p#notice= notice
+- model_class = Task
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human
 
+%p
+  %strong= model_class.human_attribute_name(:task_type) + ':'
+  %br
+  = @task.task_type
+%p
+  %strong= model_class.human_attribute_name(:status) + ':'
+  %br
+  = @task.status
+%p
+  %strong= model_class.human_attribute_name(:label) + ':'
+  %br
+  = @task.label
+%p
+  %strong= model_class.human_attribute_name(:options) + ':'
+  %br
+  = hash_to_table(@task.options)
+%p
+  %strong= model_class.human_attribute_name(:result) + ':'
+  %br
+  = sanitize_uri @task.result
+%p
+  %strong= model_class.human_attribute_name(:call_back) + ':'
+  %br
+  = @task.call_back
+  - if @task.call_back
+    %br
+    WebHook:
+    - if @task.result_task_log.web_hook
+      = "completed: #{@task.result_task_log.web_hook.completed_at || 'no'}, max: #{@task.result_task_log.web_hook.retry_max}, count: #{@task.result_task_log.web_hook.retry_count}"
+    - else
+      none
+    %br
+    = link_to t('.send', :default => t("helpers.links.send")), inform_task_path(@task), :method => "post", :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')), :class => 'btn btn-info'
 
-= link_to 'Edit', edit_task_path(@task)
-\|
-= link_to 'Back', tasks_path
+%h2 Log
+%table.table.table-striped
+  %thead
+    %th Date
+    %th Status
+    %th Message
+    %th Info
+    - if @task.call_back
+      %th Callback
+  %tbody
+    - @task.task_logs.each do |task_log|
+      %tr
+        %td= task_log.logged_at.to_s(:db)
+        %td= task_log.status
+        %td= task_log.message
+        %td= format_log_info(task_log)
+        - if @task.call_back
+          %td= task_log.web_hook ? task_log.web_hook.completed? : 'none'
+
+.form-actions
+  = link_to t('.back', :default => t("helpers.links.back")), @task.job, :class => 'btn'
+  = link_to t('.edit', :default => t("helpers.links.edit")), edit_task_path(@task), :class => 'btn'
