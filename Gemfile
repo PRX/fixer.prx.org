@@ -71,4 +71,5 @@ end
 
 group :test do
   gem 'minitest-spec-rails'
+  gem 'factory_girl'
 end

@@ -7,8 +7,20 @@ require 'minitest/autorun'
 require 'devise'
 
 class ActiveSupport::TestCase
+  include FactoryGirl::Syntax::Methods
 end
 
 class ActionController::TestCase
+  include FactoryGirl::Syntax::Methods
   include Devise::TestHelpers
+end
+
+# MiniTest
+class MiniTest::Unit::TestCase
+  include FactoryGirl::Syntax::Methods
+end
+
+# MiniTest::Spec
+class MiniTest::Spec
+  include FactoryGirl::Syntax::Methods
 end
