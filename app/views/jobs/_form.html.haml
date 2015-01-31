@@ -10,9 +10,9 @@
       %br
       = @job.status
     %p
-      %strong= model_class.human_attribute_name(:client_application) + ':'
+      %strong= model_class.human_attribute_name(:application) + ':'
       %br
-      = link_to(@job.client_application.name, oauth_client_path(@job.client_application))
+      = @job.application.name if @job.application
 
 = form_for @job, :html => { :class => 'form-horizontal' } do |f|
   - if @job.errors.any?
