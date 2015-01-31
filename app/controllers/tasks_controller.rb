@@ -2,11 +2,12 @@
 
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_job, only: [:index]
 
   respond_to :html
 
   def index
-    @tasks = Task.all
+    @tasks = @job.tasks
     respond_with(@tasks)
   end
 
@@ -41,6 +42,10 @@ class TasksController < ApplicationController
   private
     def set_task
       @task = Task.find(params[:id])
+    end
+
+    def set_job
+      @job = Job.find(params[:job_id])
     end
 
     def task_params
