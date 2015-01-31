@@ -33,14 +33,16 @@ class Job < BaseModel
 
   def task_ended(task)
     return if cancelled?
-    logger.debug "job: task_ended: start"
-    if ended?
-      logger.debug "job: task_ended: all ended"
-      success? ? complete! : error!
-      send_call_back
-      retry_on_error
-    else
-      logger.debug "job: task_ended: NOT all ended: " + tasks.collect{|t| "#{t.id}:#{t.status}"}.join(', ')
+    # logger.debug "job: task_ended: start"
+    with_lock do
+      if ended?
+        # logger.debug "job: task_ended: all ended"
+        success? ? complete! : error!
+        send_call_back
+        retry_on_error
+      # else
+        # logger.debug "job: task_ended: NOT all ended: " + tasks.collect{|t| "#{t.id}:#{t.status}"}.join(', ')
+      end
     end
   end
 

@@ -47,23 +47,21 @@ class Task < BaseModel
 
     logger.info "Task.log: #{self.id} : #{state} : #{message} : #{info.inspect[0,100]}"
 
-    Task.transaction do
-      task_log = task_logs.create(status: state, message: message, info: info, logged_at: logged_at)
-      update_status(state, message, info, logged_at)
-    end
+    task_log = task_logs.create(status: state, message: message, info: info, logged_at: logged_at)
+    update_status(state, logged_at)
 
     task_log
   end
 
-  def update_status(state, message, info, logged_at)
-    # TODO: introduce lock on the task so this prevents concurrent updates messing up
-
+  def update_status(state, logged_at)
     # if this is not a status that updates (such as info), then skip it
     return unless STATUS_VALUES.include?(state)
 
-    # see if there is already another status that came in that was logged_at > than this one.
-    future_log = task_logs.where('logged_at > ? and status in (?)', logged_at, STATUS_VALUES)
-    update_attribute(:status, state) unless future_log
+    with_lock do
+      # see if there is already another status that came in that was logged_at > than this one.
+      future_log = task_logs.where('logged_at > ? and status in (?)', logged_at, STATUS_VALUES)
+      update_attribute(:status, state) unless future_log
+    end
   end
 
   def retry_task(force=false)
@@ -91,8 +89,8 @@ class Task < BaseModel
     send_call_back
 
     # if the task has ended, let the job or sequece know so it can do a callback
-    job.task_ended(self) if (ended? && job)
     sequence.task_ended(self) if (ended? && sequence)
+    job.task_ended(self) if (ended? && job)
   end
 
   def publish_messages
