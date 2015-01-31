@@ -7,7 +7,7 @@ class TasksControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index
+    get :index, job_id: @job.id
     assert_response :success
     assert_not_nil assigns(:tasks)
   end
