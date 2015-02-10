@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    CFPropertyList (2.3.0)
     actionmailer (4.2.0)
       actionpack (= 4.2.0)
       actionview (= 4.2.0)
@@ -44,9 +45,12 @@ GEM
       mimemagic
       mp3info
       nu_wav
-    autoprefixer-rails (5.1.0)
+    autoprefixer-rails (5.1.5)
       execjs
       json
+    aws-sdk-v1 (1.61.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
     bcrypt (3.1.10)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -72,6 +76,7 @@ GEM
       execjs
     coffee-script-source (1.9.0)
     columnize (0.9.0)
+    connection_pool (2.1.1)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
     devise (3.4.1)
@@ -81,20 +86,105 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
-    doorkeeper (2.1.0)
+    doorkeeper (2.1.1)
       railties (>= 3.1)
     dotenv (1.0.2)
     dotenv-rails (1.0.2)
       dotenv (= 1.0.2)
     erubis (2.7.0)
-    execjs (2.2.2)
+    excon (0.44.1)
+    execjs (2.3.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
+    faraday (0.8.9)
+      multipart-post (~> 1.2.0)
+    faraday_middleware (0.9.1)
+      faraday (>= 0.7.4, < 0.10)
     ffi (1.9.6)
+    fission (0.5.0)
+      CFPropertyList (~> 2.2)
+    fog (1.27.0)
+      fog-atmos
+      fog-aws (~> 0.0)
+      fog-brightbox (~> 0.4)
+      fog-core (~> 1.27, >= 1.27.3)
+      fog-ecloud
+      fog-json
+      fog-profitbricks
+      fog-radosgw (>= 0.0.2)
+      fog-sakuracloud (>= 0.0.4)
+      fog-serverlove
+      fog-softlayer
+      fog-storm_on_demand
+      fog-terremark
+      fog-vmfusion
+      fog-voxel
+      fog-xml (~> 0.1.1)
+      ipaddress (~> 0.5)
+      nokogiri (~> 1.5, >= 1.5.11)
+    fog-atmos (0.1.0)
+      fog-core
+      fog-xml
+    fog-aws (0.1.0)
+      fog-core (~> 1.27)
+      fog-json (~> 1.0)
+      fog-xml (~> 0.1)
+      ipaddress (~> 0.8)
+    fog-brightbox (0.7.1)
+      fog-core (~> 1.22)
+      fog-json
+      inflecto (~> 0.0.2)
+    fog-core (1.28.0)
+      builder
+      excon (~> 0.38)
+      formatador (~> 0.2)
+      mime-types
+      net-scp (~> 1.1)
+      net-ssh (>= 2.1.3)
+    fog-ecloud (0.0.2)
+      fog-core
+      fog-xml
+    fog-json (1.0.0)
+      multi_json (~> 1.0)
+    fog-profitbricks (0.0.1)
+      fog-core
+      fog-xml
+      nokogiri
+    fog-radosgw (0.0.3)
+      fog-core (>= 1.21.0)
+      fog-json
+      fog-xml (>= 0.0.1)
+    fog-sakuracloud (1.0.0)
+      fog-core
+      fog-json
+    fog-serverlove (0.1.1)
+      fog-core
+      fog-json
+    fog-softlayer (0.4.0)
+      fog-core
+      fog-json
+    fog-storm_on_demand (0.1.0)
+      fog-core
+      fog-json
+    fog-terremark (0.0.3)
+      fog-core
+      fog-xml
+    fog-vmfusion (0.0.1)
+      fission
+      fog-core
+    fog-voxel (0.0.2)
+      fog-core
+      fog-xml
+    fog-xml (0.1.1)
+      fog-core
+      nokogiri (~> 1.5, >= 1.5.11)
     formatador (0.2.5)
-    globalid (0.3.0)
+    globalid (0.3.2)
       activesupport (>= 4.1.0)
-    guard (2.11.1)
+    google_speech (0.4.1)
+      excon
+      uuid
+    guard (2.12.1)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -108,7 +198,7 @@ GEM
       guard (~> 2.2)
       guard-compat (~> 1.1)
     guard-compat (1.2.1)
-    guard-minitest (2.4.2)
+    guard-minitest (2.4.3)
       guard-compat (~> 1.2)
       minitest (>= 3.0)
     haml (4.0.6)
@@ -119,6 +209,7 @@ GEM
       haml (>= 3.1, < 5.0)
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
+    hashie (3.4.0)
     hike (1.2.3)
     hitimes (1.2.2)
     html2haml (2.0.0)
@@ -127,6 +218,8 @@ GEM
       nokogiri (~> 1.6.0)
       ruby_parser (~> 3.5)
     i18n (0.7.0)
+    inflecto (0.0.2)
+    ipaddress (0.8.0)
     jbuilder (2.2.6)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -138,6 +231,7 @@ GEM
     kaminari (0.16.2)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    language_list (1.0.0)
     listen (2.8.5)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -145,6 +239,8 @@ GEM
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.9)
+    macaddr (1.7.1)
+      systemu (~> 2.6.2)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     method_source (0.8.2)
@@ -155,17 +251,44 @@ GEM
     minitest-spec-rails (5.2.0)
       minitest (~> 5.0)
       rails (~> 4.1)
+    mixlib-cli (1.5.0)
+    mixlib-config (2.1.0)
+    mixlib-log (1.6.0)
+    mixlib-shellout (2.0.1)
     mp3info (0.8.5)
       ruby-mp3info (>= 0.8.5)
     multi_json (1.10.1)
+    multi_xml (0.5.5)
+    multipart-post (1.2.0)
     nenv (0.2.0)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.9.2)
+    netrc (0.10.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
-    notiffany (0.0.3)
+    notiffany (0.0.4)
       nenv (~> 0.1)
       shellany (~> 0.0)
     nu_wav (0.5.1)
       ruby-mp3info (>= 0.6.13)
+    ohai (6.18.0)
+      ipaddress
+      mixlib-cli
+      mixlib-config
+      mixlib-log
+      mixlib-shellout
+      systemu
+      yajl-ruby
+    open_calais (0.1.0)
+      activesupport
+      excon
+      faraday (>= 0.7.4, < 0.9)
+      faraday_middleware (~> 0.9)
+      hashie (>= 0.4.0)
+      multi_json (~> 1.0, >= 1.0.3)
+      multi_xml
+      stringex
     orm_adapter (0.5.0)
     pg (0.18.1)
     pry (0.10.1)
@@ -205,8 +328,15 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.0)
       json (~> 1.4)
+    redis (3.2.0)
+    redis-namespace (1.5.1)
+      redis (~> 3.0, >= 3.0.4)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    rest-client (1.7.2)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    ruby-audio (1.6.1)
     ruby-mp3info (0.8.5)
     ruby_parser (3.6.4)
       sexp_processor (~> 4.1)
@@ -222,8 +352,18 @@ GEM
       rdoc (~> 4.0)
     sexp_processor (4.4.5)
     shellany (0.0.1)
+    shoryuken (0.0.5)
+      aws-sdk-v1
+      celluloid (~> 0.16.0)
+    sidekiq (3.3.2)
+      celluloid (>= 0.16.0)
+      connection_pool (>= 2.1.1)
+      json
+      redis (>= 3.0.6)
+      redis-namespace (>= 1.3.1)
+    simple_oauth (0.3.1)
     slop (3.6.0)
-    spring (1.2.0)
+    spring (1.3.1)
     sprockets (2.12.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -233,6 +373,8 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    stringex (2.5.2)
+    systemu (2.6.4)
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
@@ -245,13 +387,28 @@ GEM
     uglifier (2.7.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    uuid (2.3.7)
+      macaddr (~> 1.0)
     warden (1.2.3)
       rack (>= 1.0)
+    waveformjson (0.0.2)
+      ruby-audio
     web-console (2.0.0)
       activemodel (~> 4.0)
       binding_of_caller (>= 0.7.2)
       railties (~> 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    yahoo_content_analysis (0.1.2)
+      activesupport
+      excon
+      faraday (>= 0.7.4, < 0.9)
+      faraday_middleware (~> 0.9)
+      hashie (>= 0.4.0)
+      language_list
+      multi_json (~> 1.0, >= 1.0.3)
+      simple_oauth
+      stringex
+    yajl-ruby (1.2.1)
 
 PLATFORMS
   ruby
@@ -268,6 +425,8 @@ DEPENDENCIES
   doorkeeper
   dotenv-rails
   factory_girl
+  fog
+  google_speech (~> 0.4.1)
   guard
   guard-bundler
   guard-minitest
@@ -275,12 +434,21 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   kaminari
+  mimemagic
   minitest-spec-rails
+  ohai
+  open_calais (~> 0.1)
   pg
   rails (= 4.2.0)
+  rest-client
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  shoryuken
+  sidekiq
   spring
+  stringex
   turbolinks
   uglifier (>= 1.3.0)
+  waveformjson
   web-console (~> 2.0)
+  yahoo_content_analysis (~> 0.1)

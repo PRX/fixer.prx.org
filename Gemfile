@@ -50,6 +50,30 @@ gem 'bcrypt', '~> 3.1.7'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# trying to use sidekiq, will abstract to use shoryken too
+gem 'sidekiq'
+
+gem 'shoryuken'
+
+# gems for media processors
+gem 'ohai'
+
+gem 'fog'
+
+gem 'rest-client' # factor this out in favor of excon
+
+gem 'google_speech', '~> 0.4.1'
+
+gem 'open_calais', '~> 0.1'
+
+gem 'yahoo_content_analysis', '~> 0.1'
+
+gem 'stringex'
+
+gem 'waveformjson'
+
+gem 'mimemagic'
+
 group :development, :test do
   # env vars for config and credentials
   gem 'dotenv-rails'
@@ -66,7 +90,6 @@ group :development, :test do
   gem 'guard'
   gem 'guard-minitest'
   gem 'guard-bundler'
-
 end
 
 group :test do
