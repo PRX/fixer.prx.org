@@ -14,8 +14,6 @@ class WebHook < BaseModel
 
   after_commit :call_web_hook, if: :persisted?
 
-  publishes_to :web_hooks
-
   validates_presence_of :url, :message
 
   def completed?
@@ -51,7 +49,7 @@ class WebHook < BaseModel
   end
 
   def to_message
-    self.to_json(include: :informer, except: [:informer_id, :informer_type])
+    self.as_json(include: :informer, except: [:informer_id, :informer_type])
   end
 
 end
