@@ -80,9 +80,10 @@ class Task < BaseModel
 
     logger.debug "task: publish_messages: #{previous_status} != #{status}"
 
-     if process_task && status == CREATED
+    if process_task && status == CREATED
+      logger.debug "task: publish_messages: insert created log"
       # log create on after_commit
-      task_logs.create(status: CREATED, message: 'created message.', logged_at: Time.now)
+      task_logs.create!(status: CREATED, message: 'created message.', logged_at: Time.now)
     end
 
     logger.debug "task: publish_messages: send_call_back: #{status}"
@@ -98,31 +99,17 @@ class Task < BaseModel
     send_task_message if (process_task && sequence_id.nil?)
   end
 
-  # def send_task_message
-  #   destination = destination_symbol
-  #   message = self.to_message
-  #   logger.debug "publish message to do task: #{destination} : #{message}"
+  def send_task_message
+    destination = destination_symbol
+    message = self.to_message
+    logger.debug "publish message to do task: #{destination} : #{message}"
+    TaskWorker.publish(destination, message)
+  end
 
-  #   publish(destination, message)
-  # end
-
-  # def destination_symbol
-  #   priority = if job.priority.blank?
-  #     MediaMonster.destination_priorities.last
-  #   else
-  #     # this is for backwards compatibility
-  #     if job.priority.to_s == 'high'
-  #       1
-  #     else
-  #       job.priority.to_i
-  #     end
-  #   end
-
-  #   # priority limited by what queues exist, defulat to lowest priority if bad one specified
-  #   priority = MediaMonster.destination_priorities.last unless MediaMonster.destination_priorities.include?(priority)
-
-  #   "#{job.job_type}_priority_#{priority}".to_sym
-  # end
+  def destination_symbol
+    priority = job.priority.blank? ? DEFAULT_PRIORITY : [job.priority.to_i, MAX_PRIORITY].min
+    "fixer_p_#{priority}".to_sym
+ end
 
   def send_call_back(force=true)
     rtl = result_task_log
@@ -159,6 +146,6 @@ class Task < BaseModel
   end
 
   def to_message
-    self.to_json(include: :job)
+    self.as_json(include: :job)
   end
 end
