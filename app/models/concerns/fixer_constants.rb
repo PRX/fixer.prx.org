@@ -12,5 +12,10 @@ module FixerConstants
   INFO        = 'info'        # info logging does not change status of the task
 
   STATUS_VALUES = [CREATED, PROCESSING, COMPLETE, ERROR, RETRYING, CANCELLED].freeze
-  LOG_STATUS_VALUES = ([PROGRESS, INFO] + STATUS_VALUES).freeze
+  LOG_STATUS_VALUES = (STATUS_VALUES + [PROGRESS, INFO]).freeze
+
+  DEFAULT_PRIORITY = 3
+  MAX_PRIORITY = 4
+
+  JOB_TYPES = ['audio', 'image', 'file', 'text']
 end
