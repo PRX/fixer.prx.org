@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+# allows three options for workers: local (synch call, default), sidekiq, and shoryken
 class BaseWorker
 
   include FixerConstants
@@ -23,6 +24,10 @@ class BaseWorker
 
   def self.local_options(options={})
     @local_options = options
+  end
+
+  def self.get_local_options
+    @local_options
   end
 
   def self.publish(queue, message, options={})
