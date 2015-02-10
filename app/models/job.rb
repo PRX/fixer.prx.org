@@ -3,8 +3,6 @@
 class Job < BaseModel
   enum status: STATUS_VALUES
 
-  JOB_TYPES = ['audio', 'image', 'file', 'text']
-
   has_many :tasks
   has_one :web_hook, as: :informer
   belongs_to :application, class_name: 'Doorkeeper::Application'
