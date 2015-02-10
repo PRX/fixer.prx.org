@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20150127041734) do
 
   create_table "task_logs", force: :cascade do |t|
     t.uuid     "task_id"
-    t.string   "status"
+    t.integer  "status"
     t.string   "message"
     t.text     "info"
     t.datetime "logged_at"
