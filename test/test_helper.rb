@@ -24,3 +24,11 @@ end
 class MiniTest::Spec
   include FactoryGirl::Syntax::Methods
 end
+
+def out_file(o)
+  File.expand_path(File.dirname(__FILE__) + '/../tmp/' + o)
+end
+
+def in_file(i)
+  File.expand_path(File.dirname(__FILE__) + '/fixtures/files/' + i)
+end
