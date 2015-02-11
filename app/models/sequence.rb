@@ -32,4 +32,24 @@ class Sequence < Task
   def success?
     tasks.all?{|t| t.success?}
   end
+
+  def to_call_back_message
+    as_json(
+      only: [:id, :task_type, :result, :label, :options, :call_back],
+      methods: :result_details,
+      include: {
+        tasks: {
+          only: [:id, :task_type, :result, :label, :options, :call_back],
+          methods: :result_details
+        },
+        job: {
+          only: [:id, :job_type, :original, :status]
+        }
+      }
+    )
+  end
+
+  def to_message
+    self.as_json(include: [:job, :tasks])
+  end
 end
