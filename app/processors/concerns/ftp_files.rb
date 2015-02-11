@@ -5,7 +5,7 @@ require 'timeout'
 module FtpFiles
 
   def ftp_download_file(uri, options={})
-    retry_max = options[:retry_max] || 6
+    retry_max = options[:retry_max] || 5
     retry_wait = options[:retry_wait] || 10
     retry_count = 0
     result = false
@@ -23,7 +23,7 @@ module FtpFiles
 
     local_file = nil
 
-    while (!result && (retry_count < retry_max)) do
+    while (!result && (retry_count <= retry_max)) do
 
       if local_file
         local_file.close rescue nil
@@ -63,7 +63,7 @@ module FtpFiles
 
         result = true
       rescue StandardError => err
-        if passive && ((retry_count +1) >= retry_max)
+        if passive && (retry_count >= retry_max)
           passive = false
           retry_count = 0
           logger.error "ftp_file retry in active mode: retrycount(#{retry_count}): error: #{err.message}"
@@ -89,7 +89,7 @@ module FtpFiles
     local_file
   end
 
-    def ftp_upload_file(uri, local_file, options={})
+  def ftp_upload_file(uri, local_file, options={})
     no_retry = !!options[:no_retry]
 
     retry_max = no_retry ? 1 : (options[:retry_max] || 6)
@@ -117,7 +117,7 @@ module FtpFiles
     keep_alive = options[:keep_alive].to_i
 
     while (!result && (retry_count < retry_max)) do
-      ftp = Net::FTP.new()
+      ftp = Net::FTP.new
 
       begin
         # this makes active mode on ec2 work by sending the public ip
