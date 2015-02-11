@@ -24,6 +24,6 @@ class TaskWorker < BaseWorker
     processor_name = "#{job_type}_processor"
     # require processor_name # is this necessary?
     processor_class = processor_name.classify.constantize
-    processor_class.new
+    processor_class.new(logger: logger)
   end
 end
