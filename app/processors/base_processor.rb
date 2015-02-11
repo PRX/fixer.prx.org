@@ -41,6 +41,7 @@ class BaseProcessor
 
   def publish_update(log)
     TaskUpdateWorker.publish(:task_update, log)
+    log
   end
 
   def on_message(message)
@@ -83,7 +84,7 @@ class BaseProcessor
   end
 
   def process_task(atask)
-    self.task = atask
+    self.task = atask if atask
 
     self.options = nil
 
@@ -118,7 +119,7 @@ class BaseProcessor
     [self.source, self.original, self.destination].each do |f|
       next unless f
       f.close rescue nil
-      f.unlink rescue nil
+      File.unlink(f) rescue nil
     end
   end
 
@@ -171,11 +172,18 @@ class BaseProcessor
   end
 
   def upload_file(uri, file, opts)
-    unless ['s3' 'ia', 'ftp', 'file'].include?(uri.scheme)
+    unless upload_schemes.include?(uri.scheme)
       raise "store_result: #{uri.scheme} not supported."
     end
 
-    send("#{uri.scheme})_upload_file", uri, file, opts)
+    send("#{uri.scheme}_upload_file", uri, file, opts)
+  end
+
+  def upload_schemes
+    @_upload_schemes ||= begin
+      s = ['s3', 'ia', 'ftp']
+      s << 'file' if ServiceOptions.env != 'production'
+    end
   end
 
   def notify_task_processing
@@ -231,14 +239,21 @@ class BaseProcessor
   end
 
   def download_file(uri)
-    unless ['s3' 'ia', 'ftp', 'file'].include?(uri.scheme)
+    unless download_schemes.include?(uri.scheme)
       raise "download_file: #{uri.scheme} not supported."
     end
 
-    send("#{uri.scheme})_download_file", uri)
+    send("#{uri.scheme}_download_file", uri)
   rescue StandardError => err
     logger.error "BaseProcessor download_file: #{err.class.name}\n#{err.message}\n\t" + err.backtrace.join("\n\t")
     raise "Could not download file '#{uri}': #{err.message}"
+  end
+
+  def download_schemes
+    @_download_schemes ||= begin
+      s = ['s3', 'ia', 'ftp', 'http']
+      s << 'file' if ServiceOptions.env != 'production'
+    end
   end
 
   def file_download_file(uri)
@@ -248,13 +263,14 @@ class BaseProcessor
   end
 
   def file_upload_file(uri, file, opts={})
-    local_file_path = File.join(temp_directory, File.expand_path(uri.host ? File.join(uri.host, uri.path) : uri.path))
+    local_file_path = File.join(temp_directory, (uri.host ? File.join(uri.host, uri.path) : uri.path))
     FileUtils.mkdir_p(File.dirname(local_file_path))
     FileUtils.cp(file.path, local_file_path)
+    local_file_path
   end
 
   def temp_directory
-    File.expand_path(File.join(ActiveMessaging.app_root,'tmp','fixer'))
+    File.expand_path(File.join(ServiceOptions.root,'tmp','fixer'))
   end
 
   def storage_connection(uri, opts={})
@@ -268,6 +284,7 @@ class BaseProcessor
   # Retry logic varies by broker - see individual adapter code and docs for how it will be treated
   def on_error(err)
     logger.error "BaseProcessor on_error: #{err.class.name}\n#{err.message}\n\t" + err.backtrace.join("\n\t")
+    log = nil
 
     if (task && task['id'])
 
@@ -283,7 +300,7 @@ class BaseProcessor
       }
 
       logger.error "BaseProcessor on_error: publish task_log error: #{task_log.inspect}"
-      publish_update(task_log: task_log)
+      log = publish_update(task_log: task_log)
     end
 
     if (err.kind_of?(StandardError))
@@ -292,6 +309,8 @@ class BaseProcessor
       logger.error "BaseProcessor::on_error: #{err.class.name} raised: " + err.message
       raise err
     end
+
+    log
   end
 
   def clean_backtrace(err)
@@ -308,5 +327,13 @@ class BaseProcessor
 
   def logger
     @logger ||= BaseProcessor.logger
+  end
+
+  def job_type
+    self.class.job_type
+  end
+
+  def supported_tasks
+    self.class.supported_tasks || []
   end
 end
