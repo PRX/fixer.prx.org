@@ -17,7 +17,7 @@ class ImageProcessorTest < ActiveSupport::TestCase
           label: 'resize',
           job: { id: 'guid1', job_type: 'image', status: 'created', original: "file://#{in_file('test_pattern.jpg')}" },
           options: { size: '100x100' },
-          result: 'file:///test/images/21/test_pattern_small.jpg'
+          result: 'file:///test/images/test_pattern_small.jpg'
         }
       }.with_indifferent_access
     }
