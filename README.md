@@ -21,6 +21,12 @@ brew install mp3val
 brew install ffmpeg
 ```
 
+For images you also need the ImageMagick or GraphicsMagick command-line tool.
+```
+brew install imagemagick
+```
+
+
 ### Get started!
 ```
 git clone git@github.com:PRX/fixer.prx.org.git

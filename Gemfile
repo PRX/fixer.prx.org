@@ -74,6 +74,8 @@ gem 'waveformjson'
 
 gem 'mimemagic'
 
+gem 'mini_magick'
+
 group :development, :test do
   # env vars for config and credentials
   gem 'dotenv-rails'
