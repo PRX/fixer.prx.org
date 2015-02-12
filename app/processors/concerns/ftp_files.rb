@@ -27,7 +27,7 @@ module FtpFiles
 
       if local_file
         local_file.close rescue nil
-        local_file.unlink rescue nil
+        File.unlink(local_file) rescue nil
       end
 
       local_file = AudioMonster.create_temp_file(remote_file_name)
@@ -246,7 +246,7 @@ module FtpFiles
   ensure
     if md5_file
       md5_file.close rescue nil
-      md5_file.unlink rescue nil
+      File.unlink(md5_file) rescue nil
     end
   end
 

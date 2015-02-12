@@ -48,7 +48,7 @@ module S3Files
 
         if temp_file
           temp_file.close rescue nil
-          temp_file.unlink rescue nil
+          File.unlink(temp_file) rescue nil
         end
 
         temp_file = AudioMonster.create_temp_file(file_name)
