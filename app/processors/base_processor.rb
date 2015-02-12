@@ -39,6 +39,10 @@ class BaseProcessor
     self.options = opts[:options]
   end
 
+  def completed(info, message)
+    { status: COMPLETE, info: info, message: message }
+  end
+
   def publish_update(log)
     TaskUpdateWorker.publish(:task_update, log)
     log
