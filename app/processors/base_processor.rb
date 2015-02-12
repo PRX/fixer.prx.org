@@ -39,8 +39,9 @@ class BaseProcessor
     self.options = opts[:options]
   end
 
-  def completed(info, message)
-    { status: COMPLETE, info: info, message: message }
+  def completed_with(info={}, message=nil)
+    message ||= (caller[0][/`.*'/][1..-2].humanize + " #{COMPLETE}.") rescue 'complete.'
+    self.result_details = { status: COMPLETE, info: info, message: message}
   end
 
   def publish_update(log)
@@ -133,6 +134,7 @@ class BaseProcessor
 
   # valid tasks validate, transcode
   def execute_task
+    self.result_details = nil
     task_type = task['task_type'].to_s
 
     unless supported_tasks.include?(task_type)
@@ -140,7 +142,9 @@ class BaseProcessor
     end
 
     # call the method to execute the task based on task and job type
-    self.result_details = self.send("#{task_type}_#{job_type}".to_sym)
+    task_method = "#{task_type}_#{job_type}"
+    send(task_method)
+    raise "Task must set the result details (via completed_with): #{task_method}" unless result_details
   end
 
   def store_result

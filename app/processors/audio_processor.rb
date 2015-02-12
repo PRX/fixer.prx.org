@@ -23,9 +23,8 @@ class AudioProcessor < BaseProcessor
 
     self.destination_format = 'json'
     self.destination  = temp_file
-    info = info_for_transcript(transcript)
 
-    completed info, 'transcribe audio complete'
+    completed_with info_for_transcript(transcript)
   end
 
   def info_for_transcript(t)
@@ -63,17 +62,16 @@ class AudioProcessor < BaseProcessor
 
     self.destination = temp_file
     self.destination_format = 'json'
-    info = info_for_waveform(wf)
 
-    completed info, 'waveformjson for audio complete'
-  end
-
-  def info_for_waveform(data)
-    { data_count: data.size }
+    completed_with info_for_waveform(wf)
   end
 
   def waveformjson(wav, opts={})
     Waveformjson.generate(wav, symbolize_options(opts))
+  end
+
+  def info_for_waveform(data)
+    { data_count: data.size }
   end
 
   # task methods of "#{task_type}_#{job_type}" naming standard
@@ -83,30 +81,26 @@ class AudioProcessor < BaseProcessor
 
     self.destination = transcode_to(format, options)
     self.destination_format = format
-    info = info_for(destination_format, destination)
 
-    completed info, 'transcode complete'
+    completed_with info_for(destination_format, destination)
   end
 
   def copy_audio
     self.destination = source
     self.destination_format = source_format
-    info = info_for(destination_format, destination)
 
-    completed info, 'copy complete'
+    completed_with info_for(destination_format, destination)
   end
 
   def analyze_audio
-    info = info_for(source_format, source)
-    completed info, 'analysis complete'
+    completed_with info_for(source_format, source)
   end
 
   # this is a stub for the moment - not validating anything yet
   def validate_audio
     errors, analysis = validate(source_format, source, options)
-    info = { errors: errors, analysis: analysis }
 
-    completed info, 'validation complete'
+    completed_with { errors: errors, analysis: analysis }
   end
 
   def cut_audio
@@ -116,9 +110,8 @@ class AudioProcessor < BaseProcessor
 
     self.destination_format = 'wav'
     self.destination = task_tmp
-    info = info_for(destination_format, destination)
 
-    completed info, 'cut audio complete'
+    completed_with info_for(destination_format, destination)
   end
 
   def slice_audio
@@ -129,9 +122,8 @@ class AudioProcessor < BaseProcessor
 
     self.destination_format = 'wav'
     self.destination = task_tmp
-    info = info_for(destination_format, destination)
 
-    completed info, 'slice audio complete'
+    completed_with info_for(destination_format, destination)
   end
 
   def tone_detect_audio
@@ -141,9 +133,8 @@ class AudioProcessor < BaseProcessor
     threshold = options['threshold'] || 0.05
     min_time = options['min_time'] || 0.5
     ranges = AudioMonster.tone_detect(source_wav.path, tone, threshold, min_time)
-    info = ranges.collect{|r| [r[:start], r[:finish]] }
 
-    completed info, 'tone detection complete'
+    completed_with detected_ranges(ranges)
   end
 
   def silence_detect_audio
@@ -153,9 +144,12 @@ class AudioProcessor < BaseProcessor
     min_time = options['min_time'] || 1.0
     # puts "t: #{threshold}, m: #{min_time}"
     ranges = AudioMonster.silence_detect(source_wav.path, threshold, min_time)
-    info = ranges.collect{|r| [r[:start], r[:finish]] }
 
-    completed info, 'silence detection complete'
+    completed_with detected_ranges(ranges)
+  end
+
+  def detected_ranges(ranges)
+    ranges.collect{|r| [r[:start], r[:finish]] }
   end
 
   def wrap_audio
@@ -168,9 +162,8 @@ class AudioProcessor < BaseProcessor
 
     self.destination_format = 'wav'
     self.destination = task_tmp
-    info = info_for(destination_format, destination)
 
-    completed info, 'wav wrapped with cart chunk'
+    completed_with info_for(destination_format, destination)
   end
 
   def extract_result_options(result_uri_string)
@@ -250,10 +243,8 @@ class AudioProcessor < BaseProcessor
 
   def release_tempfile(tmp)
     if(tmp && tmp.is_a?(Tempfile))
-      logger.debug "release_wav_tmp: start #{tmp.path}"
       tmp.close
-      tmp.unlink
-      logger.debug "release_wav_tmp: end #{tmp.path}"
+      File.unlink(tmp)
     end
   rescue Exception => err
     logger.error "release_wav_tmp: err #{err.inspect}"

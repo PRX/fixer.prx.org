@@ -97,12 +97,13 @@ class BaseProcessorTest < ActiveSupport::TestCase
   end
 
   it 'processes and executes task' do
-    def processor.test_base; { status: 'test_base' }; end
     BaseProcessor.task_types ['test']
+    def processor.test_base;  completed_with({ foo: 'test!' }); end
 
     processor.prepare(task_message)
     processor.process_task(task_message['task'])
-    processor.result_details[:status].must_equal 'test_base'
+    processor.result_details[:status].must_equal 'complete'
+    processor.result_details[:message].must_equal 'Test base complete.'
   end
 
   it 'closes open files' do
