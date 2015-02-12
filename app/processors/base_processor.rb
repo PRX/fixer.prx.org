@@ -44,6 +44,11 @@ class BaseProcessor
     self.result_details = { status: COMPLETE, info: info, message: message}
   end
 
+  def file_info(file=destination)
+    out, err = AudioMonster.run_command("file -b #{file.path}", nice: 'n', echo_return: false)
+    { file: out.chomp }
+  end
+
   def publish_update(log)
     TaskUpdateWorker.publish(:task_update, log)
     log
@@ -123,8 +128,12 @@ class BaseProcessor
   def close_files
     [self.source, self.original, self.destination].each do |f|
       next unless f
-      f.close rescue nil
-      File.unlink(f) rescue nil
+      begin
+        f.close
+        File.unlink(f) if ServiceOptions.env == 'production'
+      rescue
+        nil
+      end
     end
   end
 
