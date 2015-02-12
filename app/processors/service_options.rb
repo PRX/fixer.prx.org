@@ -43,7 +43,7 @@ module ServiceOptions
 
   def self.service_options(service)
     service = storage_provider_abbr_for_uri(service) if service.is_a?(URI)
-    options[service]
+    options[service].with_indifferent_access
   end
 
   def self.options_for_uri(uri)
