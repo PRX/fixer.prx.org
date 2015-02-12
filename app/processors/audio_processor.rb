@@ -22,7 +22,7 @@ class AudioProcessor < BaseProcessor
     temp_file.fsync
 
     self.destination_format = 'json'
-    self.destination  = temp_file
+    self.destination = temp_file
 
     completed_with info_for_transcript(transcript)
   end
@@ -82,25 +82,25 @@ class AudioProcessor < BaseProcessor
     self.destination = transcode_to(format, options)
     self.destination_format = format
 
-    completed_with info_for(destination_format, destination)
+    completed_with audio_info
   end
 
   def copy_audio
     self.destination = source
     self.destination_format = source_format
 
-    completed_with info_for(destination_format, destination)
+    completed_with audio_info
   end
 
   def analyze_audio
-    completed_with info_for(source_format, source)
+    completed_with audio_info(source_format, source)
   end
 
   # this is a stub for the moment - not validating anything yet
   def validate_audio
     errors, analysis = validate(source_format, source, options)
-
-    completed_with { errors: errors, analysis: analysis }
+    info = { errors: errors, analysis: analysis }
+    completed_with info
   end
 
   def cut_audio
@@ -111,7 +111,7 @@ class AudioProcessor < BaseProcessor
     self.destination_format = 'wav'
     self.destination = task_tmp
 
-    completed_with info_for(destination_format, destination)
+    completed_with audio_info
   end
 
   def slice_audio
@@ -123,7 +123,7 @@ class AudioProcessor < BaseProcessor
     self.destination_format = 'wav'
     self.destination = task_tmp
 
-    completed_with info_for(destination_format, destination)
+    completed_with audio_info
   end
 
   def tone_detect_audio
@@ -163,7 +163,7 @@ class AudioProcessor < BaseProcessor
     self.destination_format = 'wav'
     self.destination = task_tmp
 
-    completed_with info_for(destination_format, destination)
+    completed_with audio_info
   end
 
   def extract_result_options(result_uri_string)
@@ -191,7 +191,7 @@ class AudioProcessor < BaseProcessor
   end
 
   # helper methods
-  def info_for(format, file)
+  def audio_info(format=destination_format, file=destination)
     AudioMonster.send("info_for_#{format}".to_sym, file.path)
   end
 
@@ -244,7 +244,7 @@ class AudioProcessor < BaseProcessor
   def release_tempfile(tmp)
     if(tmp && tmp.is_a?(Tempfile))
       tmp.close
-      File.unlink(tmp)
+      File.unlink(tmp) if ServiceOptions.env == 'production'
     end
   rescue Exception => err
     logger.error "release_wav_tmp: err #{err.inspect}"
