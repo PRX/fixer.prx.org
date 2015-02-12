@@ -6,6 +6,8 @@ require 'minitest/spec'
 require 'minitest/autorun'
 require 'devise'
 
+AudioMonster.logger = Logger.new('/dev/null')
+
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
 end
