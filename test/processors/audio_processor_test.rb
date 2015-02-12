@@ -2,7 +2,6 @@ require 'test_helper'
 
 class AudioProcessorTest < ActiveSupport::TestCase
 
-  # let(:processor) { AudioProcessor.new(logger: Logger.new(STDOUT)) }
   let(:processor) { AudioProcessor.new(logger: Logger.new('/dev/null')) }
 
   it 'defines supported tasks' do
