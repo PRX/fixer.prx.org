@@ -4,9 +4,12 @@ require 'rails/test_help'
 
 require 'minitest/spec'
 require 'minitest/autorun'
+require 'webmock/minitest'
 require 'devise'
 
 AudioMonster.logger = Logger.new('/dev/null')
+
+WebMock.allow_net_connect!
 
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
@@ -34,3 +37,4 @@ end
 def in_file(i)
   File.expand_path(File.dirname(__FILE__) + '/fixtures/files/' + i)
 end
+

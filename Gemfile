@@ -96,5 +96,21 @@ end
 
 group :test do
   gem 'minitest-spec-rails'
-  gem 'factory_girl'
+  gem 'factory_girl_rails'
+  gem 'webmock'
+  gem 'minitest-reporters', require: false
+  gem "codeclimate-test-reporter", require: false
+  gem 'simplecov', require: false
+  gem 'coveralls', require: false
 end
+
+group :production do
+  gem 'rails_12factor'
+end
+
+group :development, :production, :staging do
+  gem 'sinatra' # for sidekiq
+  gem 'foreman'
+  gem 'unicorn'
+end
+
