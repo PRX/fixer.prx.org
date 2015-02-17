@@ -76,6 +76,8 @@ gem 'mimemagic'
 
 gem 'mini_magick'
 
+gem 'say_when', '~> 1.0'
+
 group :development, :test do
   # env vars for config and credentials
   gem 'dotenv-rails'
