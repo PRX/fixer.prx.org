@@ -4,6 +4,7 @@ require 'base_worker'
 
 class TaskUpdateWorker < BaseWorker
   def perform(log)
+    log = log.with_indifferent_access
     task_log = log['task_log']
     task = Task.find_by_id(task_log['task_id'])
     return unless task
