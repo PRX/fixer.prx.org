@@ -69,6 +69,8 @@ class BaseProcessor
   # set job, sequence, tasks, task, and original
   def prepare(amessage=nil)
     self.message = amessage if amessage
+    self.message = message.with_indifferent_access
+
     logger.info "BaseProcessor.prepare: #{message}"
 
     if message['sequence']
@@ -189,18 +191,8 @@ class BaseProcessor
   end
 
   def upload_file(uri, file, opts)
-    unless upload_schemes.include?(uri.scheme)
-      raise "store_result: #{uri.scheme} not supported."
-    end
-
+    raise "#{uri.scheme} not supported." if !file_schemes.include?(uri.scheme)
     send("#{uri.scheme}_upload_file", uri, file, opts)
-  end
-
-  def upload_schemes
-    @_upload_schemes ||= begin
-      s = ['s3', 'ia', 'ftp']
-      s << 'file' if ServiceOptions.env != 'production'
-    end
   end
 
   def notify_task_processing
@@ -256,18 +248,15 @@ class BaseProcessor
   end
 
   def download_file(uri)
-    unless download_schemes.include?(uri.scheme)
-      raise "download_file: #{uri.scheme} not supported."
-    end
-
+    raise "#{uri.scheme} not supported." if !file_schemes.include?(uri.scheme)
     send("#{uri.scheme}_download_file", uri)
   rescue StandardError => err
     logger.error "BaseProcessor download_file: #{err.class.name}\n#{err.message}\n\t" + err.backtrace.join("\n\t")
     raise "Could not download file '#{uri}': #{err.message}"
   end
 
-  def download_schemes
-    @_download_schemes ||= begin
+  def file_schemes
+    @_file_schemes ||= begin
       s = ['s3', 'ia', 'ftp', 'http']
       s << 'file' if ServiceOptions.env != 'production'
     end
