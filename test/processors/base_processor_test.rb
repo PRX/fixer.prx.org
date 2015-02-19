@@ -93,7 +93,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
     def processor.process_task(t); self.result_details = { task: t }; end
     processor.prepare(task_message)
     processor.process
-    processor.result_details[:task].must_equal task_message['task']
+    processor.result_details[:task].must_equal processor.task
   end
 
   it 'processes and executes task' do
@@ -156,10 +156,6 @@ class BaseProcessorTest < ActiveSupport::TestCase
     processor.upload_file(uri, file, {}).must_equal 'uploaded!'
   end
 
-  it 'lists supported upload schemes' do
-    processor.upload_schemes.must_be :include?, 'file'
-  end
-
   it 'updates when processing starts' do
     processor.task = { id: '123' }
 
@@ -200,8 +196,8 @@ class BaseProcessorTest < ActiveSupport::TestCase
     processor.download_file(uri).must_equal 'downloaded!'
   end
 
-  it 'lists supported download schemes' do
-    processor.download_schemes.must_be :include?, 'file'
+  it 'lists supported file schemes' do
+    processor.file_schemes.must_be :include?, 'file'
   end
 
   it 'handles standard errors' do
