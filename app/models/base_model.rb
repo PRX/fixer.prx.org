@@ -6,4 +6,6 @@ class BaseModel < ActiveRecord::Base
   self.abstract_class = true
 
   include FixerConstants
+
+  acts_as_scheduled
 end

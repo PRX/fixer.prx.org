@@ -3,9 +3,9 @@
 class Job < BaseModel
   enum status: STATUS_VALUES
 
+  belongs_to :application, class_name: 'Doorkeeper::Application'
   has_many :tasks
   has_one :web_hook, as: :informer
-  belongs_to :application, class_name: 'Doorkeeper::Application'
 
   serialize :original
 
@@ -34,12 +34,12 @@ class Job < BaseModel
     # logger.debug "job: task_ended: start"
     with_lock do
       if ended?
-        # logger.debug "job: task_ended: all ended"
+        logger.debug "job: task_ended: all ended"
         success? ? complete! : error!
         send_call_back
         retry_on_error
-      # else
-        # logger.debug "job: task_ended: NOT all ended: " + tasks.collect{|t| "#{t.id}:#{t.status}"}.join(', ')
+      else
+        logger.debug "job: task_ended: NOT all ended: " + tasks.collect{|t| "#{t.id}:#{t.status}"}.join(', ')
       end
     end
   end
@@ -52,24 +52,21 @@ class Job < BaseModel
 
   def retry_on_error
     return if (success? || cancelled? || !retry? || retry_scheduled?)
-    # temporary
-
-    # consider this for exponential retry
-    # delay = (2**(retry_count)/2) * retry_delay.seconds
-    # schedule_in(delay.seconds, {:method=>:scheduled_retry})
-
     # this is the current job
     # schedule_in(retry_delay.seconds, {:method=>:scheduled_retry})
+
+    # try this for exponential retry
+    delay = (2**(retry_count)/2) * retry_delay.seconds
+    schedule_in(delay.seconds, { method: :scheduled_retry } )
   end
 
   def retry_scheduled?
-    true # temporary
-  #   scheduled_jobs.
-  #     where(job_method: "scheduled_retry").
-  #     where('next_fire_at > ?', Time.now).
-  #     where('status != "complete"').exists?
-  # rescue
-  #   false
+    scheduled_jobs.
+      where(job_method: 'scheduled_retry').
+      where('next_fire_at > ?', Time.now).
+      where('status != "complete"').exists?
+  rescue
+    false
   end
 
   def scheduled_retry(data={})
@@ -83,8 +80,8 @@ class Job < BaseModel
     self.web_hook = nil
 
     self.update_attributes(status:      RETRYING,
-                           retry_count: (retry_count+1),
-                           retry_max:   [(retry_count+1), retry_max].max)
+                           retry_count: (retry_count + 1),
+                           retry_max:   [(retry_count + 1), retry_max].max)
 
     tasks.each{|t| t.retry_task(force)}
   end
