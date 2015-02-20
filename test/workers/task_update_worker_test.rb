@@ -3,7 +3,7 @@ require 'test_helper'
 class TaskUpdateWorkerTest < ActiveSupport::TestCase
 
   before {
-    ENV['FIXER_WORKER_LIB'] = 'local'
+    ENV['WORKER_LIB'] = 'local'
   }
 
   let(:job) { Job.create!(job_type: 'audio', priority: 1, application_id: 1) }

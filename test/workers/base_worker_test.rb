@@ -9,7 +9,7 @@ class BaseWorkerTest < ActiveSupport::TestCase
   end
 
   before {
-    ENV['FIXER_WORKER_LIB'] = 'local'
+    ENV['WORKER_LIB'] = 'local'
   }
 
   it 'knows the worker lib' do
