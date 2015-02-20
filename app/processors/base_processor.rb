@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'uri'
 require 'json'
 require 'fog'
@@ -50,7 +52,7 @@ class BaseProcessor
   end
 
   def publish_update(log)
-    TaskUpdateWorker.publish(:task_update, log)
+    TaskUpdateWorker.publish(:update, log)
     log
   end
 
@@ -93,6 +95,8 @@ class BaseProcessor
       process_task(t)
     end
     close_files
+
+    result_details
   end
 
   def process_task(atask)
