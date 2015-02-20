@@ -1,0 +1,4 @@
+%p
+  = @message
+%p
+  = link_to "More information", url_for(controller: @web_hook['informer_type'].downcase.pluralize, action: 'show', id: @web_hook['informer_id'], only_path: false)
