@@ -60,15 +60,6 @@ class Job < BaseModel
     schedule_in(delay.seconds, { method: :scheduled_retry } )
   end
 
-  def retry_scheduled?
-    scheduled_jobs.
-      where(job_method: 'scheduled_retry').
-      where('next_fire_at > ?', Time.now).
-      where('status != "complete"').exists?
-  rescue
-    false
-  end
-
   def scheduled_retry(data={})
     self.retry(false)
   end
