@@ -5,6 +5,7 @@ require 'base_worker'
 class TaskWorker < BaseWorker
 
   def perform(task)
+    task = task.with_indifferent_access
     job_type = extract_job_type(task)
     processor = lookup_processor(job_type)
     processor.on_message(task)
@@ -13,9 +14,9 @@ class TaskWorker < BaseWorker
   def extract_job_type(task)
     # identify the type of job
     t = task['task'] || task['sequence']
-    jt = j['job']['job_type']
+    jt = t['job']['job_type']
 
-    raise "Unrecognized job type: #{jt}" unless JOB_TYPES.include?(jt.to_sym)
+    raise "Unrecognized job type: #{jt}" unless JOB_TYPES.include?(jt.to_s)
 
     jt
   end
