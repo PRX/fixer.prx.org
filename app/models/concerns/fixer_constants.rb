@@ -17,5 +17,5 @@ module FixerConstants
   DEFAULT_PRIORITY = 3
   MAX_PRIORITY = 4
 
-  JOB_TYPES = ['audio', 'image', 'file', 'text']
+  JOB_TYPES = ['audio', 'image', 'file', 'text', 'test']
 end
