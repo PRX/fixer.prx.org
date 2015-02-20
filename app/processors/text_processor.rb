@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'open_calais'
 require 'yahoo_content_analysis'
 require 'stringex'

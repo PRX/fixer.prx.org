@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'audio_monster'
 require 'net/ftp'
 require 'timeout'
