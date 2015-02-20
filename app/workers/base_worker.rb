@@ -9,13 +9,15 @@ class BaseWorker
   end
 
   def self.worker_lib
-    ENV['FIXER_WORKER_LIB'] || 'local'
+    ENV['WORKER_LIB'] || 'local'
   end
 
   if worker_lib == 'sidekiq'
     include Sidekiq::Worker
   elsif worker_lib == 'shoryken'
     include Shoryuken::Worker
+  else
+    include LocalWorker
   end
 
   def self.worker_options(*args)
