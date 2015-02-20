@@ -55,11 +55,3 @@ vi .env
 
 ## License
 Fixer is offered under the [AGPL 3.0](http://opensource.org/licenses/AGPL-3.0)
-
----------------------------------------
-### Development notes
-- [ ] Submit jobs via messages, not HTTP/API calls
-- [ ] Fix reliance on serialized task status update
-- [ ] Messaging - activemessaging and SQS, considering shoryuken
-- [ ] Worker Processes - celluloid based for processing, single threaded for updates
-- [ ] Scheduling - uses say_when
