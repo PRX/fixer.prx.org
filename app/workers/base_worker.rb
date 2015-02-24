@@ -34,7 +34,7 @@ class BaseWorker
 
   def self.publish(queue, message, options={})
     if worker_lib == 'sidekiq'
-      client_push('queue' => queue, 'class' => self, 'args' => message)
+      client_push('queue' => queue, 'class' => self, 'args' => Array[message])
     elsif worker_lib == 'shoryken'
       options[:message_attributes] ||= {}
       options[:message_attributes]['shoryuken_class'] = {
