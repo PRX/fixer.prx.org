@@ -7,8 +7,6 @@ class Job < BaseModel
   has_many :tasks
   has_one :web_hook, as: :informer
 
-  serialize :original
-
   before_validation(on: :create) { self.status = CREATED }
 
   validates_presence_of :job_type, :status, :application_id
@@ -90,26 +88,23 @@ class Job < BaseModel
   end
 
   def self.create_from_message(h, application=nil)
-    raise 'Message must specify job' unless h['job']
-
-    tasks = h['job'].delete('tasks') || []
-    job = Job.new(h['job'])
+    tasks = h.delete('tasks') || []
+    job = Job.new(h)
     job.application = application
-
-    raise 'Jobs must have at least one task' unless tasks && tasks.size > 0
 
     begin
       Job.transaction do
         job.save!
         tasks.each do |t|
-          if t.keys.first == 'task'
-            job.tasks.create!(t['task'])
-          elsif t.keys.first == 'sequence'
-            sequence_tasks = t['sequence'].delete('tasks') || []
-            sequence = Sequence.new(t['sequence'])
+          # Handle when task attributes are classname prefixed or not
+          if asequence = extract_sequence(t)
+            sequence_tasks = asequence.delete('tasks') || []
+            sequence = Sequence.new(asequence)
             job.tasks << sequence
             sequence.save!
-            sequence_tasks.each { |st| sequence.tasks.create!(st['task']) }
+            sequence_tasks.each { |st| sequence.tasks.create!(extract_task(st)) }
+          elsif atask = extract_task(t)
+            job.tasks.create!(atask)
           end
         end
       end
@@ -119,4 +114,27 @@ class Job < BaseModel
     end
     job
   end
+
+  def extract_sequence(t)
+    if t.keys.first == 'sequence'
+      t['sequence']
+    elsif t.keys.include?('tasks')
+      t
+    else
+      nil
+    end
+  end
+
+  def extract_task(t)
+    if t.keys.first == 'task'
+      t['task']
+    elsif t.keys.first == 'sequence'
+      nil
+    elsif t.keys.include?('tasks')
+      nil
+    else
+      t
+    end
+  end
+
 end
