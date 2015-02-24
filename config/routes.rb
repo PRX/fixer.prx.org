@@ -22,6 +22,11 @@ Rails.application.routes.draw do
     resources :tasks
   end
 
+  if ENV['WORKER_LIB'] == 'sidekiq' && Rails.env.development?
+    require 'sidekiq/web'
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   root 'jobs#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
