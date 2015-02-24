@@ -1,0 +1,9 @@
+---
+:concurrency: <%= ENV['WORKER_COUNT'] || 5 %>
+:pidfile: tmp/pids/all_sidekiq.pid
+:queues:
+  - [fixer_update, 3]
+  - [fixer_p1, 4]
+  - [fixer_p2, 3]
+  - [fixer_p3, 2]
+  - [fixer_p4, 1]
