@@ -11,7 +11,7 @@ class Task < BaseModel
 
   serialize :options
 
-  acts_as_list scope: :sequence
+  acts_as_list scope: 'sequence_id = \'#{send(:sequence_id) || "00000000-0000-0000-0000-000000000000"}\''
 
   attr_accessor :process_task, :previous_status
 
@@ -108,7 +108,7 @@ class Task < BaseModel
 
   def destination_symbol
     priority = job.priority.blank? ? DEFAULT_PRIORITY : [job.priority.to_i, MAX_PRIORITY].min
-    "fixer_p_#{priority}".to_sym
+    "fixer_p#{priority}".to_sym
  end
 
   def send_call_back(force=true)
