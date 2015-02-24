@@ -37,7 +37,7 @@ class WebHook < BaseModel
   end
 
   def call_web_hook
-    publish :web_hooks, self.to_message if process_web_hook
+    send_webook_message if process_web_hook
   end
 
   def informer_status
@@ -46,5 +46,12 @@ class WebHook < BaseModel
 
   def to_message
     self.as_json(methods: :informer_status)
+  end
+
+  def send_webook_message
+    destination = :fixer_p2
+    message = self.to_message
+    logger.debug "publish message to do web_hook: #{destination} : #{message}"
+    WebHookWorker.publish(destination, message)
   end
 end
