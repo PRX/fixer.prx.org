@@ -52,7 +52,7 @@ class BaseProcessor
   end
 
   def publish_update(log)
-    TaskUpdateWorker.publish(:update, log)
+    TaskUpdateWorker.publish(:fixer_update, log)
     log
   end
 
@@ -71,7 +71,7 @@ class BaseProcessor
   # set job, sequence, tasks, task, and original
   def prepare(amessage=nil)
     self.message = amessage if amessage
-    self.message = message.with_indifferent_access
+    self.message = (message || {}).with_indifferent_access
 
     logger.info "BaseProcessor.prepare: #{message}"
 
@@ -235,14 +235,8 @@ class BaseProcessor
     # now try and get the original
     unless original && original_format
       return unless job['original']
-      uri = nil
-      if job['original'].is_a?(String)
-        uri = URI.parse(job['original'])
-        self.original_format = extract_format(uri)
-      elsif job['original'].is_a?(Hash)
-        uri = URI.parse(job['original']['url'])
-        self.original_format = job['original']['format']
-      end
+      uri = URI.parse(job['original'])
+      self.original_format = extract_format(uri)
       self.original = download_file(uri)
     end
   end
