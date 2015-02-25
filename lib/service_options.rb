@@ -4,18 +4,9 @@ require 'yaml'
 require 'erb'
 require 'uri'
 require 'active_support/core_ext/hash/indifferent_access'
+require 'system_information'
 
 module ServiceOptions
-
-  def self.env=(e)
-    @env = e
-  end
-
-  def self.env
-    @env ||= (defined?(Rails) && Rails.respond_to?(:env) && Rails.env) ||
-    ENV['RAILS_ENV'] || ENV['APP_ENV'] ||
-    'development'
-  end
 
   def self.root=(r)
     @root = r
@@ -69,7 +60,7 @@ module ServiceOptions
 
   def self.parse_service_options
     so = YAML::load(ERB.new(File.read(file_path)).result).with_indifferent_access
-    so[env].with_indifferent_access if so
+    so[SystemInformation.env].with_indifferent_access if so
   end
 
   def self.storage_provider_for_uri(u)

@@ -2,17 +2,6 @@ require 'test_helper'
 
 class ServiceOptionsTest < ActiveSupport::TestCase
 
-  it 'provides env' do
-    ServiceOptions.env.must_equal 'test'
-  end
-
-  it 'provides env' do
-    ServiceOptions.env = 'foo'
-    ServiceOptions.env.must_equal 'foo'
-    ServiceOptions.env = nil
-    ServiceOptions.env.must_equal 'test'
-  end
-
   it 'provides root path' do
     ServiceOptions.root.wont_be_nil
   end
@@ -39,14 +28,6 @@ class ServiceOptionsTest < ActiveSupport::TestCase
     ServiceOptions.file_path.must_equal 'foo.yml'
     ServiceOptions.file_path = nil
   end
-
-  it 'provides env' do
-    ServiceOptions.env = 'foo'
-    ServiceOptions.env.must_equal 'foo'
-    ServiceOptions.env = nil
-    ServiceOptions.env.must_equal 'test'
-  end
-
 
   it 'gets provider for uri' do
     uri = URI.parse('s3://test.aws.amazon.com/test/test.mp3')

@@ -4,8 +4,8 @@ require 'uri'
 require 'json'
 require 'fog'
 require 'rack'
-require 'service_options'
 require 'system_information'
+require 'service_options'
 
 %W(ftp ia http s3).each{|f| require "concerns/#{f}_files" }
 
@@ -136,7 +136,7 @@ class BaseProcessor
       next unless f
       begin
         f.close
-        File.unlink(f) if ServiceOptions.env == 'production'
+        File.unlink(f) if SystemInformation.env == 'production'
       rescue
         nil
       end
@@ -256,7 +256,7 @@ class BaseProcessor
   def file_schemes
     @_file_schemes ||= begin
       s = ['s3', 'ia', 'ftp', 'http']
-      s << 'file' if ServiceOptions.env != 'production'
+      s << 'file' if SystemInformation.env != 'production'
     end
   end
 
