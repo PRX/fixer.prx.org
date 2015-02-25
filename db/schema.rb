@@ -107,7 +107,7 @@ ActiveRecord::Schema.define(version: 20150217213900) do
   add_index "say_when_jobs", ["next_fire_at", "status"], name: "index_say_when_jobs_on_next_fire_at_and_status", using: :btree
   add_index "say_when_jobs", ["scheduled_type", "scheduled_id"], name: "index_say_when_jobs_on_scheduled_type_and_scheduled_id", using: :btree
 
-  create_table "task_logs", force: :cascade do |t|
+  create_table "task_logs", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "task_id"
     t.integer  "status"
     t.string   "message"
