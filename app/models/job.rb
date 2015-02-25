@@ -16,11 +16,11 @@ class Job < BaseModel
   scope :failed, -> { where(status: Job.statuses[ERROR]) }
 
   def ended?
-    tasks(true).all?{|t| t.ended?}
+    tasks(true).all?{ |t| t.ended? }
   end
 
   def success?
-    tasks(true).all?{|t| t.success?}
+    tasks(true).all?{ |t| t.success? }
   end
 
   def retry?
@@ -37,7 +37,7 @@ class Job < BaseModel
         send_call_back
         retry_on_error
       else
-        logger.debug "job: task_ended: NOT all ended: " + tasks.collect{|t| "#{t.id}:#{t.status}"}.join(', ')
+        logger.debug "job: task_ended: NOT all ended: " + tasks.collect{ |t| "#{t.id}:#{t.status}" }.join(', ')
       end
     end
   end
@@ -72,7 +72,7 @@ class Job < BaseModel
                            retry_count: (retry_count + 1),
                            retry_max:   [(retry_count + 1), retry_max].max)
 
-    tasks.each{|t| t.retry_task(force)}
+    tasks.each{ |t| t.retry_task(force) }
   end
 
   def to_call_back_message
