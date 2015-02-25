@@ -33,17 +33,27 @@ class BaseWorker
   end
 
   def self.publish(queue, message, options={})
-    if worker_lib == 'sidekiq'
-      client_push('queue' => queue, 'class' => self, 'args' => Array[message])
-    elsif worker_lib == 'shoryken'
-      options[:message_attributes] ||= {}
-      options[:message_attributes]['shoryuken_class'] = {
-        string_value: self.to_s,
-        data_type: 'String'
-      }
-      Shoryuken::Client.send_message('queue', message, options)
-    elsif worker_lib == 'local'
-      new.perform(message)
-    end
+    send("#{worker_lib}_publish", queue, message, options)
+  end
+
+  def self.local_publish(queue, message, options)
+    new.perform(message)
+  end
+
+  def self.sidekiq_publish(queue, message, options)
+    client_push('queue' => queue, 'class' => self, 'args' => Array[message])
+  end
+
+  def self.shoryuken_publish(queue, message, options)
+    options[:message_attributes] ||= {}
+    options[:message_attributes]['shoryuken_class'] = {
+      string_value: self.to_s,
+      data_type: 'String'
+    }
+    Shoryuken::Client.send_message(shoryuken_q(queue), message, options)
+  end
+
+  def self.shoryuken_q(queue)
+    "#{SystemInformation.env}_#{queue}"
   end
 end
