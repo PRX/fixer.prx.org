@@ -102,7 +102,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
 
     processor.prepare(task_message)
     processor.process_task(task_message['task'])
-    processor.result_details[:status].must_equal 'complete'
+    processor.result_details[:status].must_equal :complete
     processor.result_details[:message].must_equal 'Test base complete.'
   end
 
@@ -161,7 +161,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
 
     TaskUpdateWorker.stub :publish, "awesome" do
       log = processor.notify_task_processing
-      log[:task_log][:status].must_equal 'processing'
+      log[:task_log][:status].must_equal :processing
     end
   end
 
@@ -206,7 +206,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
 
     TaskUpdateWorker.stub :publish, "superb" do
       log = processor.on_error(err)
-      log[:task_log][:status].must_equal 'error'
+      log[:task_log][:status].must_equal :error
       log[:task_log][:task_id].must_equal '456'
     end
   end

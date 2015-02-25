@@ -54,13 +54,14 @@ class Task < BaseModel
   end
 
   def update_status(state, logged_at)
+    logger.error("update_status for #{id}: #{state} #{logged_at}")
     # if this is not a status that updates (such as info), then skip it
-    return unless STATUS_VALUES.include?(state)
+    return unless STATUS_VALUES.include?(state.to_sym)
 
     with_lock do
       # see if there is already another status that came in that was logged_at > than this one.
-      future_log = task_logs.where('logged_at > ? and status in (?)', logged_at, STATUS_VALUES)
-      update_attribute(:status, state) unless future_log
+      future_log = task_logs.where(status: Task.statuses.keys).where('logged_at > ?', logged_at).exists?
+      self.send("#{state}!") unless future_log
     end
   end
 
@@ -71,16 +72,16 @@ class Task < BaseModel
     self.process_task = true
 
     task_log = task_logs.create(status: RETRYING, message: "retrying task: status: #{status}, force: #{force}", logged_at: Time.now)
-    self.update_attributes(status: RETRYING)
+    self.retrying!
     task_log
   end
 
   def handle_status_changes
-    return if previous_status == status
+    return if previous_status.to_s == status.to_s
 
     logger.debug "task: publish_messages: #{previous_status} != #{status}"
 
-    if process_task && status == CREATED
+    if process_task && created?
       logger.debug "task: publish_messages: insert created log"
       # log create on after_commit
       task_logs.create!(status: CREATED, message: 'created message.', logged_at: Time.now)

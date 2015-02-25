@@ -12,8 +12,8 @@ class Job < BaseModel
   validates_presence_of :job_type, :status, :application_id
   validates_inclusion_of :job_type, in: JOB_TYPES
 
-  scope :incomplete, -> { where(status: [CREATED, ERROR]) }
-  scope :failed, -> { where(status: ERROR) }
+  scope :incomplete, -> { where(status: [Job.statuses[CREATED], Job.statuses[ERROR]]) }
+  scope :failed, -> { where(status: Job.statuses[ERROR]) }
 
   def ended?
     tasks(true).all?{|t| t.ended?}
@@ -29,7 +29,7 @@ class Job < BaseModel
 
   def task_ended(task)
     return if cancelled?
-    # logger.debug "job: task_ended: start"
+    logger.debug "task_ended for job #{id}: task: #{task.id}"
     with_lock do
       if ended?
         logger.debug "job: task_ended: all ended"
@@ -115,7 +115,7 @@ class Job < BaseModel
     job
   end
 
-  def extract_sequence(t)
+  def self.extract_sequence(t)
     if t.keys.first == 'sequence'
       t['sequence']
     elsif t.keys.include?('tasks')
@@ -125,7 +125,7 @@ class Job < BaseModel
     end
   end
 
-  def extract_task(t)
+  def self.extract_task(t)
     if t.keys.first == 'task'
       t['task']
     elsif t.keys.first == 'sequence'
