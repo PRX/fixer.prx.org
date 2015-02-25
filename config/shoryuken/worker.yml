@@ -1,0 +1,8 @@
+---
+:concurrency: <%= ENV['WORKER_COUNT'] || 5 %>
+:delay: <%= ENV['SHORYUKEN_DELAY'] || 5 %>
+:queues:
+  - [<%= SystemInformation.env %>_fixer_p1, 4]
+  - [<%= SystemInformation.env %>_fixer_p2, 3]
+  - [<%= SystemInformation.env %>_fixer_p3, 2]
+  - [<%= SystemInformation.env %>_fixer_p4, 1]
