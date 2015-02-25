@@ -246,7 +246,7 @@ class AudioProcessor < BaseProcessor
   def release_tempfile(tmp)
     if(tmp && tmp.is_a?(Tempfile))
       tmp.close
-      File.unlink(tmp) if ServiceOptions.env == 'production'
+      File.unlink(tmp) if SystemInformation.env == 'production'
     end
   rescue Exception => err
     logger.error "release_wav_tmp: err #{err.inspect}"
