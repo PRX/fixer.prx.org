@@ -1,6 +1,6 @@
 class CreateTaskLogs < ActiveRecord::Migration
   def change
-    create_table :task_logs do |t|
+    create_table :task_logs, id: :uuid, default: 'uuid_generate_v4()' do |t|
       t.uuid      :task_id
       t.integer   :status
       t.string    :message
