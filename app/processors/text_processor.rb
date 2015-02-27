@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'base_processor'
 require 'open_calais'
 require 'yahoo_content_analysis'
 require 'stringex'

@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'base_processor'
 require 'uri'
 require 'mini_magick'
 

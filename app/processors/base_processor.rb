@@ -4,6 +4,7 @@ require 'uri'
 require 'json'
 require 'fog'
 require 'rack'
+require 'fixer_constants'
 require 'system_information'
 require 'service_options'
 

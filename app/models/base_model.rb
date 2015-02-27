@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'fixer_constants'
+
 class BaseModel < ActiveRecord::Base
 
   self.include_root_in_json = true

@@ -1,3 +1,4 @@
+require 'fixer_constants'
 require 'system_information'
 
 namespace :sqs do

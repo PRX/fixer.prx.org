@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'base_processor'
+
 class TestProcessor < BaseProcessor
 
   task_types ['echo']

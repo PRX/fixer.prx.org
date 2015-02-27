@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'base_processor'
+
 class FileProcessor < BaseProcessor
 
   task_types ['copy']

@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'base_processor'
 require 'google_speech'
 
 class AudioProcessor < BaseProcessor
