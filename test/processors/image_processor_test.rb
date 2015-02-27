@@ -26,11 +26,5 @@ class ImageProcessorTest < ActiveSupport::TestCase
       processor.on_message(msg)
       processor.result_details[:info][:file].must_match /JPEG/
     end
-
-    it "should resize an http file" do
-      msg[:task][:job][:original] = "http://s3.amazonaws.com/production.mediajoint.prx.org/public/comatose_files/4625/prx-logo_large.png"
-      processor.on_message(msg)
-      processor.result_details[:info][:file].must_match /PNG/
-    end
   end
 end

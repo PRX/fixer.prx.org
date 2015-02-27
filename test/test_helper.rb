@@ -1,4 +1,5 @@
 ENV['RAILS_ENV'] ||= 'test'
+ENV['WORKER_LIB'] = 'local'
 
 require 'simplecov'
 SimpleCov.start 'rails'
