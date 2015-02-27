@@ -4,7 +4,7 @@ class Job < BaseModel
   enum status: STATUS_VALUES
 
   belongs_to :application, class_name: 'Doorkeeper::Application'
-  has_many :tasks
+  has_many :tasks, -> { order(position: :desc) }
   has_one :web_hook, as: :informer
 
   before_validation(on: :create) { self.status = CREATED }

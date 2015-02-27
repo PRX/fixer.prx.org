@@ -7,7 +7,7 @@ class Task < BaseModel
 
   belongs_to :sequence
 
-  has_many :task_logs
+  has_many :task_logs, -> { order(logged_at: :asc) }
 
   serialize :options
 
