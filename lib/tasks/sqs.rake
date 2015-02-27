@@ -1,14 +1,20 @@
 require 'fixer_constants'
 require 'system_information'
 
+require 'aws-sdk-core'
+require 'aws-sdk-resources'
+
 namespace :sqs do
 
   desc 'Create required SQS queues'
   task :create => :environment do
 
     default_options = {
-      visibility_timeout: 1.hour.seconds.to_i,
-      message_retention_period: 1.week.seconds.to_i
+      'DelaySeconds' => "0",
+      'MaximumMessageSize' => "#{(256 * 1024)}",
+      'VisibilityTimeout' => "#{1.hour.seconds.to_i}",
+      'ReceiveMessageWaitTimeSeconds' => "0",
+      'MessageRetentionPeriod' => "#{1.week.seconds.to_i}"
     }
 
     # create the update queue and DLQ
@@ -22,19 +28,31 @@ namespace :sqs do
     end
   end
 
-  def create_queue(queue, dlq, options)
-    sqs = AWS::SQS.new
-    options = options.merge(redrive_policy: %Q{{"maxReceiveCount":"10", "deadLetterTargetArn":"#{dlq.arn}"}"})
+  def create_queue(queue, dlq, options={})
+    sqs_resource = Aws::SQS::Resource.new
     q_name = qn(queue)
-    puts "create #{q_name}: #{options.inspect}"
-    sqs.queues.create(q_name, options)
+    q = sqs_resource.get_queue_by_name(queue_name: q_name) rescue nil
+    if q
+      puts "Queue '#{queue}'' already exists: #{q.inspect}"
+    else
+      options = options.merge('RedrivePolicy' => %Q{{"maxReceiveCount":"10", "deadLetterTargetArn":"#{dlq.arn}"}"})
+      puts "create #{q_name}: #{options.inspect}"
+      q = sqs_resource.create_queue(queue_name: q_name, attributes: options)
+    end
+    q
   end
 
   def create_dlq(queue, options)
-    sqs = AWS::SQS.new
+    sqs_resource = Aws::SQS::Resource.new
     dlq_name = "#{qn(queue)}_failures"
-    puts "create DLQ #{dlq_name}: #{options.inspect}"
-    sqs.queues.create(dlq_name, options)
+    dlq = sqs_resource.get_queue_by_name(queue_name: dlq_name) rescue nil
+    if dlq
+      puts "DLQ '#{queue}'' already exists: #{dlq.inspect}"
+    else
+      puts "create DLQ #{dlq_name}: #{options.inspect}"
+      dlq = sqs_resource.create_queue(queue_name: dlq_name, attributes: options)
+    end
+    dlq
   end
 
   def qn(n)
