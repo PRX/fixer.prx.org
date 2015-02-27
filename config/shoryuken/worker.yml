@@ -1,8 +1,9 @@
+<% env = ENV['APP_ENV'] || ENV['RAILS_ENV'] || 'development' %>
 ---
-:concurrency: <%= ENV['WORKER_COUNT'] || 5 %>
-:delay: <%= ENV['SHORYUKEN_DELAY'] || 5 %>
-:queues:
-  - [<%= SystemInformation.env %>_fixer_p1, 4]
-  - [<%= SystemInformation.env %>_fixer_p2, 3]
-  - [<%= SystemInformation.env %>_fixer_p3, 2]
-  - [<%= SystemInformation.env %>_fixer_p4, 1]
+concurrency: <%= ENV['WORKER_COUNT'] || 5 %>
+delay: <%= ENV['SHORYUKEN_DELAY'] || 5 %>
+queues:
+  - [<%= env %>_fixer_p1, 4]
+  - [<%= env %>_fixer_p2, 3]
+  - [<%= env %>_fixer_p3, 2]
+  - [<%= env %>_fixer_p4, 1]
