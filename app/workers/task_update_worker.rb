@@ -4,7 +4,7 @@ require 'base_worker'
 
 class TaskUpdateWorker < BaseWorker
 
-  def perform(log)
+  def process(log)
     ActiveRecord::Base.connection_pool.with_connection do
       log = log.with_indifferent_access
       task_log = log[:task_log].with_indifferent_access

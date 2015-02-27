@@ -5,8 +5,9 @@ require 'excon'
 
 class WebHookWorker < BaseWorker
 
-  def perform(web_hook)
+  def process(web_hook)
     logger.info "WebHookWorker start: #{web_hook.inspect}"
+
     web_hook = web_hook.with_indifferent_access
     web_hook = web_hook[:web_hook]
 

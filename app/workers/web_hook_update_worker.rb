@@ -4,7 +4,7 @@ require 'base_worker'
 
 class WebHookUpdateWorker < BaseWorker
 
-  def perform(log)
+  def process(log)
     ActiveRecord::Base.connection_pool.with_connection do
       log = log.with_indifferent_access
       web_hook_log = log[:web_hook].with_indifferent_access
