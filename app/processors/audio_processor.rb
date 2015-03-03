@@ -77,6 +77,10 @@ class AudioProcessor < BaseProcessor
     { data_count: data.size }
   end
 
+  def loudness_audio
+    completed_with AudioMonster.loudness_info(source.path)
+  end
+
   # task methods of "#{task_type}_#{job_type}" naming standard
   def transcode_audio
     format = options['format'].to_s
@@ -195,7 +199,9 @@ class AudioProcessor < BaseProcessor
 
   # helper methods
   def audio_info(format=destination_format, file=destination)
-    AudioMonster.send("info_for_#{format}".to_sym, file.path)
+    info = AudioMonster.send("info_for_#{format}".to_sym, file.path) || {}
+    info[:loudness] = AudioMonster.loudness_info(file.path)
+    info
   end
 
   def transcode_to(format, opts)

@@ -51,7 +51,7 @@ GEM
     addressable (2.3.7)
     ansi (1.5.0)
     arel (6.0.0)
-    audio_monster (1.0.2)
+    audio_monster (1.0.3)
       activesupport
       mimemagic
       mp3info

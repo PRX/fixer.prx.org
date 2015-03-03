@@ -12,6 +12,27 @@ class AudioProcessorTest < ActiveSupport::TestCase
     processor.symbolize_options({'foo' => 'bar'})[:foo].must_equal 'bar'
   end
 
+  describe 'analyze_audio' do
+
+    let(:msg) {
+      {
+        task: {
+          id: 'guid3',
+          task_type: 'analyze',
+          label: 'scope',
+          job: { id: 'guid3', job_type: 'audio', status: 'created', original: "file://#{in_file('test_long.wav')}" },
+          options: { start: '10', length: '5' }
+        }
+      }.with_indifferent_access
+    }
+
+    it 'should return analysis with loudness' do
+      processor.on_message(msg)
+      processor.result_details[:info][:length].to_i.must_equal 48
+      processor.result_details[:info][:loudness][:loudness][:integrated_loudness][:i].must_equal -18.5
+    end
+  end
+
   describe 'slice_audio' do
 
     let(:msg) {
