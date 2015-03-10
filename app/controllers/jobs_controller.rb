@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 class JobsController < ApplicationController
+  before_action :authenticate_user!
+
   before_action :set_job, only: [:show, :edit, :update, :destroy]
 
   respond_to :html
