@@ -70,6 +70,8 @@ gem 'yahoo_content_analysis', '~> 0.1'
 
 gem 'stringex'
 
+gem 'ruby-audio', github: 'PRX/ruby-audio'
+
 gem 'waveformjson'
 
 gem 'mimemagic'
@@ -79,6 +81,7 @@ gem 'mini_magick'
 gem 'say_when', '~> 1.0'
 
 group :development, :test do
+  gem 'rake'
   # env vars for config and credentials
   gem 'dotenv-rails'
 
