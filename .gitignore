@@ -12,6 +12,11 @@
 !/log/.keep
 /tmp
 
+# we use .env in development, and .env.production for docker-compose
 .env*
 
+# code coverage output
 coverage/*
+
+# build used in making docker images
+build/*
