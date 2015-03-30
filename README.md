@@ -113,6 +113,37 @@ There is also a default 'local' value, for development and testing, where tasks 
 Why not ActiveJob? We are using priorities, which requires specifying which queue a job ends up on, and that is not possible with the ActiveJob interface.
 
 
+## Containers
+
+In the `container` folder are scripts and files to build docker images for fixer.
+
+`container/build.sh` can be called from the project dir to build the images.
+
+There are three images defined under `container/images/`
+- `master` is the main web application, using phusion/passenger ruby images as base, and running nginx
+- `master_processor` is the image to run proecss to listen for messages to update the master
+- `worker` is an image defining a worker processs listening to task messages to work on
+- `docker-compose.yml` defines how these images relate to a postgres db
+
+Within each image folder are supporting configuration files and templates.
+
+Image builds are done by copying the correct files into the `build` folder.
+This way only the specific required files are built for a particular image.
+
+### Using compose
+
+There is a `container/docker-compose.yml` file that specifies a postgres db, and the app images.
+This is used for building, but can also be used for running instances.
+
+Add a '.env.production' file to the app root to be used when running images.
+No `.env*` file will be copied to the `build` dir, and so will not be included in images.
+
+### Building
+
+- `container/build.sh` builds all the images
+- `container/build.sh up` will build and run
+- `container/build.sh clean` will delete the `build` dir
+
 ## Copyright
 &copy; Copyright PRX, Public Radio Exchange https://www.prx.org
 
