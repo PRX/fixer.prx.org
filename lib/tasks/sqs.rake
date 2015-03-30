@@ -7,7 +7,9 @@ require 'aws-sdk-resources'
 namespace :sqs do
 
   desc 'Create required SQS queues'
-  task :create => :environment do
+  task :create, [:env] => [:environment] do |t, args|
+
+    env = args[:env] || Rails.env
 
     default_options = {
       'DelaySeconds' => "0",
@@ -18,33 +20,32 @@ namespace :sqs do
     }
 
     # create the update queue and DLQ
-    update_dlq = create_dlq('fixer_update', default_options)
-    create_queue('fixer_update', update_dlq, default_options)
+    update_dlq = create_dlq("#{env}_fixer_update", default_options)
+    create_queue("#{env}_fixer_update", update_dlq, default_options)
 
     # create the priority queues
-    dlq = create_dlq('fixer', default_options)
+    dlq = create_dlq("#{env}_fixer", default_options)
     (1..FixerConstants::MAX_PRIORITY).each do |p|
-      create_queue("fixer_p#{p}", dlq, default_options)
+      create_queue("#{env}_fixer_p#{p}", dlq, default_options)
     end
   end
 
   def create_queue(queue, dlq, options={})
     sqs_resource = Aws::SQS::Resource.new
-    q_name = qn(queue)
-    q = sqs_resource.get_queue_by_name(queue_name: q_name) rescue nil
+    q = sqs_resource.get_queue_by_name(queue_name: queue) rescue nil
     if q
       puts "Queue '#{queue}'' already exists: #{q.inspect}"
     else
       options = options.merge('RedrivePolicy' => %Q{{"maxReceiveCount":"10", "deadLetterTargetArn":"#{dlq.arn}"}"})
-      puts "create #{q_name}: #{options.inspect}"
-      q = sqs_resource.create_queue(queue_name: q_name, attributes: options)
+      puts "create #{queue}: #{options.inspect}"
+      q = sqs_resource.create_queue(queue_name: queue, attributes: options)
     end
     q
   end
 
   def create_dlq(queue, options)
     sqs_resource = Aws::SQS::Resource.new
-    dlq_name = "#{qn(queue)}_failures"
+    dlq_name = "#{queue}_failures"
     dlq = sqs_resource.get_queue_by_name(queue_name: dlq_name) rescue nil
     if dlq
       puts "DLQ '#{queue}'' already exists: #{dlq.inspect}"
@@ -53,9 +54,5 @@ namespace :sqs do
       dlq = sqs_resource.create_queue(queue_name: dlq_name, attributes: options)
     end
     dlq
-  end
-
-  def qn(n)
-    "#{SystemInformation.env}_#{n}"
   end
 end
