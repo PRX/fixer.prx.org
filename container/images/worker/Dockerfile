@@ -78,6 +78,7 @@ RUN chown -R app:app $APP_HOME
 # add runit for the worker process
 RUN mkdir /etc/service/worker
 ADD worker.sh /etc/service/worker/run
+RUN chmod +x /etc/service/worker/run
 
 
 ### Clean
