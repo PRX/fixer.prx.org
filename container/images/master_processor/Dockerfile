@@ -69,7 +69,7 @@ RUN chown -R app:app $APP_HOME
 # add runit for the worker process
 RUN mkdir /etc/service/master_processor
 ADD master_processor.sh /etc/service/master_processor/run
-
+RUN chmod +x /etc/service/master_processor/run
 
 ### Clean
 
