@@ -1,5 +1,7 @@
-require 'dotenv'
-Dotenv.load
+if ENV['RAILS_ENV'] == 'development'
+  require 'dotenv'
+  Dotenv.load
+end
 
 app_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 ENV['APP_ROOT'] ||= app_root
