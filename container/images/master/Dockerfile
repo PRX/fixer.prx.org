@@ -44,7 +44,6 @@ WORKDIR $APP_HOME
 ADD Gemfile $APP_HOME/
 ADD Gemfile.lock $APP_HOME/
 RUN chown -R app:app $APP_HOME
-
 RUN sudo -u app bundle install --deployment --without development test
 
 ADD . $APP_HOME
@@ -52,7 +51,8 @@ RUN chown -R app:app $APP_HOME
 
 # add say_when to runit
 RUN mkdir /etc/service/say_when
-ADD say_when.sh /etc/service/worker/run
+ADD say_when.sh /etc/service/say_when/run
+RUN chmod +x /etc/service/say_when/run
 
 # Nginx and Passenger are disabled by default. Enable them like so:
 RUN rm -f /etc/service/nginx/down
