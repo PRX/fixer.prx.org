@@ -84,4 +84,4 @@ test:
 #
 production:
   <<: *default
-  database: fixer_prx_org_production
+  database: <%= ENV['DB_ENV_POSTGRES_DATABASE'] %>
