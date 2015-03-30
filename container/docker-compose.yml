@@ -1,0 +1,22 @@
+master:
+  build: build/master
+  ports:
+    - "80:80"
+  links:
+    - db
+  env_file:
+    - .env.production
+masterprocessor:
+  build: build/master_processor
+  links:
+    - db
+  env_file:
+    - .env.production
+worker:
+  build: build/worker
+  env_file:
+    - .env.production
+db:
+  image: postgres
+  ports:
+    - "5432:5432"
