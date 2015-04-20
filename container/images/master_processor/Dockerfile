@@ -7,6 +7,11 @@ MAINTAINER PRX <sysadmin@prx.org>
 ENV HOME /root
 ENV RAILS_ENV production
 
+# Add a startup script for the app
+RUN mkdir -p /etc/my_init.d
+COPY app_init.sh /etc/my_init.d/app_init.sh
+RUN chmod +x /etc/my_init.d/app_init.sh
+
 # Use baseimage-docker's init process.
 CMD ["/sbin/my_init"]
 
@@ -51,12 +56,21 @@ RUN apt-get install -y zlib1g-dev
 # libsndfile for ruby_audio gem (waveformjson depends on it)
 RUN apt-get install -y libsndfile1-dev
 
+# js runtime
+RUN apt-get install -y nodejs
+
+
+### Clean
+
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 ### Deploy Fixer
 
 # application home
 ENV APP_HOME /home/app/webapp
-RUN mkdir $APP_HOME
+RUN mkdir -p $APP_HOME
 RUN chown -R app:app $APP_HOME
 WORKDIR $APP_HOME
 ADD Gemfile $APP_HOME/
@@ -67,11 +81,6 @@ ADD . $APP_HOME
 RUN chown -R app:app $APP_HOME
 
 # add runit for the worker process
-RUN mkdir /etc/service/master_processor
+RUN mkdir -p /etc/service/master_processor
 ADD master_processor.sh /etc/service/master_processor/run
 RUN chmod +x /etc/service/master_processor/run
-
-### Clean
-
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
