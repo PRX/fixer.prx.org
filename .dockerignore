@@ -7,3 +7,5 @@ log/*
 tmp/*
 coverage/*
 test
+*ssl.crt
+*ssl.key
