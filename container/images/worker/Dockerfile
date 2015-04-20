@@ -60,6 +60,15 @@ RUN apt-get install -y imagemagick libsox-fmt-all lame mp3val sox madplay twolam
 # install ffmpeg
 RUN /fixer_scripts/ffmpeg.sh
 
+# js runtime
+RUN apt-get install -y nodejs
+
+
+### Clean
+
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 ### Deploy Fixer
 
@@ -79,9 +88,3 @@ RUN chown -R app:app $APP_HOME
 RUN mkdir /etc/service/worker
 ADD worker.sh /etc/service/worker/run
 RUN chmod +x /etc/service/worker/run
-
-
-### Clean
-
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
