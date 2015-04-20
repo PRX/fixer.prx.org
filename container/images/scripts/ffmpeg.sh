@@ -5,7 +5,31 @@ set -e
 source /fixer_scripts/buildconfig
 set -x
 
-minimal_apt_get_install subversion make cmake git gcc-4.8 gfortran-4.8 cpp-4.8 g++-4.8 yasm autoconf automake nasm libtool vim augeas-tools augeas-lenses curl software-properties-common python-software-properties bison wget re2c lemon ruby
+minimal_apt_get_install \
+  subversion \
+  make \
+  cmake \
+  git \
+  gcc-4.8 \
+  gfortran-4.8 \
+  cpp-4.8 \
+  g++-4.8 \
+  yasm \
+  autoconf \
+  automake \
+  nasm \
+  libtool \
+  vim \
+  augeas-tools \
+  augeas-lenses \
+  curl \
+  software-properties-common \
+  python-software-properties \
+  bison \
+  wget \
+  re2c \
+  lemon \
+  ruby
 
 add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ trusty universe multiverse" && add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ trusty-updates universe multiverse"
 
@@ -13,7 +37,101 @@ apt-get update &&  apt-get -y upgrade
 
 DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 
-minimal_apt_get_install yamdi libx264-dev x264 libgnutls-dev libass-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer-plugins-good1.0-0 libgstreamer-plugins-good1.0-dev libgstreamer1.0-0 libgstreamer1.0-dev libgstreamer-plugins-bad1.0-0 libgstreamer-plugins-bad1.0-dev libgstreamer-vaapi1.0-0 libgstreamer-vaapi1.0-dev libcrypto++-dev libcrypto++-utils libcrypto++9 libssl-dev libpcre3-dev libpcre++-dev libpcre3 libpcrecpp0 libbz2-dev libcurl4-openssl-dev libxpm-dev libfreetype6-dev libfreetype6 t1lib-bin libt1-dev t1utils libmcrypt4 libmcrypt-dev libtomcrypt-dev libtomcrypt0 mcrypt libxslt1.1 libxslt1-dev libgmp-dev libgmp3-dev libvpx-dev vpx-tools libfaad-dev libfaac-dev libopus-dev opus-tools libjpeg-turbo8 libjpeg-turbo8-dev libjpeg-turbo-progs libturbojpeg libopenjpeg2 libopenjpeg-dev openjpeg-tools libmpeg2-4-dev libmpeg2-4 mp4v2-utils libmp4v2-2 libmp4v2-dev libwebp-dev libwebp5 libwebpdemux1 libwebpmux1 libgsm1-dev libgsmme-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libopencore-amrnb0 libopencore-amrwb0 libpulse-dev librtmp-dev libschroedinger-1.0-0 libschroedinger-dev libspeex-dev libspeex1 libspeexdsp-dev libspeexdsp1 libtheora-dev libtwolame-dev libvo-aacenc-dev libvo-amrwbenc-dev libvorbis-dev libxvidcore-dev  libfdk-aac-dev libfdk-aac0 libfaad2 libfaad-dev faad imagemagick libmagick++-dev libmagickwand5 librsvg2-bin libfftw3-bin libfftw3-dev
+minimal_apt_get_install \
+  yamdi \
+  libx264-dev \
+  x264 \
+  libgnutls-dev \
+  libass-dev \
+  libgstreamer-plugins-base1.0-0 \
+  libgstreamer-plugins-base1.0-dev \
+  libgstreamer-plugins-good1.0-0 \
+  libgstreamer-plugins-good1.0-dev \
+  libgstreamer1.0-0 \
+  libgstreamer1.0-dev \
+  libgstreamer-plugins-bad1.0-0 \
+  libgstreamer-plugins-bad1.0-dev \
+  libgstreamer-vaapi1.0-0 \
+  libgstreamer-vaapi1.0-dev \
+  libcrypto++-dev \
+  libcrypto++-utils \
+  libcrypto++9 \
+  libssl-dev \
+  libpcre3-dev \
+  libpcre++-dev \
+  libpcre3 \
+  libpcrecpp0 \
+  libbz2-dev \
+  libcurl4-openssl-dev \
+  libxpm-dev \
+  libfreetype6-dev \
+  libfreetype6 \
+  t1lib-bin \
+  libt1-dev \
+  t1utils \
+  libmcrypt4 \
+  libmcrypt-dev \
+  libtomcrypt-dev \
+  libtomcrypt0 \
+  mcrypt \
+  libxslt1.1 \
+  libxslt1-dev \
+  libgmp-dev \
+  libgmp3-dev \
+  libvpx-dev \
+  vpx-tools \
+  libfaad-dev \
+  libfaac-dev \
+  libopus-dev \
+  opus-tools \
+  libjpeg-turbo8 \
+  libjpeg-turbo8-dev \
+  libjpeg-turbo-progs \
+  libturbojpeg \
+  libopenjpeg2 \
+  libopenjpeg-dev \
+  openjpeg-tools \
+  libmpeg2-4-dev \
+  libmpeg2-4 \
+  mp4v2-utils \
+  libmp4v2-2 \
+  libmp4v2-dev \
+  libwebp-dev \
+  libwebp5 \
+  libwebpdemux1 \
+  libwebpmux1 \
+  libgsm1-dev \
+  libgsmme-dev \
+  libmp3lame-dev \
+  libopencore-amrnb-dev \
+  libopencore-amrwb-dev \
+  libopencore-amrnb0 \
+  libopencore-amrwb0 \
+  libpulse-dev \
+  librtmp-dev \
+  libschroedinger-1.0-0 \
+  libschroedinger-dev \
+  libspeex-dev \
+  libspeex1 \
+  libspeexdsp-dev \
+  libspeexdsp1 \
+  libtheora-dev \
+  libtwolame-dev \
+  libvo-aacenc-dev \
+  libvo-amrwbenc-dev \
+  libvorbis-dev \
+  libxvidcore-dev \
+  libfdk-aac-dev \
+  libfdk-aac0 \
+  libfaad2 \
+  libfaad-dev \
+  faad \
+  imagemagick \
+  libmagick++-dev \
+  libmagickwand5 \
+  librsvg2-bin \
+  libfftw3-bin \
+  libfftw3-dev
 
 #ffmpeg
 cd /tmp
