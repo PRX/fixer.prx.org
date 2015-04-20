@@ -1,9 +1,10 @@
 # Fixer
 
 Application providing asynchronous media file processing.
+
 Jobs are submitted via a REST API to the master application that delegates processing to any number of worker processes using messages on prioritized queues.  Workers process files and save the results to number of destinations, updating the master, and sending webhook notifications.
 
-## Install
+## Installation
 
 ### Install basics
 * Ruby (tested on 2.1)
@@ -54,7 +55,7 @@ rake db:migrate
 ## Description
 
 Fixer was designed as an application to process media files.
-A user create a an application with a set of oAuth credentials (id and secret).
+A user creates an application with a set of oAuth credentials (id and secret).
 Using these credentials, jobs can be created for fixer to work on.
 
 Each job has:
@@ -143,6 +144,15 @@ No `.env*` file will be copied to the `build` dir, and so will not be included i
 - `container/build.sh` builds all the images
 - `container/build.sh up` will build and run
 - `container/build.sh clean` will delete the `build` dir
+
+### Using
+
+The containers rely on ENV values.
+
+For example, a new user will be created based on the following ENV vars during `master` image start:
+
+bundle exec rake user:create FIXER_USER_EMAIL=andrew@somedomain.com FIXER_USER_PASSWORD=password
+
 
 ## Copyright
 &copy; Copyright PRX, Public Radio Exchange https://www.prx.org
