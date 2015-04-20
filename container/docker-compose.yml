@@ -3,8 +3,11 @@ master:
   env_file: .env.production
   ports:
     - "80:80"
+    - "443:443"
   links:
     - db
+  volumes:
+    - "~/fixer/tls:/home/app/tls"
 masterprocessor:
   build: build/master_processor
   env_file: .env.production
