@@ -56,8 +56,14 @@ _prepare_image() {
   cp -a container/images/$image_name/ $image_build_dir
 }
 
+_prepare_container_files() {
+  mkdir -p ~/fixer/tls
+  cp -a container/tls/ ~/fixer/tls
+}
+
 _build() {
   _prepare
+  _prepare_container_files
   _prepare_image master
   _prepare_image master_processor
   _prepare_image worker
@@ -76,3 +82,19 @@ elif [ "$1" = "up" ]; then
 else
   _build
 fi
+
+
+# Add in the ssl cert and key generation
+# openssl req \
+#   -new \
+#   -newkey rsa:2048 \
+#   -sha256 \
+#   -days 3650 \
+#   -nodes \
+#   -x509 \
+#   -keyout container/tls/ssl.key \
+#   -out container/tls/ssl.crt \
+#   -config container/tls/openssl.cnf
+
+
+# docker rmi $(docker images | grep "^<none>" | awk '{ print $3 }')
