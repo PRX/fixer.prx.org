@@ -1,7 +1,9 @@
 # encoding: utf-8
 
 class JobsController < ApplicationController
-  before_action :set_job, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+
+  before_action :set_job, only: [:show, :edit, :update, :destroy, :retry]
 
   respond_to :html
 
@@ -42,12 +44,20 @@ class JobsController < ApplicationController
     respond_with(@job)
   end
 
-  private
-    def set_job
-      @job = Job.find(params[:id])
-    end
+  # POST /jobs/1/retry
+  # POST /jobs/1/retry.xml
+  def retry
+    @job.retry(true)
+    respond_with(@job)
+  end
 
-    def job_params
-      params[:job]
-    end
+  private
+
+  def set_job
+    @job = Job.find(params[:id])
+  end
+
+  def job_params
+    params[:job]
+  end
 end

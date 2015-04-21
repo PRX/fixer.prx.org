@@ -258,6 +258,7 @@ class BaseProcessor
     @_file_schemes ||= begin
       s = ['s3', 'ia', 'ftp', 'http']
       s << 'file' if SystemInformation.env != 'production'
+      s
     end
   end
 

@@ -38,14 +38,13 @@ class WebHookWorker < BaseWorker
   end
 
   def http_execute(uri, data, options={})
-    connection = Excon.new(uri.to_s)
+    connection = Excon.new(uri.to_s, ssl_verify_peer: false )
     request = {
       method: options[:method] || :post,
       headers: options[:headers] || {},
       expects: (200..207).to_a,
       idempotent: !options[:no_retry],
-      retry_limit: (options.key?(:retry_max) ? options[:retry_max].to_i : 6),
-      ssl_verify_peer: false
+      retry_limit: (options.key?(:retry_max) ? options[:retry_max].to_i : 6)
     }
 
     if [:post, :put, :patch].include?(request[:method])
