@@ -1,9 +1,10 @@
 # Fixer
 
 Application providing asynchronous media file processing.
+
 Jobs are submitted via a REST API to the master application that delegates processing to any number of worker processes using messages on prioritized queues.  Workers process files and save the results to number of destinations, updating the master, and sending webhook notifications.
 
-## Install
+## Installation
 
 ### Install basics
 * Ruby (tested on 2.1)
@@ -54,7 +55,7 @@ rake db:migrate
 ## Description
 
 Fixer was designed as an application to process media files.
-A user create a an application with a set of oAuth credentials (id and secret).
+A user creates an application with a set of oAuth credentials (id and secret).
 Using these credentials, jobs can be created for fixer to work on.
 
 Each job has:
@@ -111,6 +112,46 @@ By setting the `WORKER_LIB` you can choose to use either 'shoryken' or 'sidekiq'
 There is also a default 'local' value, for development and testing, where tasks are called synchronously - no messaging or worker process is used at all.
 
 Why not ActiveJob? We are using priorities, which requires specifying which queue a job ends up on, and that is not possible with the ActiveJob interface.
+
+
+## Containers
+
+In the `container` folder are scripts and files to build docker images for fixer.
+
+`container/build.sh` can be called from the project dir to build the images.
+
+There are three images defined under `container/images/`
+- `master` is the main web application, using phusion/passenger ruby images as base, and running nginx
+- `master_processor` is the image to run proecss to listen for messages to update the master
+- `worker` is an image defining a worker processs listening to task messages to work on
+- `docker-compose.yml` defines how these images relate to a postgres db
+
+Within each image folder are supporting configuration files and templates.
+
+Image builds are done by copying the correct files into the `build` folder.
+This way only the specific required files are built for a particular image.
+
+### Using compose
+
+There is a `container/docker-compose.yml` file that specifies a postgres db, and the app images.
+This is used for building, but can also be used for running instances.
+
+Add a '.env.production' file to the app root to be used when running images.
+No `.env*` file will be copied to the `build` dir, and so will not be included in images.
+
+### Building
+
+- `container/build.sh` builds all the images
+- `container/build.sh up` will build and run
+- `container/build.sh clean` will delete the `build` dir
+
+### Using
+
+The containers rely on ENV values.
+
+For example, a new user will be created based on the following ENV vars during `master` image start:
+
+bundle exec rake user:create FIXER_USER_EMAIL=andrew@somedomain.com FIXER_USER_PASSWORD=password
 
 
 ## Copyright

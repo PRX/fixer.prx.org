@@ -29,7 +29,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
     it 'should return analysis with loudness' do
       processor.on_message(msg)
       processor.result_details[:info][:length].to_i.must_equal 48
-      processor.result_details[:info][:loudness][:loudness][:integrated_loudness][:i].must_equal -18.5
+      processor.result_details[:info][:loudness][:integrated_loudness][:i].must_equal -18.5
     end
   end
 

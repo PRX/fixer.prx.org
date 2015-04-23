@@ -20,6 +20,10 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV['DATABASE_POOL_SIZE'] %>
+  user: <%= ENV['DB_ENV_POSTGRES_USER'] %>
+  password: <%= ENV['DB_ENV_POSTGRES_PASSWORD'] %>
+  host: <%= ENV['DB_PORT_5432_TCP_ADDR'] %>
+  port: <%= ENV['DB_PORT_5432_TCP_PORT'] %>
 
 development:
   <<: *default
@@ -80,4 +84,4 @@ test:
 #
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  database: <%= ENV['DB_ENV_POSTGRES_DATABASE'] %>

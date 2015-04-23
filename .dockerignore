@@ -1,0 +1,11 @@
+*.DS_Store
+.powder
+Guardfile
+env-example
+.env*
+log/*
+tmp/*
+coverage/*
+test
+*ssl.crt
+*ssl.key
