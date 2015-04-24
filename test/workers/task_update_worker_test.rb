@@ -3,7 +3,12 @@ require 'test_helper'
 class TaskUpdateWorkerTest < ActiveSupport::TestCase
 
   before {
-    ENV['WORKER_LIB'] = 'local'
+    ENV['WORKER_LIB'] = 'inline'
+    ActiveJob::Base.queue_adapter = :inline
+  }
+
+  after {
+    ActiveJob::Base.queue_adapter = :test
   }
 
   let(:job) { Job.create!(job_type: 'audio', priority: 1, application_id: 1) }
@@ -21,11 +26,11 @@ class TaskUpdateWorkerTest < ActiveSupport::TestCase
         },
       }
     }
-    JSON.parse(l.to_json)
+    l.to_json
   end
 
   it 'calls worker perform' do
-    log = TaskUpdateWorker.publish('test-queue', msg)
+    log = TaskUpdateWorker.new.perform(msg)
     log.must_be_instance_of TaskLog
     log.task_id.must_equal task.id
     log.status.must_equal 'processing'

@@ -1,5 +1,6 @@
+<% env = ENV['APP_ENV'] || ENV['RAILS_ENV'] || 'development' %>
 ---
 :concurrency: <%= ENV['WORKER_COUNT'] || 5 %>
 :pidfile: tmp/pids/sidekiq_master.pid
 :queues:
-  - fixer_update
+  - <%= env %>_fixer_update
