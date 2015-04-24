@@ -58,7 +58,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
       message: 'created'
     }
 
-    TaskUpdateWorker.stub :publish, 'cool' do
+    TaskUpdateWorker.stub :perform_later, 'cool' do
       log = processor.publish_update(task_log: task_log)
       log[:task_log][:status].must_equal 'created'
     end
@@ -159,7 +159,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
   it 'updates when processing starts' do
     processor.task = { id: '123' }
 
-    TaskUpdateWorker.stub :publish, "awesome" do
+    TaskUpdateWorker.stub :perform_later, "awesome" do
       log = processor.notify_task_processing
       log[:task_log][:status].must_equal :processing
     end
@@ -169,7 +169,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
     processor.task = { 'id' => '345' }
     processor.result_details = {status: 'test'}
 
-    TaskUpdateWorker.stub :publish, "superb" do
+    TaskUpdateWorker.stub :perform_later, "superb" do
       log = processor.update_task
       log[:task_log][:status].must_equal 'test'
       log[:task_log][:task_id].must_equal '345'
@@ -204,7 +204,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
     processor.task = { 'id' => '456' }
     begin; raise 'fail!'; rescue; err = $!; end
 
-    TaskUpdateWorker.stub :publish, "superb" do
+    TaskUpdateWorker.stub :perform_later, "superb" do
       log = processor.on_error(err)
       log[:task_log][:status].must_equal :error
       log[:task_log][:task_id].must_equal '456'
