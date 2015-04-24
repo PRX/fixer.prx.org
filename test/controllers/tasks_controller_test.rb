@@ -1,9 +1,14 @@
 require 'test_helper'
 
 class TasksControllerTest < ActionController::TestCase
+
   setup do
-    @job = Job.create(job_type: 'audio', priority: 1, application_id: 1)
+    @user = User.create!(email: 'test@prx.org', password: 'foobarpassword')
+    @application = Doorkeeper::Application.create(name: 'test', owner: @user, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
+    @job = Job.create(job_type: 'audio', priority: 1, application_id: @application.id)
     @task = Task.create!(job_id: @job.id)
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in @user
   end
 
   test "should get index" do
