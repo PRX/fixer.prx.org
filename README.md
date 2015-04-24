@@ -105,14 +105,48 @@ For testing purposes (i.e. disabled in production), the 'file://' scheme is supp
 When the master receives an update, it always updates its record of the status of the task and overall job.
 can schedule a retries on failure, and initiates callbacks via webhooks or  emails.  Callbacks can be specified for each task, a sequence, or a job. For example, if there is a callback on the job, callbacks will only occur when the entire job is complete.  If the callback is on a task, then only changes and completion of that task will cause a callback.
 
-### Worker Library: `sidekiq` || `shoryuken` || `local`
+### Worker Library: `sidekiq` || `shoryuken` || `inline`
+
+Fixer used `ActiveJob` which abstracts which worker/queuing library is used. It has been tested with `shoryuken` and `sidekiq` and includes initializers and config files for those options, but could be extended for other options.
 
 By setting the `WORKER_LIB` you can choose to use either 'shoryken' or 'sidekiq' for messaging and async task processing.
 
-There is also a default 'local' value, for development and testing, where tasks are called synchronously - no messaging or worker process is used at all.
+There is also a default 'inline' value, for development and testing, where tasks are called synchronously - no messaging or worker process is used at all.
 
-Why not ActiveJob? We are using priorities, which requires specifying which queue a job ends up on, and that is not possible with the ActiveJob interface.
+There are config YAML files and initializers for sidekiq and shoryuken.
+There is also a `worker.rb` file to be used for worker only processes, so all of Rails is not loaded, and no DB connection is needed.
 
+#### Start Shoryuken
+
+Before using shoryuken, you need the SQS queues created.
+You can use a rake task for this:
+```
+bundle exec rake sqs:create
+```
+
+To start one process for all messages:
+```
+bundle exec shoryuken -R -C ./config/shoryuken/all.yml
+```
+
+To start two processes for master and worker messages:
+```
+bundle exec shoryuken -R -C ./config/shoryuken/master.yml
+bundle exec shoryuken -r ./config/worker.rb -C ./config/shoryuken/worker.yml
+```
+
+#### Start Sidekiq
+
+To start one process for all messages:
+```
+bundle exec sidekiq -C ./config/sidekiq/all.yml
+```
+
+To start two processes for master and worker messages:
+```
+bundle exec sidekiq -C ./config/sidekiq/master.yml
+bundle exec sidekiq -r ./config/worker.rb -C ./config/sidekiq/worker.yml
+```
 
 ## Containers
 
@@ -153,10 +187,8 @@ For example, a new user will be created based on the following ENV vars during `
 
 bundle exec rake user:create FIXER_USER_EMAIL=andrew@somedomain.com FIXER_USER_PASSWORD=password
 
-
 ## Copyright
 &copy; Copyright PRX, Public Radio Exchange https://www.prx.org
-
 
 ## License
 Fixer is offered under the [AGPL 3.0](http://opensource.org/licenses/AGPL-3.0)
