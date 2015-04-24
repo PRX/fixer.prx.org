@@ -49,9 +49,8 @@ class WebHook < BaseModel
   end
 
   def send_webook_message
-    destination = :fixer_p2
     message = self.to_message
-    logger.debug "publish message to do web_hook: #{destination} : #{message}"
-    WebHookWorker.publish(destination, message)
+    logger.debug "publish message to do web_hook: #{message}"
+    WebHookWorker.perform_later(message.to_json)
   end
 end
