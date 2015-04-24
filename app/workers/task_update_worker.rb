@@ -4,9 +4,11 @@ require 'base_worker'
 
 class TaskUpdateWorker < BaseWorker
 
-  def process(log)
+  queue_as :fixer_update
+
+  def perform(msg)
     ActiveRecord::Base.connection_pool.with_connection do
-      log = log.with_indifferent_access
+      log = JSON.parse(msg).with_indifferent_access
       task_log = log[:task_log].with_indifferent_access
       task = Task.find_by_id(task_log[:task_id])
       return unless task
