@@ -53,7 +53,7 @@ gem 'bcrypt', '~> 3.1.7'
 # trying to use sidekiq, will abstract to use shoryken too
 gem 'sidekiq'
 
-gem 'shoryuken', github: 'PRX/shoryuken'
+gem 'shoryuken'
 
 # gems for media processors
 gem 'ohai'
