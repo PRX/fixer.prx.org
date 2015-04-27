@@ -101,16 +101,10 @@ class Task < BaseModel
   end
 
   def send_task_message
-    destination = destination_symbol
     message = self.to_message
-    logger.debug "publish message to do task: #{destination} : #{message}"
-    TaskWorker.publish(destination, message)
+    logger.debug "publish message to do task: #{message}"
+    TaskWorker.perform_later(message.to_json)
   end
-
-  def destination_symbol
-    priority = job.priority.blank? ? DEFAULT_PRIORITY : [job.priority.to_i, MAX_PRIORITY].min
-    "fixer_p#{priority}".to_sym
- end
 
   def send_call_back(force=true)
     rtl = result_task_log

@@ -1,5 +1,5 @@
 ENV['RAILS_ENV'] ||= 'test'
-ENV['WORKER_LIB'] = 'local'
+ENV['WORKER_LIB'] = 'inline'
 
 require 'simplecov'
 SimpleCov.start 'rails'
@@ -11,6 +11,7 @@ require 'minitest/spec'
 require 'minitest/autorun'
 require 'webmock/minitest'
 require 'devise'
+require 'active_job/test_helper'
 
 AudioMonster.logger = Logger.new('/dev/null')
 

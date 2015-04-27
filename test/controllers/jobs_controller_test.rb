@@ -1,13 +1,12 @@
 require 'test_helper'
 
 class JobsControllerTest < ActionController::TestCase
+
   setup do
     @user = User.create!(email: 'test@prx.org', password: 'foobarpassword')
     @application = Doorkeeper::Application.create(name: 'test', owner: @user, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
     @job = Job.create(job_type: 'audio', priority: 1, application_id: @application.id)
-
     @request.env["devise.mapping"] = Devise.mappings[:user]
-    # user.confirm! # or set a confirmed_at inside the factory. Only necessary if you are using the "confirmable" module
     sign_in @user
   end
 

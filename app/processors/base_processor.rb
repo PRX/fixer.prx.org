@@ -53,7 +53,7 @@ class BaseProcessor
   end
 
   def publish_update(log)
-    TaskUpdateWorker.publish(:fixer_update, log)
+    TaskUpdateWorker.perform_later(log.to_json)
     log
   end
 

@@ -4,15 +4,6 @@ GIT
   specs:
     ruby-audio (1.6.1)
 
-GIT
-  remote: git://github.com/PRX/shoryuken.git
-  revision: b1106ebff7b87d4a11cb2a5754d55e12d38632d9
-  specs:
-    shoryuken (0.0.5)
-      aws-sdk-core (= 2.0.21)
-      aws-sdk-resources (= 2.0.21.pre)
-      celluloid (~> 0.16.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -66,13 +57,10 @@ GEM
     autoprefixer-rails (5.1.7)
       execjs
       json
-    aws-sdk-core (2.0.21)
+    aws-sdk-core (2.0.39)
       builder (~> 3.0)
       jmespath (~> 1.0)
       multi_json (~> 1.0)
-      multi_xml (~> 0.5)
-    aws-sdk-resources (2.0.21.pre)
-      aws-sdk-core (= 2.0.21)
     bcrypt (3.1.10)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -426,6 +414,9 @@ GEM
       rdoc (~> 4.0)
     sexp_processor (4.5.0)
     shellany (0.0.1)
+    shoryuken (1.0.2)
+      aws-sdk-core (~> 2.0.21)
+      celluloid (~> 0.16.0)
     sidekiq (3.3.2)
       celluloid (>= 0.16.0)
       connection_pool (>= 2.1.1)
@@ -542,7 +533,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   say_when (~> 1.0)
   sdoc (~> 0.4.0)
-  shoryuken!
+  shoryuken
   sidekiq
   simplecov
   sinatra

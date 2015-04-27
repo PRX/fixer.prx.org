@@ -1,6 +1,7 @@
 if ENV['WORKER_LIB'] == 'shoryuken'
 
 require 'shoryuken'
+require 'shoryuken/extensions/active_job_adapter'
 
 Shoryuken.default_worker_options =  {
   'queue'                   => 'default',

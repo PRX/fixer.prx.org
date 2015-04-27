@@ -2,7 +2,6 @@ require 'fixer_constants'
 require 'system_information'
 
 require 'aws-sdk-core'
-require 'aws-sdk-resources'
 
 namespace :sqs do
 
@@ -20,39 +19,29 @@ namespace :sqs do
     }
 
     # create the update queue and DLQ
-    update_dlq = create_dlq("#{env}_fixer_update", default_options)
-    create_queue("#{env}_fixer_update", update_dlq, default_options)
+    dlq_arn = create_dlq("#{env}_fixer_update", default_options)
+    create_queue("#{env}_fixer_update", dlq_arn, default_options)
 
     # create the priority queues
-    dlq = create_dlq("#{env}_fixer", default_options)
+    dlq_arn = create_dlq("#{env}_fixer", default_options)
     (1..FixerConstants::MAX_PRIORITY).each do |p|
-      create_queue("#{env}_fixer_p#{p}", dlq, default_options)
+      create_queue("#{env}_fixer_p#{p}", dlq_arn, default_options)
     end
   end
 
-  def create_queue(queue, dlq, options={})
-    sqs_resource = Aws::SQS::Resource.new
-    q = sqs_resource.get_queue_by_name(queue_name: queue) rescue nil
-    if q
-      puts "Queue '#{queue}'' already exists: #{q.inspect}"
-    else
-      options = options.merge('RedrivePolicy' => %Q{{"maxReceiveCount":"10", "deadLetterTargetArn":"#{dlq.arn}"}"})
-      puts "create #{queue}: #{options.inspect}"
-      q = sqs_resource.create_queue(queue_name: queue, attributes: options)
-    end
-    q
+  def create_queue(queue, dlq_arn, options={})
+    sqs = Aws::SQS::Client.new
+    options = options.merge('RedrivePolicy' => %Q{{"maxReceiveCount":"10", "deadLetterTargetArn":"#{dlq_arn}"}"})
+    q = sqs.create_queue(queue_name: queue, attributes: options)
+    puts "created queue: #{q.inspect}"
   end
 
   def create_dlq(queue, options)
-    sqs_resource = Aws::SQS::Resource.new
+    sqs = Aws::SQS::Client.new
     dlq_name = "#{queue}_failures"
-    dlq = sqs_resource.get_queue_by_name(queue_name: dlq_name) rescue nil
-    if dlq
-      puts "DLQ '#{queue}'' already exists: #{dlq.inspect}"
-    else
-      puts "create DLQ #{dlq_name}: #{options.inspect}"
-      dlq = sqs_resource.create_queue(queue_name: dlq_name, attributes: options)
-    end
-    dlq
+    dlq = sqs.create_queue(queue_name: dlq_name, attributes: options)
+    puts "created DLQ: #{dlq.inspect}"
+    attrs = sqs.get_queue_attributes(queue_url: dlq.queue_url, attribute_names: ['QueueArn']) rescue nil
+    attrs.attributes['QueueArn']
   end
 end

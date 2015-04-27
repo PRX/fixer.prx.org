@@ -5,7 +5,9 @@ require 'excon'
 
 class WebHookWorker < BaseWorker
 
-  def process(web_hook)
+  queue_as :fixer_p2
+
+  def perform(web_hook)
     logger.info "WebHookWorker start: #{web_hook.inspect}"
 
     web_hook = web_hook.with_indifferent_access
@@ -33,7 +35,7 @@ class WebHookWorker < BaseWorker
 
   def publish_webhook_update(id, complete)
     log = { web_hook: { id: id, complete: complete } }
-    WebHookUpdateWorker.publish(:fixer_update, log)
+    WebHookUpdateWorker.perform_later(log.to_json)
     log
   end
 
