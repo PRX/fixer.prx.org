@@ -8,7 +8,7 @@ class JobsController < ApplicationController
   respond_to :html
 
   def index
-    @jobs = Job.order('created_at DESC').page(params[:page])
+    @jobs = Job.order('created_at DESC').page(params[:page]).per(params[:per_page])
     @jobs = @jobs.where(application_id: params[:app_id]) if params[:app_id]
     @jobs = @jobs.incomplete if params[:status] == 'incomplete'
     @jobs = @jobs.failed if params[:status] == 'failed'
