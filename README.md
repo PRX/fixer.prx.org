@@ -99,22 +99,20 @@ A source URL can also be to get a file via an http(s) get request, i.e. 'http://
 
 For testing purposes (i.e. disabled in production), the 'file://' scheme is supported for using local files as sources and destinations.
 
-
 ### Processing Updates: Callbacks and Retries
 
 When the master receives an update, it always updates its record of the status of the task and overall job.
 can schedule a retries on failure, and initiates callbacks via webhooks or  emails.  Callbacks can be specified for each task, a sequence, or a job. For example, if there is a callback on the job, callbacks will only occur when the entire job is complete.  If the callback is on a task, then only changes and completion of that task will cause a callback.
 
-### Worker Library: `sidekiq` || `shoryuken` || `inline`
+### Worker Library
 
-Fixer used `ActiveJob` which abstracts which worker/queuing library is used. It has been tested with `shoryuken` and `sidekiq` and includes initializers and config files for those options, but could be extended for other options.
+Fixer uses `ActiveJob` to abstract which worker/queuing library is used. It has been tested with `shoryuken` and `sidekiq`. It includes initializers and config files for those two options, but could be extended for other options.
 
 By setting the `WORKER_LIB` you can choose to use either 'shoryken' or 'sidekiq' for messaging and async task processing.
 
-There is also a default 'inline' value, for development and testing, where tasks are called synchronously - no messaging or worker process is used at all.
+`ActiveJob` has a default 'inline' value, for development and testing, where tasks are called synchronously - no messaging or worker process is used at all. This is obviously not recommended for production use, but works fine for development and testing.
 
-There are config YAML files and initializers for sidekiq and shoryuken.
-There is also a `worker.rb` file to be used for worker only processes, so all of Rails is not loaded, and no DB connection is needed.
+Also under config is a `worker.rb` file to be used for worker only processes.  Using this file, all of Rails is not loaded, and no DB connection is configured or used.
 
 #### Start Shoryuken
 
@@ -150,6 +148,20 @@ bundle exec sidekiq -r ./config/worker.rb -C ./config/sidekiq/worker.yml
 
 ## Containers
 
+### Pre-existing
+
+We are publishing 3 docker images for the different processes that make up fixer:
+- https://registry.hub.docker.com/u/publicradioexchange/fixer_master/
+- https://registry.hub.docker.com/u/publicradioexchange/fixer_masterprocessor/
+- https://registry.hub.docker.com/u/publicradioexchange/fixer_worker/
+
+You should then be able to run and use these by providing a database and the proper environment variables.
+We are working on the following to help as well:
+- A sample compose yml file for running them locally
+- Instructions and supporting files to deploy on Amazon's Elastic Beanstalk
+
+### Building
+
 In the `container` folder are scripts and files to build docker images for fixer.
 
 `container/build.sh` can be called from the project dir to build the images.
@@ -184,8 +196,9 @@ No `.env*` file will be copied to the `build` dir, and so will not be included i
 The containers rely on ENV values.
 
 For example, a new user will be created based on the following ENV vars during `master` image start:
-
-bundle exec rake user:create FIXER_USER_EMAIL=andrew@somedomain.com FIXER_USER_PASSWORD=password
+```
+bundle exec rake user:create FIXER_USER_EMAIL=user@domain.com FIXER_USER_PASSWORD=user-password
+```
 
 ## Copyright
 &copy; Copyright PRX, Public Radio Exchange https://www.prx.org
