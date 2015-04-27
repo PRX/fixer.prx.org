@@ -1,5 +1,11 @@
 # Fixer
 
+[![License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
+[![Build Status](https://travis-ci.org/PRX/fixer.prx.org.svg?branch=master)](https://travis-ci.org/PRX/fixer.prx.org)
+[![Code Climate](https://codeclimate.com/github/PRX/fixer.prx.org/badges/gpa.svg)](https://codeclimate.com/github/PRX/fixer.prx.org)
+[![Coverage Status](https://coveralls.io/repos/PRX/fixer.prx.org/badge.svg?branch=master)](https://coveralls.io/r/PRX/fixer.prx.org?branch=master)
+[![Dependency Status](https://gemnasium.com/PRX/fixer.prx.org.svg)](https://gemnasium.com/PRX/fixer.prx.org)
+
 Application providing asynchronous media file processing.
 
 Jobs are submitted via a REST API to the master application that delegates processing to any number of worker processes using messages on prioritized queues.  Workers process files and save the results to number of destinations, updating the master, and sending webhook notifications.
