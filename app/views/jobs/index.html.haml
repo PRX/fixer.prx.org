@@ -2,12 +2,17 @@
 .page-header
   %h1=t '.title', :default => model_class.model_name.human.pluralize
 
-Filter:
-= link_to 'incomplete', jobs_path(filter_params(status: :incomplete)), class: 'btn btn-default'
-= link_to 'failed', jobs_path(filter_params(status: :failed)), class: 'btn btn-default'
-= link_to 'all', jobs_path, class: 'btn btn-default'
+.pull-left
+  %ul.pagination
+    %li{:class => ('active' if params[:status].blank?) }
+      = link_to 'all', jobs_path
+    %li{:class => ('active' if params[:status] == 'incomplete') }
+      = link_to 'incomplete', jobs_path(filter_params(status: :incomplete))
+    %li{:class => ('active' if params[:status] == 'failed') }
+      = link_to 'failed', jobs_path(filter_params(status: :failed))
 
-= paginate @jobs
+.pull-right
+  = paginate @jobs
 
 %table.table.table-striped
   %thead
