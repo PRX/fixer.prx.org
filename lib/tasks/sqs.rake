@@ -34,6 +34,7 @@ namespace :sqs do
     options = options.merge('RedrivePolicy' => %Q{{"maxReceiveCount":"10", "deadLetterTargetArn":"#{dlq_arn}"}"})
     q = sqs.create_queue(queue_name: queue, attributes: options)
     puts "created queue: #{q.inspect}"
+    q
   end
 
   def create_dlq(queue, options)
