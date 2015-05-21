@@ -10,7 +10,7 @@ class WebHookWorker < BaseWorker
   def perform(web_hook)
     logger.info "WebHookWorker start: #{web_hook.inspect}"
 
-    web_hook = web_hook.with_indifferent_access
+    web_hook = JSON.parse(web_hook).with_indifferent_access
     web_hook = web_hook[:web_hook]
 
     uri = URI.parse(web_hook[:url])
