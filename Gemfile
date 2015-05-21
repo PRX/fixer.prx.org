@@ -60,8 +60,6 @@ gem 'ohai'
 
 gem 'fog'
 
-gem 'rest-client' # factor this out in favor of excon
-
 gem 'google_speech', '~> 0.4.1'
 
 gem 'open_calais', '~> 0.1'

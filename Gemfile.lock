@@ -528,7 +528,6 @@ DEPENDENCIES
   rails (= 4.2.0)
   rails_12factor
   rake
-  rest-client
   ruby-audio!
   sass-rails (~> 5.0)
   say_when (~> 1.0)
