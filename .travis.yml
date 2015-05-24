@@ -8,4 +8,4 @@ before_install:
 before_script:
   - psql -c 'create database fixer_prx_org_test;' -U postgres
 env:
-  - DB_ENV_POSTGRES_USER=postgres
+  - DB_ENV_POSTGRES_USER=postgres TRAVIS=true MAIL_FROM=fixer@prx.org MAIL_HOST=fixer.prx.dev
