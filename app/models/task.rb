@@ -13,7 +13,7 @@ class Task < BaseModel
 
   acts_as_list scope: 'sequence_id = \'#{send(:sequence_id) || "00000000-0000-0000-0000-000000000000"}\''
 
-  attr_accessor :process_task, :previous_status
+  attr_accessor :process_task
 
   validates_presence_of :job_id, unless: :sequenced?
 
@@ -42,9 +42,6 @@ class Task < BaseModel
     info ||= {}
     task_log = nil
 
-    # changes attributes lost to after commit hook
-    self.previous_status = self.status
-
     logger.info "Task.log: #{self.id} : #{state} : #{message} : #{info.inspect[0,100]}"
 
     task_log = task_logs.create(status: state, message: message, info: info, logged_at: logged_at)
@@ -60,7 +57,7 @@ class Task < BaseModel
 
     with_lock do
       # see if there is already another status that came in that was logged_at > than this one.
-      future_log = task_logs.where(status: Task.statuses.keys).where('logged_at > ?', logged_at).exists?
+      future_log = task_logs.where(status: Task.statuses.values).where('logged_at > ?', logged_at).exists?
       self.send("#{state}!") unless future_log
     end
   end
@@ -71,20 +68,23 @@ class Task < BaseModel
     # setting this causes this post commit callback to send out the message
     self.process_task = true
 
-    task_log = task_logs.create(status: RETRYING, message: "retrying task: status: #{status}, force: #{force}", logged_at: Time.now)
+    task_log = task_logs.create(status: RETRYING, message: "retrying task: status: #{status}, force: #{force}", logged_at: Time.now, info: {})
     self.retrying!
     task_log
   end
 
   def handle_status_changes
-    return if previous_status.to_s == status.to_s
+    logger.debug "task: publish_messages: status: #{status}"
 
+    return unless previous_changes['status']
+
+    previous_status = previous_changes['status'].try(:first)
     logger.debug "task: publish_messages: #{previous_status} != #{status}"
 
     if process_task && created?
       logger.debug "task: publish_messages: insert created log"
       # log create on after_commit
-      task_logs.create!(status: CREATED, message: 'created message.', logged_at: Time.now)
+      task_logs.create!(status: CREATED, message: 'created message.', logged_at: Time.now, info: {})
     end
 
     logger.debug "task: publish_messages: send_call_back: #{status}"
@@ -104,14 +104,19 @@ class Task < BaseModel
     message = self.to_message
     logger.debug "publish message to do task: #{message}"
     TaskWorker.perform_later(message.to_json)
+    self.process_task = false
   end
 
   def send_call_back(force=true)
+    logger.debug "send_call_back!"
     rtl = result_task_log
     rtl.web_hook = nil if force
 
+    logger.debug "call_back: #{call_back.inspect}, rtl.web_hook: #{rtl.web_hook.inspect}"
     return if (call_back.blank? || rtl.web_hook)
-    rtl.create_web_hook(url: call_back, message: to_call_back_message)
+
+    web_hook = rtl.create_web_hook(url: call_back, message: to_call_back_message)
+    logger.debug "created webhook: #{web_hook.inspect}"
   end
 
   def to_call_back_message
@@ -137,7 +142,8 @@ class Task < BaseModel
   end
 
   def result_task_log
-    task_logs.where(status: status).order('logged_at ASC').last
+    logger.debug("result_task_log: status: #{status}")
+    task_logs.where(status: Task.statuses[status.to_s]).order('logged_at ASC').last
   end
 
   def to_message
