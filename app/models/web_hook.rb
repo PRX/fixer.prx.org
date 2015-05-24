@@ -3,8 +3,6 @@
 class WebHook < BaseModel
   attr_accessor :process_web_hook
 
-  # acts_as_scheduled
-
   belongs_to :informer, :polymorphic => true
 
   before_validation(on: :create) do
@@ -25,9 +23,13 @@ class WebHook < BaseModel
       update_attribute(:completed_at, Time.now)
     elsif retry_count < retry_max
       update_attribute(:completed_at, nil)
-      delay = (2**(retry_count + 1)/2) * 10.minutes
-      schedule_in(delay.seconds, { method: :scheduled_retry }) if !retry_scheduled?
+      schedule_in(calculate_retry_delay, { method: :scheduled_retry }) if !retry_scheduled?
     end
+    self
+  end
+
+  def calculate_retry_delay
+    [(2**(retry_count + 1)/2) * 10.minutes, 7.days].min
   end
 
   def scheduled_retry(data={})
@@ -52,5 +54,6 @@ class WebHook < BaseModel
     message = self.to_message
     logger.debug "publish message to do web_hook: #{message}"
     WebHookWorker.perform_later(message.to_json)
+    self.process_web_hook = false
   end
 end
