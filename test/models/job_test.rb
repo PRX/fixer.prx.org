@@ -40,6 +40,30 @@ class JobTest < ActiveSupport::TestCase
     job.must_be :cancelled?
   end
 
+  it 'can be in a callback message' do
+    msg = JSON.parse(job.to_call_back_message)
+    msg['job'].wont_be_nil
+    msg['job']['status'].must_equal 'created'
+  end
+
+  it 'calculates an exponential retry delay' do
+    job.retry_delay = 10.minutes
+    job.retry_count = 0
+    job.calculate_retry_delay.must_equal 10.minutes
+
+    job.retry_count = 1
+    job.calculate_retry_delay.must_equal 20.minutes
+
+    job.retry_count = 2
+    job.calculate_retry_delay.must_equal 40.minutes
+  end
+
+  it 'has a max exponential retry delay' do
+    job.retry_delay = 10.minutes
+    job.retry_count = 100
+    job.calculate_retry_delay.must_equal 7.days
+  end
+
   describe 'task updates' do
 
     let(:task) { job.tasks.create!(task_type: 'audio', label: 'test1')}
@@ -50,7 +74,69 @@ class JobTest < ActiveSupport::TestCase
       job.task_ended(task)
       job.must_be :error?
     end
-
   end
 
+  describe 'create from message' do
+    let(:user) { User.create!(email: 'test@prx.org', password: 'foobarpassword') }
+    let(:application) { Doorkeeper::Application.create(name: 'test', owner: user, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob') }
+
+    it 'creates from a message with one task' do
+      hash = {
+        job_type: 'test',
+        priority: 1,
+        retry_max: 10,
+        retry_delay: 300,
+        tasks: [
+          {
+            task_type: 'echo',
+            label: 'test1',
+            options: { foo: 'bar' },
+            call_back: 'http://cms.prx.dev/call_back'
+          }
+        ]
+      }.with_indifferent_access
+      job = Job.create_from_message(hash, application)
+      job.must_be :valid?
+      job.must_be :persisted?
+      job.tasks.size.must_equal 1
+      job.job_type.must_equal 'test'
+      job.priority.must_equal 1
+      job.retry_max.must_equal 10
+      job.retry_delay.must_equal 300
+    end
+
+    it 'creates from a message with a sequence' do
+      hash = {
+        job_type: 'test',
+        priority: 1,
+        retry_max: 10,
+        retry_delay: 300,
+        tasks: [
+          sequence: {
+            tasks: [
+              {
+                task_type: 'echo',
+                label: 'test1',
+                options: { foo: 'bar' },
+                call_back: 'http://cms.prx.dev/call_back'
+              },
+              {
+                task_type: 'echo',
+                label: 'test1',
+                options: { bar: 'foo' },
+                call_back: 'http://cms.prx.dev/call_back'
+              }
+            ]
+          }
+        ]
+      }.with_indifferent_access
+
+      job = Job.create_from_message(hash, application)
+      job.must_be :valid?
+      job.must_be :persisted?
+      job.tasks.size.must_equal 1
+      job.tasks.first.must_be_instance_of Sequence
+      job.tasks.first.tasks.size.must_equal 2
+    end
+  end
 end
