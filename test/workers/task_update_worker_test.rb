@@ -8,6 +8,7 @@ class TaskUpdateWorkerTest < ActiveSupport::TestCase
   }
 
   after {
+    ENV['WORKER_LIB'] = 'test'
     ActiveJob::Base.queue_adapter = :test
   }
 

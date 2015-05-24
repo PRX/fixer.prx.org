@@ -12,7 +12,7 @@ class BaseWorkerTest < ActiveSupport::TestCase
   end
 
   it 'knows the worker lib' do
-    BaseWorker.worker_lib.must_equal 'inline'
+    BaseWorker.worker_lib.must_equal 'test'
   end
 
   it 'calls worker perform' do
