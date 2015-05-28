@@ -60,7 +60,7 @@ class BaseProcessor
   def on_message(message)
     prepare(message)
     process
-  rescue Object=>err
+  rescue Exception => err
     begin
       on_error(err)
     rescue Object=>ex
