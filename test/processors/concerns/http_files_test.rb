@@ -27,7 +27,7 @@ class HttpFilesTest < ActiveSupport::TestCase
   it 'can download from http url' do
 
     stub_request(:get, http_uri.to_s).
-      with(headers: {'Host'=>'test.prx.org:80'}).
+      with(headers: { 'Host' => 'test.prx.org:80' } ).
       to_return(status: 200, headers: {}, body: File.open(in_file('test_short.mp2')))
 
     tmp = processor.http_download_file(http_uri)
@@ -36,7 +36,7 @@ class HttpFilesTest < ActiveSupport::TestCase
 
   it 'can download from https url' do
     stub_request(:get, https_uri.to_s).
-      with(:headers => {'Host'=>'test.prx.org:443'}).
+      with(:headers => { 'Host' => 'test.prx.org:443' } ).
       to_return(status: 200, headers: {}, body: File.open(in_file('test_short.mp2')))
 
     tmp = processor.https_download_file(https_uri)

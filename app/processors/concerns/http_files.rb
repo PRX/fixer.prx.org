@@ -12,7 +12,6 @@ module HttpFiles
 
   alias_method :https_upload_file, :http_upload_file
 
-
   def http_download_file(uri, limit = 10)
     temp_file = nil
     try_count = 0
