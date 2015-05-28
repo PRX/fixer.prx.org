@@ -1,21 +1,23 @@
 #!/bin/bash
 
+set -ex
+
 export LC_ALL=C
 export DEBIAN_FRONTEND=noninteractive
 
 function minimal_apt_get_install()
 {
   if [[ ! -e /var/lib/apt/lists/lock ]]; then
-    sudo apt-get update
+    apt-get update
   fi
-  sudo apt-get install -y --no-install-recommends "$@"
+  apt-get install -y --no-install-recommends "$@"
 }
 
-sudo echo "deb http://archive.ubuntu.com/ubuntu precise main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-sudo echo "deb http://extras.ubuntu.com/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
-sudo echo "deb-src http://extras.ubuntu.com/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
+echo "deb http://archive.ubuntu.com/ubuntu precise main restricted universe multiverse" | tee -a /etc/apt/sources.list
+echo "deb http://extras.ubuntu.com/ubuntu precise main" | tee -a /etc/apt/sources.list
+echo "deb-src http://extras.ubuntu.com/ubuntu precise main" | tee -a /etc/apt/sources.list
 
-sudo apt-get update && sudo apt-get upgrade -y
+apt-get update && apt-get upgrade -y
 
 minimal_apt_get_install \
   subversion \
@@ -145,9 +147,9 @@ minimal_apt_get_install \
 
 #ffmpeg
 cd /tmp
-sudo git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+git clone --depth 1 git://source.ffmpeg.org/ffmpeg
 cd ffmpeg
-sudo ./configure --shlibdir=/usr/lib64 --prefix=/usr --mandir=/usr/share/man --libdir=/usr/lib64 --enable-static \
+./configure --shlibdir=/usr/lib64 --prefix=/usr --mandir=/usr/share/man --libdir=/usr/lib64 --enable-static \
   --extra-cflags='-fmessage-length=0 -grecord-gcc-switches -fstack-protector -O2 -Wall -D_FORTIFY_SOURCE=2 -funwind-tables -fasynchronous-unwind-tables -g -fPIC -I/usr/include/gsm' \
   --disable-x11grab \
   --enable-gpl \
@@ -183,7 +185,7 @@ sudo ./configure --shlibdir=/usr/lib64 --prefix=/usr --mandir=/usr/share/man --l
   --enable-libopenjpeg \
   --enable-gray \
   --enable-libwebp \
-&& sudo make -j4 install && sudo make install-data && sudo make clean
+&& make -j4 install && make install-data && make clean
 
 minimal_apt_get_install libsox-fmt-all lame mp3val sox madplay twolame flac
 
