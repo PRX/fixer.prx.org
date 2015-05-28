@@ -19,13 +19,13 @@ module HttpFiles
 
     prior_remaining, prior_total = 0
     streamer = lambda do |chunk, remaining_bytes, total_bytes|
-      if (remaining_bytes > prior_remaining) || (total_bytes != prior_total) || !temp_file
+      if (remaining_bytes.to_i > prior_remaining) || (total_bytes.to_i != prior_total) || !temp_file
         close_temp_file(temp_file)
         temp_file = AudioMonster.create_temp_file(uri.to_s)
       end
 
-      prior_remaining = remaining_bytes
-      prior_total = total_bytes
+      prior_remaining = remaining_bytes.to_i
+      prior_total = total_bytes.to_i
       temp_file.write(chunk)
     end
 
@@ -53,7 +53,7 @@ module HttpFiles
 
     raise "HTTP Download #{uri}: did not complete" unless file_downloaded
 
-    raise "HTTP Download #{uri}: #{temp_file.size} is not the expected size: #{prior_total}" if temp_file.size != prior_total
+    raise "HTTP Download #{uri}: #{temp_file.size} is not the expected size: #{prior_total}" if prior_total > 0 && temp_file.size != prior_total
 
     raise "HTTP Download #{uri}: Zero length file downloaded" if temp_file.size == 0
 
