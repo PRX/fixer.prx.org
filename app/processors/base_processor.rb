@@ -256,7 +256,7 @@ class BaseProcessor
 
   def file_schemes
     @_file_schemes ||= begin
-      s = ['s3', 'ia', 'ftp', 'http']
+      s = ['s3', 'ia', 'ftp', 'http', 'https']
       s << 'file' if SystemInformation.env != 'production'
       s
     end
