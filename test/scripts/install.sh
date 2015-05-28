@@ -8,7 +8,7 @@ export DEBIAN_FRONTEND=noninteractive
 function minimal_apt_get_install()
 {
   if [[ ! -e /var/lib/apt/lists/lock ]]; then
-    sudo apt-get update
+    sudo apt-get -y update
   fi
   sudo apt-get install -y --no-install-recommends "$@"
 }
