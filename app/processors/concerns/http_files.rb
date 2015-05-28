@@ -10,6 +10,9 @@ module HttpFiles
     raise NotImplementedError.new('Upload via http not available yet.')
   end
 
+  alias_method :https_upload_file, :http_upload_file
+
+
   def http_download_file(uri, limit = 10)
     temp_file = nil
     try_count = 0
@@ -57,6 +60,8 @@ module HttpFiles
 
     temp_file
   end
+
+  alias_method :https_download_file, :http_download_file
 
   def close_temp_file(temp_file)
     if temp_file
