@@ -2,8 +2,9 @@ language: ruby
 rvm:
   - "2.2.1"
 bundler_args: --without development
+before_install:
+  - ./test/scripts/ffmpeg-install.sh
 before_script:
-  - sh test/scripts/install.sh
   - psql -c 'create database fixer_prx_org_test;' -U postgres
 env:
   - DB_ENV_POSTGRES_USER=postgres TRAVIS=true MAIL_FROM=fixer@prx.org MAIL_HOST=fixer.prx.dev
