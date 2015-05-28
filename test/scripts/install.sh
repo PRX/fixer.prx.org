@@ -13,9 +13,9 @@ function minimal_apt_get_install()
   apt-get install -y --no-install-recommends "$@"
 }
 
-echo "deb http://archive.ubuntu.com/ubuntu precise main restricted universe multiverse" | tee -a /etc/apt/sources.list
-echo "deb http://extras.ubuntu.com/ubuntu precise main" | tee -a /etc/apt/sources.list
-echo "deb-src http://extras.ubuntu.com/ubuntu precise main" | tee -a /etc/apt/sources.list
+add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu precise main restricted universe multiverse"
+add-apt-repository -y "deb http://extras.ubuntu.com/ubuntu precise main"
+add-apt-repository -y "deb-src http://extras.ubuntu.com/ubuntu precise main"
 
 apt-get update && apt-get upgrade -y
 
