@@ -60,4 +60,10 @@ class FtpFilesTest < ActiveSupport::TestCase
     end
   end
 
+  it 'can generate an md5 file' do
+    md5 = processor.create_md5_digest(in_file('test_long.wav'))
+    f = File.open(md5)
+    result = f.read
+    result.must_equal '941465cfa1d0e9cb1aaf480a02047caa'
+  end
 end

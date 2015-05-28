@@ -3,6 +3,7 @@
 require 'audio_monster'
 require 'net/ftp'
 require 'timeout'
+require 'system_information'
 
 module FtpFiles
 

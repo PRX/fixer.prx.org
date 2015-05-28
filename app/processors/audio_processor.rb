@@ -12,6 +12,14 @@ class AudioProcessor < BaseProcessor
 
   task_types ['transcode', 'copy', 'analyze', 'validate', 'cut', 'wrap', 'transcribe', 'waveformjson', 'tone_detect', 'silence_detect', 'slice']
 
+  def audio_monster
+    @audio_monster ||= ::AudioMonster
+  end
+
+  def audio_monster=(am)
+    @audio_monster = am
+  end
+
   # make sure to handle 64 kb limit on transcripts
   # perhaps put the transcript/metadata as a result file rather than a response?
   def transcribe_audio
@@ -20,7 +28,7 @@ class AudioProcessor < BaseProcessor
     transcript = google_transcribe(source_wav, options)
 
     base_file_name = File.basename(source.path) + '.json'
-    temp_file= AudioMonster.create_temp_file(base_file_name, false)
+    temp_file= audio_monster.create_temp_file(base_file_name, false)
     temp_file.write transcript.to_json
     temp_file.fsync
 
@@ -52,14 +60,13 @@ class AudioProcessor < BaseProcessor
     if options['width_per_second']
       min = options['width_minimum'] && options['width_minimum'].to_i > 0 ? options['width_minimum'].to_i : WAVEFORM_WIDTH_MIN
       width_per_second = options['width_per_second'].to_i
-      duration = AudioMonster.audio_file_duration(source_wav.path)
+      duration = audio_monster.audio_file_duration(source_wav.path)
       options['width'] = [(duration * width_per_second), min].max
     end
 
     wf = waveformjson(source_wav, options)
-
     base_file_name = File.basename(source.path) + '.json'
-    temp_file = AudioMonster.create_temp_file(base_file_name, false)
+    temp_file = audio_monster.create_temp_file(base_file_name, false)
     temp_file.write wf.to_json
     temp_file.fsync
 
@@ -78,7 +85,7 @@ class AudioProcessor < BaseProcessor
   end
 
   def loudness_audio
-    completed_with AudioMonster.loudness_info(source.path)
+    completed_with audio_monster.loudness_info(source.path)
   end
 
   # task methods of "#{task_type}_#{job_type}" naming standard
@@ -112,8 +119,8 @@ class AudioProcessor < BaseProcessor
 
   def cut_audio
     source_wav = get_wav_from_source
-    task_tmp = AudioMonster.create_temp_file(File.basename(source.path))
-    AudioMonster.cut_wav(source_wav.path, task_tmp.path, options['length'], options['fade'] || 5 )
+    task_tmp = audio_monster.create_temp_file(File.basename(source.path))
+    audio_monster.cut_wav(source_wav.path, task_tmp.path, options['length'], options['fade'] || 5 )
 
     self.destination_format = 'wav'
     self.destination = task_tmp
@@ -123,9 +130,9 @@ class AudioProcessor < BaseProcessor
 
   def slice_audio
     source_wav = get_wav_from_source
-    task_tmp = AudioMonster.create_temp_file(File.basename(source.path))
+    task_tmp = audio_monster.create_temp_file(File.basename(source.path))
     finish = options['finish'].blank? ? '' : "=#{options['finish']}"
-    AudioMonster.slice_wav(source_wav.path, task_tmp.path, options['start'], (options['length'] || finish))
+    audio_monster.slice_wav(source_wav.path, task_tmp.path, options['start'], (options['length'] || finish))
 
     self.destination_format = 'wav'
     self.destination = task_tmp
@@ -139,7 +146,7 @@ class AudioProcessor < BaseProcessor
     tone = options['tone'] || 25
     threshold = options['threshold'] || 0.05
     min_time = options['min_time'] || 0.5
-    ranges = AudioMonster.tone_detect(source_wav.path, tone, threshold, min_time)
+    ranges = audio_monster.tone_detect(source_wav.path, tone, threshold, min_time)
 
     completed_with detected_ranges(ranges)
   end
@@ -150,7 +157,7 @@ class AudioProcessor < BaseProcessor
     threshold = options['threshold'] || 0.005
     min_time = options['min_time'] || 1.0
     # puts "t: #{threshold}, m: #{min_time}"
-    ranges = AudioMonster.silence_detect(source_wav.path, threshold, min_time)
+    ranges = audio_monster.silence_detect(source_wav.path, threshold, min_time)
 
     completed_with detected_ranges(ranges)
   end
@@ -160,11 +167,11 @@ class AudioProcessor < BaseProcessor
   end
 
   def wrap_audio
-    task_tmp = AudioMonster.create_temp_file(File.basename(source.path))
+    task_tmp = audio_monster.create_temp_file(File.basename(source.path))
     if source_format == 'wav'
-      AudioMonster.add_cart_chunk_to_wav(source.path, task_tmp.path, options)
+      audio_monster.add_cart_chunk_to_wav(source.path, task_tmp.path, options)
     elsif ['mp2', 'mp3'].include?(source_format)
-      AudioMonster.create_wav_wrapped_mp2(source.path, task_tmp.path, options)
+      audio_monster.create_wav_wrapped_mp2(source.path, task_tmp.path, options)
     end
 
     self.destination_format = 'wav'
@@ -191,7 +198,7 @@ class AudioProcessor < BaseProcessor
 
   def validate(format, file, opts)
     if format == 'mp2'
-      AudioMonster.send("validate_#{format}".to_sym, file.path, opts)
+      audio_monster.send("validate_#{format}".to_sym, file.path, opts)
     else
       raise "Format: #{format} not supported. Only validating mp2 is currently supported."
     end
@@ -199,8 +206,8 @@ class AudioProcessor < BaseProcessor
 
   # helper methods
   def audio_info(format=destination_format, file=destination)
-    info = AudioMonster.send("info_for_#{format}".to_sym, file.path) || {}
-    info[:loudness] = AudioMonster.loudness_info(file.path)
+    info = audio_monster.send("info_for_#{format}".to_sym, file.path) || {}
+    info[:loudness] = audio_monster.loudness_info(file.path)
     info
   end
 
@@ -209,8 +216,8 @@ class AudioProcessor < BaseProcessor
     if format == 'wav'
       transcode_tmp = get_wav_from_source
     else
-      transcode_tmp = AudioMonster.create_temp_file(File.basename(source.path + ".#{format}"))
-      AudioMonster.send("encode_#{format}_from_wav", get_wav_from_source.path, transcode_tmp.path, opts)
+      transcode_tmp = audio_monster.create_temp_file(File.basename(source.path + ".#{format}"))
+      audio_monster.send("encode_#{format}_from_wav", get_wav_from_source.path, transcode_tmp.path, opts)
     end
     transcode_tmp
   end
@@ -226,8 +233,8 @@ class AudioProcessor < BaseProcessor
     end
 
     if !wav_pcm_tempfile
-      wav_tmp = AudioMonster.create_temp_file(File.basename(source.path + ".wav"))
-      AudioMonster.send("encode_wav_pcm_from_#{source_format}".to_sym, source.path, wav_tmp.path)
+      wav_tmp = audio_monster.create_temp_file(File.basename(source.path + ".wav"))
+      audio_monster.send("encode_wav_pcm_from_#{source_format}".to_sym, source.path, wav_tmp.path)
       self.wav_pcm_tempfile = wav_tmp
     end
 

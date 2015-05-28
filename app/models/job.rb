@@ -54,8 +54,14 @@ class Job < BaseModel
     # schedule_in(retry_delay.seconds, {:method=>:scheduled_retry})
 
     # try this for exponential retry
-    delay = (2**(retry_count)/2) * retry_delay.seconds
-    schedule_in(delay.seconds, { method: :scheduled_retry } )
+    # delay = (2**(retry_count)/2) * retry_delay.seconds
+    schedule_in(calculate_retry_delay.seconds, { method: :scheduled_retry } )
+  end
+
+  def calculate_retry_delay
+    c = retry_count.to_i
+    d = retry_delay || 600
+    [(2**(c + 1)/2) * d.seconds, 7.days].min
   end
 
   def scheduled_retry(data={})

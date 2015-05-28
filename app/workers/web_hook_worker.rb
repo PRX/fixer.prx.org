@@ -8,6 +8,7 @@ class WebHookWorker < BaseWorker
   queue_as :fixer_p2
 
   def perform(web_hook)
+    log = nil
     logger.info "WebHookWorker start: #{web_hook.inspect}"
 
     web_hook = JSON.parse(web_hook).with_indifferent_access
@@ -25,12 +26,14 @@ class WebHookWorker < BaseWorker
       raise "Unsupported web hook URI scheme: #{uri.scheme} for #{uri.to_s}"
     end
 
-    publish_webhook_update(web_hook[:id], true)
+    log = publish_webhook_update(web_hook[:id], true)
+    return log
   rescue StandardError => err
     logger.error "WebHookWorker web_hook: #{web_hook.inspect} rescued error: #{err.class.name}:\n#{err.message}\n\t#{err.backtrace.join("\n\t")}"
     if web_hook
-      publish_webhook_update(web_hook[:id], false) rescue nil
+      log = publish_webhook_update(web_hook[:id], false) rescue nil
     end
+    return log
   end
 
   def publish_webhook_update(id, complete)
@@ -46,7 +49,8 @@ class WebHookWorker < BaseWorker
       headers: options[:headers] || {},
       expects: (200..207).to_a,
       idempotent: !options[:no_retry],
-      retry_limit: (options.key?(:retry_max) ? options[:retry_max].to_i : 6)
+      retry_limit: (options.key?(:retry_max) ? options[:retry_max].to_i : 6),
+      middlewares: Excon.defaults[:middlewares] + [Excon::Middleware::RedirectFollower]
     }
 
     if [:post, :put, :patch].include?(request[:method])

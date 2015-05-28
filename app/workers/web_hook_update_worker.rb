@@ -7,6 +7,7 @@ class WebHookUpdateWorker < BaseWorker
   queue_as :fixer_update
 
   def perform(log)
+    web_hook = nil
     ActiveRecord::Base.connection_pool.with_connection do
       log = JSON.parse(log).with_indifferent_access
       web_hook_log = log[:web_hook].with_indifferent_access
@@ -15,5 +16,6 @@ class WebHookUpdateWorker < BaseWorker
 
       web_hook.update_completed(web_hook_log[:complete])
     end
+    web_hook
   end
 end

@@ -1,11 +1,13 @@
-ENV['RAILS_ENV'] ||= 'test'
-ENV['WORKER_LIB'] = 'inline'
-
 require 'simplecov'
 SimpleCov.start 'rails'
 
-require 'coveralls'
-Coveralls.wear!
+if ENV['TRAVIS']
+  require 'coveralls'
+  Coveralls.wear!
+end
+
+ENV['RAILS_ENV'] ||= 'test'
+ENV['WORKER_LIB'] = 'test'
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
