@@ -8,16 +8,16 @@ export DEBIAN_FRONTEND=noninteractive
 function minimal_apt_get_install()
 {
   if [[ ! -e /var/lib/apt/lists/lock ]]; then
-    apt-get update
+    sudo apt-get update
   fi
-  apt-get install -y --no-install-recommends "$@"
+  sudo apt-get install -y --no-install-recommends "$@"
 }
 
-add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu precise main restricted universe multiverse"
-add-apt-repository -y "deb http://extras.ubuntu.com/ubuntu precise main"
-add-apt-repository -y "deb-src http://extras.ubuntu.com/ubuntu precise main"
+sudo echo "deb http://archive.ubuntu.com/ubuntu precise main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+sudo echo "deb http://extras.ubuntu.com/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
+sudo echo "deb-src http://extras.ubuntu.com/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
 
-apt-get update && apt-get upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y
 
 minimal_apt_get_install \
   subversion \
@@ -147,9 +147,9 @@ minimal_apt_get_install \
 
 #ffmpeg
 cd /tmp
-git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+sudo git clone --depth 1 git://source.ffmpeg.org/ffmpeg
 cd ffmpeg
-./configure --shlibdir=/usr/lib64 --prefix=/usr --mandir=/usr/share/man --libdir=/usr/lib64 --enable-static \
+sudo ./configure --shlibdir=/usr/lib64 --prefix=/usr --mandir=/usr/share/man --libdir=/usr/lib64 --enable-static \
   --extra-cflags='-fmessage-length=0 -grecord-gcc-switches -fstack-protector -O2 -Wall -D_FORTIFY_SOURCE=2 -funwind-tables -fasynchronous-unwind-tables -g -fPIC -I/usr/include/gsm' \
   --disable-x11grab \
   --enable-gpl \
@@ -185,7 +185,7 @@ cd ffmpeg
   --enable-libopenjpeg \
   --enable-gray \
   --enable-libwebp \
-&& make -j4 install && make install-data && make clean
+&& sudo make -j4 install && sudo make install-data && sudo make clean
 
 minimal_apt_get_install libsox-fmt-all lame mp3val sox madplay twolame flac
 
