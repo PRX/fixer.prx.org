@@ -68,7 +68,7 @@ gem 'yahoo_content_analysis', '~> 0.1'
 
 gem 'stringex'
 
-gem 'ruby-audio-heroku'
+gem 'ruby-audio'
 
 gem 'waveformjson'
 
