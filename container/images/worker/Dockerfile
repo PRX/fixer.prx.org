@@ -79,6 +79,7 @@ RUN chown -R app:app $APP_HOME
 WORKDIR $APP_HOME
 ADD Gemfile $APP_HOME/
 ADD Gemfile.lock $APP_HOME/
+RUN sudo -u app bundle config --local build.ruby-audio --with-cflags=-Wno-error=format-security
 RUN sudo -u app bundle install --deployment --without development test
 
 ADD . $APP_HOME
