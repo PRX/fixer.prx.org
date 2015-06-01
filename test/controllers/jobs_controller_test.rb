@@ -41,7 +41,17 @@ class JobsControllerTest < ActionController::TestCase
   end
 
   test "should update job" do
-    patch :update, id: @job, job: {  }
+    patch :update, id: @job, job: { priority: 1 }
+    assert_redirected_to job_path(assigns(:job))
+  end
+
+  test "should resend webhooks" do
+    post :inform, id: @job
+    assert_redirected_to job_path(assigns(:job))
+  end
+
+  test "should rety the job" do
+    post :retry, id: @job
     assert_redirected_to job_path(assigns(:job))
   end
 
