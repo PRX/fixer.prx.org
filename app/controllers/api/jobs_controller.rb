@@ -37,11 +37,23 @@ module Api
     end
 
     def job_params
-      option_keys = params[:job][:tasks].map{ |t| (t[:options] || {}).keys }.flatten
-      logger.error "option_keys: #{option_keys.inspect}"
+      option_keys = extract_options(params).flatten
       task_attributes = [:task_type, :result, :label, :call_back, options: option_keys]
+      task_attributes << { sequence: {tasks: task_attributes.dup } }
       job_attrs = [:job_type, :original, :status, :call_back, :priority, :retry_max, :retry_delay, tasks: task_attributes]
       params.require(:job).permit(job_attrs)
+    end
+
+    def extract_options(p)
+      if p[:job]
+        extract_options(p[:job])
+      elsif p[:sequence]
+        extract_options(p[:sequence])
+      elsif p[:tasks]
+        p[:tasks].map{ |t| extract_options(t) }
+      else
+        (p[:options] || {}).keys
+      end
     end
   end
 end
