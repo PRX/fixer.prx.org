@@ -69,24 +69,28 @@ _up() {
   docker-compose -f $BUILD_DIR/docker-compose.yml up
 }
 
-# # These are just placeholders for now
-# # todo: need to work out labelling and tracking versions
-# _tag() {
-# # docker tag build_master publicradioexchange/fixer_master
-# # docker tag build_worker publicradioexchange/fixer_worker
-# # docker tag build_masterprocessor publicradioexchange/fixer_masterprocessor
-# }
+# These are just placeholders for now
+# todo: need to work out labelling and tracking versions
+_tag() {
+  docker tag -f build_master publicradioexchange/fixer_master
+  docker tag -f build_worker publicradioexchange/fixer_worker
+  docker tag -f build_masterprocessor publicradioexchange/fixer_masterprocessor
+}
 
-# _push() {
-# # docker push publicradioexchange/fixer_master
-# # docker push publicradioexchange/fixer_worker
-# # docker push publicradioexchange/fixer_masterprocessor
-# }
+_push() {
+  docker push publicradioexchange/fixer_master
+  docker push publicradioexchange/fixer_worker
+  docker push publicradioexchange/fixer_masterprocessor
+}
 
 if [ "$1" = "clean" ]; then
   _clean
 elif [ "$1" = "up" ]; then
   _up
+elif [ "$1" = "tag" ]; then
+  _tag
+elif [ "$1" = "push" ]; then
+  _push
 else
   _build
 fi
