@@ -20,7 +20,10 @@ class Api::JobsControllerTest < ActionController::TestCase
     token
   end
 
-  let(:job) { Job.create(job_type: 'audio', priority: 1, application_id: application.id) }
+  let(:job) do
+    Job.create(job_type: 'audio', priority: 1, application_id: application.id)
+  end
+
   let(:job_params) do
     {
       job_type: 'test',
@@ -32,13 +35,13 @@ class Api::JobsControllerTest < ActionController::TestCase
           tasks: [
             {
               task_type: 'echo',
-              label: 'test1',
+              label: 'test0',
               options: { foo: 'bar' },
               call_back: 'http://cms.prx.dev/call_back'
             },
             {
               task_type: 'echo',
-              label: 'test2',
+              label: 'test1',
               options: { foo: 'bar' },
               call_back: 'http://cms.prx.dev/call_back'
             }
@@ -74,7 +77,7 @@ class Api::JobsControllerTest < ActionController::TestCase
     seq.tasks.count.must_equal 2
     seq.tasks.each_with_index do |t, i|
       t.task_type.must_equal 'echo'
-      t.label.must_equal "test#{i+1}"
+      t.label.must_equal "test#{i}"
       t.options[:foo].must_equal 'bar'
     end
   end
