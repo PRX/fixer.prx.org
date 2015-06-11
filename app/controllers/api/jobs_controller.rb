@@ -6,6 +6,8 @@ module Api
     def index
       @jobs = Job.order('created_at DESC').page(params[:page]).per(params[:per_page])
       @jobs = @jobs.where(application_id: current_application.id)
+      @jobs = @jobs.incomplete if params[:status] == 'incomplete'
+      @jobs = @jobs.failed if params[:status] == 'failed'
       respond_with @jobs
     end
 
