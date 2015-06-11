@@ -87,6 +87,11 @@ class Api::JobsControllerTest < ActionController::TestCase
     response.must_be :success?
   end
 
+  test "should list jobs by page and application" do
+    get :index, format: :json, page: 1, status: 'incomplete'
+    response.must_be :success?
+  end
+
   test "should update job" do
     patch :update, format: :json, id: job, job: { retry_max: 0 }
     response.must_be :success?
