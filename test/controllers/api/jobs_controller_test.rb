@@ -88,7 +88,7 @@ class Api::JobsControllerTest < ActionController::TestCase
   end
 
   test "should list jobs by page and application" do
-    get :index, format: :json, page: 1
+    get :index, format: :json, page: 1, status: 'incomplete'
     response.must_be :success?
   end
 
