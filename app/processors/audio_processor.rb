@@ -28,7 +28,7 @@ class AudioProcessor < BaseProcessor
     transcript = google_transcribe(source_wav, options)
 
     base_file_name = File.basename(source.path) + '.json'
-    temp_file= audio_monster.create_temp_file(base_file_name, false)
+    temp_file = audio_monster.create_temp_file(base_file_name, false)
     temp_file.write transcript.to_json
     temp_file.fsync
 
