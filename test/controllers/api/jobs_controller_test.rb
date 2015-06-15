@@ -30,6 +30,8 @@ class Api::JobsControllerTest < ActionController::TestCase
       priority: 1,
       retry_max: 10,
       retry_delay: 300,
+      original: 'file://this/aint/real.fake',
+      original_format: 'mp3',
       tasks: [
         sequence: {
           tasks: [
@@ -71,6 +73,8 @@ class Api::JobsControllerTest < ActionController::TestCase
     job = assigns(:job)
     job.wont_be_nil
     job.tasks.size.must_equal 1
+
+    job.original_format.must_equal 'mp3'
 
     seq = job.tasks.first
     seq.must_be_instance_of Sequence
