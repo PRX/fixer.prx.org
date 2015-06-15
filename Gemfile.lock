@@ -42,7 +42,7 @@ GEM
     addressable (2.3.8)
     ansi (1.5.0)
     arel (6.0.0)
-    audio_monster (1.2.1)
+    audio_monster (1.2.2)
       activesupport
       mimemagic
       nu_wav
