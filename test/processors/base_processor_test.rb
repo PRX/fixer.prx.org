@@ -234,7 +234,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
     audio_monster.expect(:info_for, mp3_info, [Object])
     uri = URI.parse('file://what/an_mp3_no_ext')
     processor.format_from_file(File.open(in_file('an_mp3_no_ext'))).must_equal 'mp3'
-    # processor.extract_format(uri, in_file('an_mp3_no_ext')).must_equal 'mp3'
+    processor.extract_format(uri, File.open(in_file('an_mp3_no_ext'))).must_equal 'mp3'
   end
 
   it 'downloads a file based on url scheme' do

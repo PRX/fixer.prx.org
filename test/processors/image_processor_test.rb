@@ -7,7 +7,7 @@ class ImageProcessorTest < ActiveSupport::TestCase
     ImageProcessor.supported_tasks.first.must_equal 'resize'
   end
 
-  describe "resize_image" do
+  describe 'resize_image' do
 
     let(:msg) {
       {
@@ -22,9 +22,9 @@ class ImageProcessorTest < ActiveSupport::TestCase
       }.with_indifferent_access
     }
 
-    it "should resize a local file" do
+    it 'should resize a local file' do
       processor.on_message(msg)
-      processor.result_details[:info][:file].must_match /JPEG/
+      processor.result_details[:info][:format].must_equal 'jpg'
     end
   end
 end

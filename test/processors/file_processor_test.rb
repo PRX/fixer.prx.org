@@ -24,8 +24,7 @@ class FileProcessorTest < ActiveSupport::TestCase
 
     it 'should copy file' do
       processor.on_message(msg)
-      processor.result_details[:info][:file].must_match /WAVE/
+      processor.result_details[:info][:format].must_equal 'wav'
     end
   end
-
 end
