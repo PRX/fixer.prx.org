@@ -184,9 +184,19 @@ class BaseProcessorTest < ActiveSupport::TestCase
     processor.original_format.must_equal 'ogg'
   end
 
-  it 'extracts format from uri' do
+  it 'extracts format from the uri' do
     uri = URI.parse 'file://what/test.mp3?wat=dat'
-    processor.extract_format(uri).must_equal 'mp3'
+    processor.format_from_uri(uri).must_equal 'mp3'
+  end
+
+  it 'extracts format from the file' do
+    processor.format_from_file(File.open(in_file('test.ogg'))).must_equal 'ogg'
+  end
+
+  it 'extracts format from a file with no extension' do
+    uri = URI.parse('file://what/an_mp3_no_ext')
+    processor.format_from_file(File.open(in_file('an_mp3_no_ext'))).must_equal 'mp3'
+    # processor.extract_format(uri, in_file('an_mp3_no_ext')).must_equal 'mp3'
   end
 
   it 'downloads a file based on url scheme' do

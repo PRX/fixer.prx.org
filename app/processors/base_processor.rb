@@ -7,6 +7,7 @@ require 'rack'
 require 'fixer_constants'
 require 'system_information'
 require 'service_options'
+require 'audio_monster'
 
 %W(ftp ia http s3).each{|f| require "concerns/#{f}_files" }
 
@@ -237,13 +238,21 @@ class BaseProcessor
     unless original && original_format
       return unless job['original']
       uri = URI.parse(job['original'])
-      self.original_format = extract_format(uri)
       self.original = download_file(uri)
+      self.original_format ||= extract_format(uri, original)
     end
   end
 
-  def extract_format(uri)
+  def extract_format(uri, file)
+    format_from_file(file) || format_from_uri(uri)
+  end
+
+  def format_from_uri(uri)
     File.extname((uri.path || '').split('/').last).downcase[1..-1]
+  end
+
+  def format_from_file(file)
+    AudioMonster.info_for(file.path)[:format]
   end
 
   def download_file(uri)
@@ -255,10 +264,8 @@ class BaseProcessor
   end
 
   def file_schemes
-    @_file_schemes ||= begin
-      s = ['s3', 'ia', 'ftp', 'http', 'https']
-      s << 'file' if SystemInformation.env != 'production'
-      s
+    @_file_schemes ||= ['s3', 'ia', 'ftp', 'http', 'https'].tap  do |fs|
+      fs << 'file' if SystemInformation.env != 'production'
     end
   end
 
