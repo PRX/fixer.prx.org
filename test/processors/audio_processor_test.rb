@@ -2,10 +2,6 @@ require 'test_helper'
 
 class AudioProcessorTest < ActiveSupport::TestCase
 
-  def travis?
-    ENV['TRAVIS']
-  end
-
   before {
     WebMock.disable_net_connect!
   }

@@ -49,3 +49,6 @@ def in_file(i)
   File.expand_path(File.dirname(__FILE__) + '/fixtures/files/' + i)
 end
 
+def travis?
+  ENV['TRAVIS']
+end

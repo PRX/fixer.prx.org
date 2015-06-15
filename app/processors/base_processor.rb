@@ -43,14 +43,21 @@ class BaseProcessor
     self.options = opts[:options]
   end
 
+  def audio_monster
+    @audio_monster ||= ::AudioMonster
+  end
+
+  def audio_monster=(am)
+    @audio_monster = am
+  end
+
   def completed_with(info={}, message=nil)
     message ||= (caller[0][/`.*'/][1..-2].humanize + " #{COMPLETE}.") rescue 'complete.'
     self.result_details = { status: COMPLETE, info: info, message: message}
   end
 
   def file_info(file=destination)
-    out, err = AudioMonster.run_command("file -b #{file.path}", nice: 'n', echo_return: false)
-    { file: out.chomp }
+    audio_monster.info_for(file.path)
   end
 
   def publish_update(log)
@@ -252,7 +259,7 @@ class BaseProcessor
   end
 
   def format_from_file(file)
-    AudioMonster.info_for(file.path)[:format]
+    audio_monster.info_for(file.path)[:format]
   end
 
   def download_file(uri)

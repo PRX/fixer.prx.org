@@ -2,8 +2,6 @@ require 'test_helper'
 
 class BaseProcessorTest < ActiveSupport::TestCase
 
-  let(:processor) { BaseProcessor.new }
-
   let(:task_message) {
     {
       'task' => {
@@ -22,6 +20,42 @@ class BaseProcessorTest < ActiveSupport::TestCase
       }
     }
   }
+
+  let(:audio_monster) do
+    Minitest::Mock.new
+  end
+
+  let(:processor) do
+    BaseProcessor.new(logger: Logger.new('/dev/null')).tap do |p|
+      p.audio_monster = audio_monster if travis?
+    end
+  end
+
+  let(:mp3_info) do
+    {
+      size: 774059,
+      content_type: 'audio/mpeg',
+      format: 'mp3',
+      channel_mode: 'Mono',
+      channels: 1,
+      bit_rate: 128,
+      length: 48.352653,
+      sample_rate: 44100
+    }
+  end
+
+  let(:ogg_info) do
+    {
+      size: 164196,
+      content_type: 'audio/ogg',
+      format: 'ogg',
+      channel_mode: 'Stereo',
+      channels: 2,
+      bit_rate: 128,
+      length: 12.57712,
+      sample_rate: 44100
+    }
+  end
 
   describe 'class methods' do
 
@@ -177,6 +211,8 @@ class BaseProcessorTest < ActiveSupport::TestCase
   end
 
   it 'downloads the original' do
+    audio_monster.expect(:info_for, ogg_info, [String]) if travis?
+
     processor.job = { 'original' => "file://#{in_file('test.ogg')}"}
     processor.download_original
 
@@ -190,10 +226,12 @@ class BaseProcessorTest < ActiveSupport::TestCase
   end
 
   it 'extracts format from the file' do
+    audio_monster.expect(:info_for, ogg_info, [String]) if travis?
     processor.format_from_file(File.open(in_file('test.ogg'))).must_equal 'ogg'
   end
 
   it 'extracts format from a file with no extension' do
+    audio_monster.expect(:info_for, mp3_info, [Object])
     uri = URI.parse('file://what/an_mp3_no_ext')
     processor.format_from_file(File.open(in_file('an_mp3_no_ext'))).must_equal 'mp3'
     # processor.extract_format(uri, in_file('an_mp3_no_ext')).must_equal 'mp3'
