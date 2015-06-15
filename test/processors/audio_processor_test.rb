@@ -353,12 +353,15 @@ class AudioProcessorTest < ActiveSupport::TestCase
         info: {
           size: 90696,
           content_type: 'audio/mpeg',
-          channel_mode: 'JStereo',
+          format: 'mp3',
+          channel_mode: 'Stereo',
+          channels: 2,
           bit_rate: 128,
-          length: 5,
+          length: 5.642449,
           sample_rate: 44100,
           version: 1,
-          layer: 3
+          layer: 3,
+          padding: false
         },
         message: 'Transcode audio complete.'
       })
