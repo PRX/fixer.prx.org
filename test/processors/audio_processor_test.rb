@@ -354,7 +354,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
           size: 90696,
           content_type: 'audio/mpeg',
           format: 'mp3',
-          channel_mode: 'Stereo',
+          channel_mode: 'JStereo',
           channels: 2,
           bit_rate: 128,
           length: 5.642449,
