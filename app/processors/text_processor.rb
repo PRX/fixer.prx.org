@@ -23,7 +23,7 @@ class TextProcessor < BaseProcessor
     end
 
     base_file_name = File.basename(source.path) + '.json'
-    temp_file = AudioMonster.create_temp_file(base_file_name, false)
+    temp_file = audio_monster.create_temp_file(base_file_name, false)
     temp_file.write analysis.to_json
     temp_file.fsync
 

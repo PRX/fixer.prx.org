@@ -12,14 +12,6 @@ class AudioProcessor < BaseProcessor
 
   task_types ['transcode', 'copy', 'analyze', 'validate', 'cut', 'wrap', 'transcribe', 'waveformjson', 'tone_detect', 'silence_detect', 'slice']
 
-  def audio_monster
-    @audio_monster ||= ::AudioMonster
-  end
-
-  def audio_monster=(am)
-    @audio_monster = am
-  end
-
   # make sure to handle 64 kb limit on transcripts
   # perhaps put the transcript/metadata as a result file rather than a response?
   def transcribe_audio

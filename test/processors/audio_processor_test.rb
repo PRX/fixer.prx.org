@@ -2,10 +2,6 @@ require 'test_helper'
 
 class AudioProcessorTest < ActiveSupport::TestCase
 
-  def travis?
-    ENV['TRAVIS']
-  end
-
   before {
     WebMock.disable_net_connect!
   }
@@ -51,6 +47,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
         audio_monster.expect(:info_for_wav, {:size=>4277159, :content_type=>"audio/vnd.wave", :channel_mode=>"Mono", :bit_rate=>705, :length=>48, :sample_rate=>44100}, [String])
         audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
+        audio_monster.expect(:info_for, { format: 'wav' }, [String])
       end
 
       processor.on_message(msg)
@@ -80,6 +77,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
         audio_monster.expect(:slice_wav, "/tmp/audio_monster/test_long.wav20150528-43657-18y5zb.wav", [String, String, String, String])
         audio_monster.expect(:info_for_wav, {:size=>441044, :content_type=>"audio/vnd.wave", :channel_mode=>"Mono", :bit_rate=>705, :length=>5, :sample_rate=>44100}, [String])
+        audio_monster.expect(:info_for, { format: 'wav' }, [String])
       end
 
       processor.on_message(msg)
@@ -107,6 +105,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         # audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
         audio_monster.expect(:encode_wav_pcm_from_flac, ["0\n", ""], [String, String])
         audio_monster.expect(:tone_detect, [{:start=>5.055, :finish=>6.2, :min=>0.050196286, :max=>0.091354366}], [String, Fixnum, Float, Float])
+        audio_monster.expect(:info_for, { format: 'flac' }, [String])
       end
 
       processor.on_message(msg)
@@ -142,6 +141,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         # audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
         audio_monster.expect(:encode_wav_pcm_from_flac, ["0\n", ""], [String, String])
         audio_monster.expect(:silence_detect, [{:start=>6.168, :finish=>14.999, :min=>0.0, :max=>0.0049678111}], [String, Float, Float])
+        audio_monster.expect(:info_for, { format: 'flac' }, [String])
       end
 
       processor.on_message(msg)
@@ -190,6 +190,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:create_wav_wrapped_mp2, true, [String, String, Hash])
         audio_monster.expect(:info_for_wav, {:size=>4277159, :content_type=>"audio/vnd.wave", :channel_mode=>"Mono", :bit_rate=>705, :length=>48, :sample_rate=>44100}, [String])
         audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
+        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
       end
 
       processor.on_message(msg)
@@ -236,6 +237,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
         audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
+        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
       end
 
       processor.stub(:waveformjson, { foo: 'bar'} ) do
@@ -253,6 +255,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
         audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
         audio_monster.expect(:audio_file_duration, 5.616, [String])
+        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
       end
 
       result = {}
@@ -286,6 +289,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
         audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
+        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
       end
 
       # stub_request(:post, "https://www.google.com/speech-api/v2/recognize?client=chrome&key=AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw&lang=en-us&output=json").
@@ -321,8 +325,9 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
         audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
         audio_monster.expect(:encode_mp3_from_wav, true, [String, String, Hash])
-        audio_monster.expect(:info_for_mp3, {:size=>90696, :content_type=>"audio/mpeg", :channel_mode=>"JStereo", :bit_rate=>128, :length=>5, :sample_rate=>44100, :version=>1, :layer=>3}, [String])
-        audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
+        audio_monster.expect(:info_for_mp3, { size: 90696, content_type: 'audio/mpeg', format: 'mp3', channel_mode: 'JStereo', channels: 2, bit_rate: 128, length: 5.642449, sample_rate: 44100, version: 1, layer: 3, padding: false }, [String])
+        audio_monster.expect(:loudness_info, { :integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
+        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
       end
     }
 
@@ -353,12 +358,15 @@ class AudioProcessorTest < ActiveSupport::TestCase
         info: {
           size: 90696,
           content_type: 'audio/mpeg',
+          format: 'mp3',
           channel_mode: 'JStereo',
+          channels: 2,
           bit_rate: 128,
-          length: 5,
+          length: 5.642449,
           sample_rate: 44100,
           version: 1,
-          layer: 3
+          layer: 3,
+          padding: false
         },
         message: 'Transcode audio complete.'
       })
@@ -383,6 +391,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
       if travis?
         audio_monster.expect(:info_for_mp2, {:size=>179712, :content_type=>"audio/mpeg", :channel_mode=>"Stereo", :bit_rate=>256, :length=>5, :sample_rate=>48000, :version=>1, :layer=>2}, [String])
         audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
+        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
       end
     }
 
@@ -430,6 +439,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
       if travis?
         audio_monster.expect(:info_for_mp2, {:size=>179712, :content_type=>"audio/mpeg", :channel_mode=>"Stereo", :bit_rate=>256, :length=>5, :sample_rate=>48000, :version=>1, :layer=>2}, [String])
         audio_monster.expect(:validate_mp2, [{}, {:size=>179712, :content_type=>"audio/mpeg", :channel_mode=>"Stereo", :bit_rate=>256, :length=>5, :sample_rate=>48000, :version=>1, :layer=>2}], [String, Hash])
+        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
       end
 
       processor.on_message(msg)
@@ -459,6 +469,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
         audio_monster.expect(:info_for_wav, {:size=>4277159, :content_type=>"audio/vnd.wave", :channel_mode=>"Mono", :bit_rate=>705, :length=>48, :sample_rate=>44100}, [String])
         audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
         audio_monster.expect(:cut_wav, ["0", "sox WARN sox: Option `-s' is deprecated, use `-e signed-integer' instead.", "sox WARN sox: Option `-s' is deprecated, use `-e signed-integer' instead."], [String, String, Fixnum, Fixnum])
+        audio_monster.expect(:info_for, { format: 'wav' }, [String])
       end
       processor.on_message(msg)
     end

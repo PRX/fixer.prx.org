@@ -1,7 +1,15 @@
 require 'test_helper'
 
 class TextProcessorTest < ActiveSupport::TestCase
-  let(:processor) { TextProcessor.new(logger: Logger.new('/dev/null')) }
+  let(:audio_monster) do
+    Minitest::Mock.new
+  end
+
+  let(:processor) do
+    TextProcessor.new(logger: Logger.new('/dev/null')).tap do |p|
+      p.audio_monster = audio_monster if travis?
+    end
+  end
 
   it 'defines supported tasks' do
     TextProcessor.supported_tasks.first.must_equal 'analyze'
@@ -31,6 +39,11 @@ class TextProcessorTest < ActiveSupport::TestCase
     }
 
     it 'should analyze file' do
+
+      if travis?
+        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
+        audio_monster.expect(:info_for, { format: 'text' }, [String])
+      end
 
       stub_request(:post, "http://api.opencalais.com/tag/rs/enrich").
         with(headers: {'Accept'=>'Application/JSON;charset=utf-8', 'Calculaterelevancescore'=>'false', 'Content-Type'=>'TEXT/RAW', 'Docrdfaccessible'=>'false', 'Enablemetadatatype'=>'SocialTags', 'Host'=>'api.opencalais.com:80', 'Omitoutputtingoriginaltext'=>'TRUE', 'Outputformat'=>'Application/JSON'}).
@@ -82,5 +95,4 @@ class TextProcessorTest < ActiveSupport::TestCase
       json.must_be :key?, 'topics'
     end
   end
-
 end

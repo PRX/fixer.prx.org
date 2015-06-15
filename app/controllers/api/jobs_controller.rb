@@ -43,7 +43,7 @@ module Api
       option_keys = extract_options(params).flatten
       task_attributes = [:task_type, :result, :label, :call_back, options: option_keys]
       task_attributes << { sequence: { tasks: task_attributes.dup } }
-      job_attrs = [:job_type, :original, :status, :call_back, :priority, :retry_max, :retry_delay, tasks: task_attributes]
+      job_attrs = [:job_type, :original, :original_format, :status, :call_back, :priority, :retry_max, :retry_delay, tasks: task_attributes]
       params.require(:job).permit(job_attrs)
     end
 

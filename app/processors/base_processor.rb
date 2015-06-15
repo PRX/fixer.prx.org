@@ -7,6 +7,7 @@ require 'rack'
 require 'fixer_constants'
 require 'system_information'
 require 'service_options'
+require 'audio_monster'
 
 %W(ftp ia http s3).each{|f| require "concerns/#{f}_files" }
 
@@ -42,14 +43,21 @@ class BaseProcessor
     self.options = opts[:options]
   end
 
+  def audio_monster
+    @audio_monster ||= ::AudioMonster
+  end
+
+  def audio_monster=(am)
+    @audio_monster = am
+  end
+
   def completed_with(info={}, message=nil)
     message ||= (caller[0][/`.*'/][1..-2].humanize + " #{COMPLETE}.") rescue 'complete.'
     self.result_details = { status: COMPLETE, info: info, message: message}
   end
 
   def file_info(file=destination)
-    out, err = AudioMonster.run_command("file -b #{file.path}", nice: 'n', echo_return: false)
-    { file: out.chomp }
+    audio_monster.info_for(file.path)
   end
 
   def publish_update(log)
@@ -237,13 +245,21 @@ class BaseProcessor
     unless original && original_format
       return unless job['original']
       uri = URI.parse(job['original'])
-      self.original_format = extract_format(uri)
       self.original = download_file(uri)
+      self.original_format ||= extract_format(uri, original)
     end
   end
 
-  def extract_format(uri)
+  def extract_format(uri, file)
+    format_from_file(file) || format_from_uri(uri)
+  end
+
+  def format_from_uri(uri)
     File.extname((uri.path || '').split('/').last).downcase[1..-1]
+  end
+
+  def format_from_file(file)
+    audio_monster.info_for(file.path)[:format]
   end
 
   def download_file(uri)
@@ -255,10 +271,8 @@ class BaseProcessor
   end
 
   def file_schemes
-    @_file_schemes ||= begin
-      s = ['s3', 'ia', 'ftp', 'http', 'https']
-      s << 'file' if SystemInformation.env != 'production'
-      s
+    @_file_schemes ||= ['s3', 'ia', 'ftp', 'http', 'https'].tap  do |fs|
+      fs << 'file' if SystemInformation.env != 'production'
     end
   end
 
