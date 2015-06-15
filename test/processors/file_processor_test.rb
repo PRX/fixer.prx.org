@@ -1,7 +1,16 @@
 require 'test_helper'
 
 class FileProcessorTest < ActiveSupport::TestCase
-  let(:processor) { FileProcessor.new(logger: Logger.new('/dev/null')) }
+
+  let(:audio_monster) do
+    Minitest::Mock.new
+  end
+
+  let(:processor) do
+    FileProcessor.new(logger: Logger.new('/dev/null')).tap do |p|
+      p.audio_monster = audio_monster if travis?
+    end
+  end
 
   it 'defines supported tasks' do
     FileProcessor.supported_tasks.first.must_equal 'copy'
@@ -23,6 +32,12 @@ class FileProcessorTest < ActiveSupport::TestCase
     }
 
     it 'should copy file' do
+      if travis?
+        audio_monster.expect(:info_for, { format: 'wav' }, [String])
+        audio_monster.expect(:info_for, { format: 'wav' }, [String])
+        audio_monster.expect(:info_for, { format: 'wav' }, [String])
+      end
+
       processor.on_message(msg)
       processor.result_details[:info][:format].must_equal 'wav'
     end

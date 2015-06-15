@@ -1,7 +1,15 @@
 require 'test_helper'
 
 class ImageProcessorTest < ActiveSupport::TestCase
-  let(:processor) { ImageProcessor.new(logger: Logger.new('/dev/null')) }
+  let(:audio_monster) do
+    Minitest::Mock.new
+  end
+
+  let(:processor) do
+    ImageProcessor.new(logger: Logger.new('/dev/null')).tap do |p|
+      p.audio_monster = audio_monster if travis?
+    end
+  end
 
   it 'defines supported tasks' do
     ImageProcessor.supported_tasks.first.must_equal 'resize'
@@ -23,6 +31,13 @@ class ImageProcessorTest < ActiveSupport::TestCase
     }
 
     it 'should resize a local file' do
+      if travis?
+        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
+        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
+        audio_monster.expect(:info_for, { format: 'jpg' }, [String])
+        audio_monster.expect(:info_for, { format: 'jpg' }, [String])
+      end
+
       processor.on_message(msg)
       processor.result_details[:info][:format].must_equal 'jpg'
     end

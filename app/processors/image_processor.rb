@@ -11,7 +11,7 @@ class ImageProcessor < BaseProcessor
 
   def resize_image
     magick_image.resize options['size'] || '100x100'
-    task_tmp = AudioMonster.create_temp_file(File.basename(source.path))
+    task_tmp = audio_monster.create_temp_file(File.basename(source.path))
     magick_image.write(task_tmp.path)
     self.destination = task_tmp
 
@@ -20,7 +20,7 @@ class ImageProcessor < BaseProcessor
 
   def rotate_image
     magick_image.rotate options['rotation'] || '-90>'
-    task_tmp = AudioMonster.create_temp_file(File.basename(source.path))
+    task_tmp = audio_monster.create_temp_file(File.basename(source.path))
     magick_image.write(task_tmp.path)
     self.destination = task_tmp
 
@@ -29,7 +29,7 @@ class ImageProcessor < BaseProcessor
 
   def format_image
     format = options['format'] || 'png'
-    task_tmp = AudioMonster.create_temp_file(File.basename(source.path))
+    task_tmp = audio_monster.create_temp_file(File.basename(source.path))
     magick_image.write(task_tmp.path)
     self.destination = task_tmp
     self.destination_format = format

@@ -231,7 +231,9 @@ class BaseProcessorTest < ActiveSupport::TestCase
   end
 
   it 'extracts format from a file with no extension' do
-    audio_monster.expect(:info_for, mp3_info, [Object])
+    audio_monster.expect(:info_for, mp3_info, [Object]) if travis?
+    audio_monster.expect(:info_for, mp3_info, [Object]) if travis?
+
     uri = URI.parse('file://what/an_mp3_no_ext')
     processor.format_from_file(File.open(in_file('an_mp3_no_ext'))).must_equal 'mp3'
     processor.extract_format(uri, File.open(in_file('an_mp3_no_ext'))).must_equal 'mp3'
