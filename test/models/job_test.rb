@@ -64,6 +64,21 @@ class JobTest < ActiveSupport::TestCase
     job.calculate_retry_delay.must_equal 7.days
   end
 
+  it 'can have retries scheduled' do
+    # set-up preconditions to retry
+    t1 = job.tasks.create!(task_type: 'audio', label: 'test1')
+    job.retry_max = 10
+
+    job.wont_be :success?
+    job.wont_be :cancelled?
+    job.must_be :retry?
+    job.wont_be :retry_scheduled?
+
+    job.retry_on_error
+
+    job.must_be :retry_scheduled?
+  end
+
   describe 'task updates' do
 
     let(:task) { job.tasks.create!(task_type: 'audio', label: 'test1')}
