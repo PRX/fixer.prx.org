@@ -14,9 +14,7 @@ class BaseModel < ActiveRecord::Base
   def retry_scheduled?
     scheduled_jobs.
       where(job_method: 'scheduled_retry').
-      where('next_fire_at > ?', Time.now).
-      where('status != \'complete\'').exists?
-  rescue
-    false
+      where('status != ?', COMPLETE).
+      exists?
   end
 end
