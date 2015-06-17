@@ -122,7 +122,5 @@ class TextProcessor < BaseProcessor
     def normalize(s)
       (s || '').remove_formatting.downcase
     end
-
   end
-
 end
