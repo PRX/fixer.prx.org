@@ -2,36 +2,36 @@ GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (2.3.1)
-    actionmailer (4.2.1)
-      actionpack (= 4.2.1)
-      actionview (= 4.2.1)
-      activejob (= 4.2.1)
+    actionmailer (4.2.2)
+      actionpack (= 4.2.2)
+      actionview (= 4.2.2)
+      activejob (= 4.2.2)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 1.0, >= 1.0.5)
-    actionpack (4.2.1)
-      actionview (= 4.2.1)
-      activesupport (= 4.2.1)
+    actionpack (4.2.2)
+      actionview (= 4.2.2)
+      activesupport (= 4.2.2)
       rack (~> 1.6)
       rack-test (~> 0.6.2)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
-    actionview (4.2.1)
-      activesupport (= 4.2.1)
+    actionview (4.2.2)
+      activesupport (= 4.2.2)
       builder (~> 3.1)
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
-    activejob (4.2.1)
-      activesupport (= 4.2.1)
+    activejob (4.2.2)
+      activesupport (= 4.2.2)
       globalid (>= 0.3.0)
-    activemodel (4.2.1)
-      activesupport (= 4.2.1)
+    activemodel (4.2.2)
+      activesupport (= 4.2.2)
       builder (~> 3.1)
-    activerecord (4.2.1)
-      activemodel (= 4.2.1)
-      activesupport (= 4.2.1)
+    activerecord (4.2.2)
+      activemodel (= 4.2.2)
+      activesupport (= 4.2.2)
       arel (~> 6.0)
-    activesupport (4.2.1)
+    activesupport (4.2.2)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -48,10 +48,10 @@ GEM
       nu_wav
       ptools
       ruby-mp3info (~> 0.8.6)
-    autoprefixer-rails (5.2.0)
+    autoprefixer-rails (5.2.0.1)
       execjs
       json
-    aws-sdk-core (2.0.47)
+    aws-sdk-core (2.0.48)
       builder (~> 3.0)
       jmespath (~> 1.0)
       multi_json (~> 1.0)
@@ -61,7 +61,7 @@ GEM
     bootstrap-kaminari-views (0.0.5)
       kaminari (>= 0.13)
       rails (>= 3.1)
-    bootstrap-sass (3.3.4.1)
+    bootstrap-sass (3.3.5)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
     builder (3.2.2)
@@ -113,8 +113,8 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    faraday (0.8.9)
-      multipart-post (~> 1.2.0)
+    faraday (0.9.1)
+      multipart-post (>= 1.2, < 3)
     faraday_middleware (0.9.1)
       faraday (>= 0.7.4, < 0.10)
     ffi (1.9.8)
@@ -122,11 +122,11 @@ GEM
       libyajl2 (~> 1.2)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
-    fog (1.30.0)
+    fog (1.31.0)
       fog-atmos
       fog-aws (~> 0.0)
       fog-brightbox (~> 0.4)
-      fog-core (~> 1.27, >= 1.27.4)
+      fog-core (~> 1.30)
       fog-ecloud
       fog-google (>= 0.0.2)
       fog-json
@@ -148,7 +148,7 @@ GEM
     fog-atmos (0.1.0)
       fog-core
       fog-xml
-    fog-aws (0.4.0)
+    fog-aws (0.4.1)
       fog-core (~> 1.27)
       fog-json (~> 1.0)
       fog-xml (~> 0.1)
@@ -157,30 +157,30 @@ GEM
       fog-core (~> 1.22)
       fog-json
       inflecto (~> 0.0.2)
-    fog-core (1.30.0)
+    fog-core (1.31.1)
       builder
       excon (~> 0.45)
       formatador (~> 0.2)
       mime-types
       net-scp (~> 1.1)
       net-ssh (>= 2.1.3)
-    fog-ecloud (0.1.1)
+    fog-ecloud (0.1.3)
       fog-core
       fog-xml
     fog-google (0.0.5)
       fog-core
       fog-json
       fog-xml
-    fog-json (1.0.1)
+    fog-json (1.0.2)
       fog-core (~> 1.0)
-      multi_json (~> 1.0)
+      multi_json (~> 1.10)
     fog-local (0.2.1)
       fog-core (~> 1.27)
     fog-powerdns (0.1.1)
       fog-core (~> 1.27)
       fog-json (~> 1.0)
       fog-xml (~> 0.1)
-    fog-profitbricks (0.0.2)
+    fog-profitbricks (0.0.3)
       fog-core
       fog-xml
       nokogiri
@@ -224,7 +224,7 @@ GEM
     google_speech (0.4.1)
       excon
       uuid
-    guard (2.12.5)
+    guard (2.12.6)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -249,7 +249,7 @@ GEM
       haml (>= 4.0.6, < 5.0)
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
-    hashie (3.4.1)
+    hashie (3.4.2)
     hitimes (1.2.2)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
@@ -261,12 +261,12 @@ GEM
     i18n (0.7.0)
     inflecto (0.0.2)
     ipaddress (0.8.0)
-    jbuilder (2.2.16)
+    jbuilder (2.3.0)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jmespath (1.0.2)
       multi_json (~> 1.0)
-    jquery-rails (4.0.3)
+    jquery-rails (4.0.4)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
@@ -277,7 +277,7 @@ GEM
     kgio (2.9.3)
     language_list (1.1.0)
     libyajl2 (1.2.0)
-    listen (2.10.0)
+    listen (2.10.1)
       celluloid (~> 0.16.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -294,7 +294,7 @@ GEM
     mini_magick (4.2.7)
     mini_portile (0.6.2)
     minitest (5.7.0)
-    minitest-reporters (1.0.16)
+    minitest-reporters (1.0.17)
       ansi
       builder
       minitest (>= 5.0)
@@ -306,9 +306,9 @@ GEM
     mixlib-config (2.2.1)
     mixlib-log (1.6.0)
     mixlib-shellout (2.1.0)
-    multi_json (1.11.0)
+    multi_json (1.11.1)
     multi_xml (0.5.5)
-    multipart-post (1.2.0)
+    multipart-post (2.0.0)
     nenv (0.2.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -333,10 +333,10 @@ GEM
       rake (~> 10.1)
       systemu (~> 2.6.4)
       wmi-lite (~> 1.0)
-    open_calais (0.1.0)
+    open_calais (0.2.2)
       activesupport
       excon
-      faraday (>= 0.7.4, < 0.9)
+      faraday (>= 0.7.4)
       faraday_middleware (~> 0.9)
       hashie (>= 0.4.0)
       multi_json (~> 1.0, >= 1.0.3)
@@ -349,21 +349,21 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     ptools (1.3.2)
-    rack (1.6.1)
+    rack (1.6.2)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rails (4.2.1)
-      actionmailer (= 4.2.1)
-      actionpack (= 4.2.1)
-      actionview (= 4.2.1)
-      activejob (= 4.2.1)
-      activemodel (= 4.2.1)
-      activerecord (= 4.2.1)
-      activesupport (= 4.2.1)
+    rails (4.2.2)
+      actionmailer (= 4.2.2)
+      actionpack (= 4.2.2)
+      actionview (= 4.2.2)
+      activejob (= 4.2.2)
+      activemodel (= 4.2.2)
+      activerecord (= 4.2.2)
+      activesupport (= 4.2.2)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 4.2.1)
+      railties (= 4.2.2)
       sprockets-rails
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
@@ -378,9 +378,9 @@ GEM
       rails_stdout_logging
     rails_serve_static_assets (0.0.4)
     rails_stdout_logging (0.0.3)
-    railties (4.2.1)
-      actionpack (= 4.2.1)
-      activesupport (= 4.2.1)
+    railties (4.2.2)
+      actionpack (= 4.2.2)
+      activesupport (= 4.2.2)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.13.0)
@@ -421,7 +421,7 @@ GEM
     shoryuken (1.0.2)
       aws-sdk-core (~> 2.0.21)
       celluloid (~> 0.16.0)
-    sidekiq (3.3.4)
+    sidekiq (3.4.0)
       celluloid (>= 0.16.0)
       connection_pool (>= 2.1.1)
       json
@@ -439,7 +439,7 @@ GEM
       tilt (>= 1.3, < 3)
     slop (3.6.0)
     spring (1.3.6)
-    sprockets (3.1.0)
+    sprockets (3.2.0)
       rack (~> 1.0)
     sprockets-rails (2.3.1)
       actionpack (>= 3.0)
@@ -447,7 +447,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
     stringex (2.5.2)
     systemu (2.6.5)
-    term-ansicolor (1.3.0)
+    term-ansicolor (1.3.1)
       tins (~> 1.0)
     thor (0.19.1)
     thread_safe (0.3.5)
@@ -469,13 +469,13 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
-    uuid (2.3.7)
+    uuid (2.3.8)
       macaddr (~> 1.0)
     warden (1.2.3)
       rack (>= 1.0)
     waveformjson (0.0.2)
       ruby-audio
-    web-console (2.1.2)
+    web-console (2.1.3)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
@@ -484,14 +484,15 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
     wmi-lite (1.0.0)
-    yahoo_content_analysis (0.1.2)
+    yahoo_content_analysis (0.2.1)
       activesupport
       excon
-      faraday (>= 0.7.4, < 0.9)
+      faraday (>= 0.7.4)
       faraday_middleware (~> 0.9)
       hashie (>= 0.4.0)
       language_list
       multi_json (~> 1.0, >= 1.0.3)
+      multi_xml
       simple_oauth
       stringex
 
@@ -529,7 +530,7 @@ DEPENDENCIES
   ohai
   open_calais (~> 0.1)
   pg
-  rails (= 4.2.1)
+  rails (= 4.2.2)
   rails_12factor
   rake
   ruby-audio
