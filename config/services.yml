@@ -16,6 +16,8 @@ default: &default
   yahoo_content_analysis:
     api_key: <%= ENV['YAHOO_CONTENT_ANALYSIS_API_KEY'] %>
     api_secret: <%= ENV['YAHOO_CONTENT_ANALYSIS_API_SECRET'] %>
+  redis:
+    url: <%= ENV['REDIS_PROVIDER'] %>
 
 development:
   <<: *default
@@ -38,3 +40,5 @@ test:
   yahoo_content_analysis:
     api_key: yahoocontentanalysisapikey
     api_secret: yahoocontentanalysisapisecret
+  redis:
+    url: 'redis://localhost:6379/12'
