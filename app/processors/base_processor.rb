@@ -294,7 +294,7 @@ class BaseProcessor
   end
 
   def storage_connection(uri, opts={})
-    service_opts = ServiceOptions.options_for_uri(uri) || ServiceOptions.service_options(uri)
+    service_opts = ServiceOptions.storage_options_for_uri(uri) || ServiceOptions.service_options(uri)
     Fog::Storage.new(service_opts.merge(opts))
   end
 

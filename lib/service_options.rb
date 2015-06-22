@@ -35,17 +35,17 @@ module ServiceOptions
   end
 
   def self.service_options(service)
-    service = storage_provider_abbr_for_uri(service) if service.is_a?(URI)
+    service = provider_abbr_for_uri(service) if service.is_a?(URI)
     options[service].with_indifferent_access
   end
 
-  def self.options_for_uri(uri)
+  def self.storage_options_for_uri(uri)
     options = nil
     # see if there is a user and pwd
     key      = URI.decode(uri.user) if uri.user
     secret   = URI.decode(uri.password) if uri.password
-    provider = storage_provider_for_uri(uri)
-    abbr     = storage_provider_abbr_for_uri(uri)
+    provider = provider_for_uri(uri)
+    abbr     = provider_abbr_for_uri(uri)
     if key && secret && provider && abbr
       options = {
         :provider => provider,
@@ -58,22 +58,50 @@ module ServiceOptions
     nil
   end
 
+  def self.awssdk_service_options
+    so = ServiceOptions.service_options(:aws)
+    {
+      access_key_id: so[:aws_access_key_id],
+      secret_access_key: so[:aws_secret_access_key]
+    }
+  end
+
+  def self.awssdk_options_for_uri(uri)
+    options = {}
+
+    if uri.user && uri.password
+      options[:access_key_id] = URI.decode(uri.user)
+      options[:secret_access_key] = URI.decode(uri.password)
+    end
+
+    if uri.host.include?('.')
+      options[:endpoint] = uri.host
+    else
+      options[:region] = uri.host
+    end
+
+    options
+  end
+
+
   def self.parse_service_options
     so = YAML::load(ERB.new(File.read(file_path)).result).with_indifferent_access
     so[SystemInformation.env].with_indifferent_access if so
   end
 
-  def self.storage_provider_for_uri(u)
+  def self.provider_for_uri(u)
     case u.scheme
     when 's3' then 'AWS'
+    when 'sqs' then 'AWS'
     when 'ia' then 'InternetArchive'
     else nil
     end
   end
 
-  def self.storage_provider_abbr_for_uri(u)
+  def self.provider_abbr_for_uri(u)
     case u.scheme
     when 's3' then :aws
+    when 'sqs' then :aws
     when 'ia' then :ia
     else nil
     end

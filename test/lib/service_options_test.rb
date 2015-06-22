@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'service_options'
 
 class ServiceOptionsTest < ActiveSupport::TestCase
 
@@ -31,7 +32,7 @@ class ServiceOptionsTest < ActiveSupport::TestCase
 
   it 'gets provider for uri' do
     uri = URI.parse('s3://test.aws.amazon.com/test/test.mp3')
-    provider = ServiceOptions.storage_provider_abbr_for_uri(uri)
+    provider = ServiceOptions.provider_abbr_for_uri(uri)
     provider.must_equal :aws
   end
 
@@ -51,7 +52,7 @@ class ServiceOptionsTest < ActiveSupport::TestCase
 
   it 'can extract options from uri' do
     uri = URI.parse('s3://KEY:secret@test.aws.amazon.com/test/test.mp3')
-    opts = ServiceOptions.options_for_uri(uri)
+    opts = ServiceOptions.storage_options_for_uri(uri)
     opts['aws_access_key_id'].must_equal 'KEY'
     opts['aws_secret_access_key'].must_equal 'secret'
   end
