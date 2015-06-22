@@ -24,12 +24,12 @@ class WebHookMailer < ApplicationMailer
 
   def format_subject(subject, web_hook)
     if subject.blank?
-      "[FIXER] notification: #{web_hook['informer_status']}: #{web_hook['informer_type']}: #{web_hook['informer_id']}"
+      "[FIXER] notification: #{web_hook[:informer_status]}: #{web_hook[:informer_type]}: #{web_hook[:informer_id]}"
     else
       s = URI.decode_www_form_component(subject) || ''
-      s.gsub!(/\$id/, web_hook['informer_id'])
-      s.gsub!(/\$type/, web_hook['informer_type'])
-      s.gsub!(/\$status/, web_hook['informer_status'])
+      s.gsub!(/\$id/, web_hook[:informer_id])
+      s.gsub!(/\$type/, web_hook[:informer_type])
+      s.gsub!(/\$status/, web_hook[:informer_status])
       s
     end
   end
