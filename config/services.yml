@@ -41,4 +41,6 @@ test:
     api_key: yahoocontentanalysisapikey
     api_secret: yahoocontentanalysisapisecret
   redis:
-    url: 'redis://localhost:6379/12'
+    url: 'redis://localhost:6379/'
+    queue: 'test_fixer_queue'
+    worker: 'TestFixerWorker'
