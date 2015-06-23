@@ -34,6 +34,7 @@ module SqsCallback
     so.merge(ServiceOptions.awssdk_options_for_uri(uri))
   end
 
+  # could make into settings, if people need it
   def queue_options
     {
       'DelaySeconds' => "0",
