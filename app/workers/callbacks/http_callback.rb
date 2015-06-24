@@ -10,7 +10,7 @@ module HttpCallback
   alias_method :https_callback, :http_callback
 
   def http_execute(uri, data, options={})
-    connection = Excon.new(uri.to_s, ssl_verify_peer: false )
+    connection = Excon.new(uri.to_s, ssl_verify_peer: ENV['SSL_VERIFY_PEER'] )
     request = {
       method: options[:method] || :post,
       headers: options[:headers] || {},
