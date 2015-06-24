@@ -1,18 +1,14 @@
 # encoding: utf-8
 
-require 'fixer_constants'
-require 'system_information'
-require 'service_options'
+require 'custom_base_worker'
 
-class JobCreateWorker
+class JobCreateWorker < CustomBaseWorker
 
-  include FixerConstants
-  include Shoryuken::Worker
+  worker_options queue: "#{SystemInformation.env}_fixer_job_create"
 
-  shoryuken_options queue: "#{SystemInformation.env}_fixer_job_create"
-
-  def perform(sqs_msg, body)
+  def process(body)
     ActiveRecord::Base.connection_pool.with_connection do
+      body = JSON.parse(body) if body.is_a?(String)
       job = body.with_indifferent_access
       job = job[:job] if job[:job]
       client_id = job.delete(:client_id)

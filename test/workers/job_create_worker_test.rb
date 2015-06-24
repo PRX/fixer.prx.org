@@ -69,10 +69,8 @@ class JobCreateWorkerTest < ActiveSupport::TestCase
     }
   end
 
-  let(:sqs_message) { Minitest::Mock.new }
-
   it 'creates a job from a message' do
-    job = JobCreateWorker.new.perform(sqs_message, msg)
+    job = JobCreateWorker.new.process(msg)
     job.wont_be_nil
     job.id.wont_be_nil
     job.tasks.size.must_equal 1
@@ -80,12 +78,12 @@ class JobCreateWorkerTest < ActiveSupport::TestCase
 
   it 'creates a job from a message with a uuid' do
     msg[:id] = '3a38f72f-8ef9-40c1-8d1c-484c93d97e97'
-    job = JobCreateWorker.new.perform(sqs_message, msg)
+    job = JobCreateWorker.new.process(msg)
     job.id.must_equal '3a38f72f-8ef9-40c1-8d1c-484c93d97e97'
   end
 
   it 'creates a job from a message with a sequence' do
-    job = JobCreateWorker.new.perform(sqs_message, sequence_msg)
+    job = JobCreateWorker.new.process(sequence_msg)
     job.tasks.first.tasks.size.must_equal 2
   end
 end
