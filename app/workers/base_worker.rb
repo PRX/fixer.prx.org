@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-require 'active_job'
 require 'fixer_constants'
 require 'system_information'
 require 'service_options'
+require 'active_job'
 
 class BaseWorker < ActiveJob::Base
   include FixerConstants
