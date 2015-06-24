@@ -19,8 +19,10 @@ namespace :sqs do
     }
 
     # create the update queue and DLQ
-    dlq_arn = create_dlq("#{env}_fixer_update", default_options)
-    create_queue("#{env}_fixer_update", dlq_arn, default_options)
+    ['update', 'job_create'].each do |queue|
+      dlq_arn = create_dlq("#{env}_fixer_#{queue}", default_options)
+      create_queue("#{env}_fixer_#{queue}", dlq_arn, default_options)
+    end
 
     # create the priority queues
     dlq_arn = create_dlq("#{env}_fixer", default_options)
