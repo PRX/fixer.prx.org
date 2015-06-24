@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'rack'
 require 'aws-sdk-core'
 require 'service_options'
 
@@ -8,8 +9,9 @@ module SqsCallback
     uri = URI.parse(web_hook[:url])
 
     sqs = sqs(sqs_options(uri))
-
     queue = uri.path[1..-1]
+    params = Rack::Utils.parse_nested_query(uri.query)
+
     begin
       sqs.create_queue(queue_name: queue, attributes: queue_options)
     rescue Aws::SQS::Errors::QueueAlreadyExists => e
@@ -18,7 +20,23 @@ module SqsCallback
 
     queue_url = sqs.get_queue_url(queue_name: queue).queue_url
 
-    sqs.send_message(queue_url: queue_url, message_body: web_hook[:message])
+    msg = message(queue_url, web_hook, params['worker'])
+    sqs.send_message(msg)
+  end
+
+  def message(url, web_hook, worker)
+    msg = {
+      queue_url: url,
+      message_body: web_hook[:message],
+      message_attributes: {}
+    }
+    if worker
+      msg[:message_attributes]['shoryuken_class'] = {
+        string_value: worker,
+        data_type: 'String'
+      }
+    end
+    msg
   end
 
   def sqs(options={})
