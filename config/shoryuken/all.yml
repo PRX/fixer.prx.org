@@ -4,6 +4,7 @@
 :delay: <%= ENV['SHORYUKEN_DELAY'] || 5 %>
 :queues:
   - [<%= env %>_fixer_update, 3]
+  - [<%= env %>_fixer_job_create, 3]
   - [<%= env %>_fixer_p1, 4]
   - [<%= env %>_fixer_p2, 3]
   - [<%= env %>_fixer_p3, 2]

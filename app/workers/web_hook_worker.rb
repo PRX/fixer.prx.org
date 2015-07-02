@@ -1,9 +1,18 @@
 # encoding: utf-8
 
 require 'base_worker'
+require 'service_options'
 require 'excon'
 
+%W(http mailto redis sns sqs).each{|f| require "callbacks/#{f}_callback" }
+
 class WebHookWorker < BaseWorker
+
+  include HttpCallback
+  include MailtoCallback
+  include RedisCallback
+  include SnsCallback
+  include SqsCallback
 
   queue_as :fixer_p2
 
@@ -15,16 +24,9 @@ class WebHookWorker < BaseWorker
     web_hook = web_hook[:web_hook]
 
     uri = URI.parse(web_hook[:url])
-    if uri.scheme[0,4] == 'http'
-      http_execute(web_hook[:url], web_hook[:message], content_type: :json)
-    elsif uri.scheme == 'mailto'
-      WebHookMailer.notification(web_hook).deliver
-    elsif uri.scheme == 'sqs'
-      # TODO
-      raise "Currently SQS is unsupported for web hooks, but is on the way!"
-    else
-      raise "Unsupported web hook URI scheme: #{uri.scheme} for #{uri.to_s}"
-    end
+
+    # send callback based on the web hook url scheme
+    send("#{uri.scheme}_callback", web_hook)
 
     log = publish_webhook_update(web_hook[:id], true)
     return log
@@ -33,44 +35,12 @@ class WebHookWorker < BaseWorker
     if web_hook
       log = publish_webhook_update(web_hook[:id], false) rescue nil
     end
-    return log
+    log
   end
 
   def publish_webhook_update(id, complete)
     log = { web_hook: { id: id, complete: complete } }
     WebHookUpdateWorker.perform_later(log.to_json)
     log
-  end
-
-  def http_execute(uri, data, options={})
-    connection = Excon.new(uri.to_s, ssl_verify_peer: false )
-    request = {
-      method: options[:method] || :post,
-      headers: options[:headers] || {},
-      expects: (200..207).to_a,
-      idempotent: !options[:no_retry],
-      retry_limit: (options.key?(:retry_max) ? options[:retry_max].to_i : 6),
-      middlewares: Excon.defaults[:middlewares] + [Excon::Middleware::RedirectFollower]
-    }
-
-    if [:post, :put, :patch].include?(request[:method])
-      request[:headers]['Content-Type'] = mime_type_string(options[:content_type] || :json)
-      request[:body] = data
-    elsif data.is_a?(Hash)
-      headers[:query] = data
-    end
-
-    connection.request(request)
-  end
-
-  def mime_type_string(type)
-    case type
-    when :json
-      'application/json; charset=utf-8'
-    when :form
-      'application/x-www-form-urlencoded'
-    else
-      'text/html; charset=utf-8'
-    end
   end
 end
