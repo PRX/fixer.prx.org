@@ -34,7 +34,7 @@ class WebHookWorkerTest < ActiveSupport::TestCase
       with(body: web_hook.message,
         headers: {
           'Content-Type' => 'application/json; charset=utf-8',
-          'Host'=>'localhost:80'
+          'Host'=>'localhost'
         }
       ).
       to_return(status: 200, body: "", headers: {})
@@ -48,7 +48,7 @@ class WebHookWorkerTest < ActiveSupport::TestCase
       with(body: web_hook.message,
         headers: {
           'Content-Type' => 'application/json; charset=utf-8',
-          'Host'=>'localhost:80'
+          'Host'=>'localhost'
         }
       ).
       to_return(status: 500, body: 'error will robinson', headers: {})
@@ -63,7 +63,7 @@ class WebHookWorkerTest < ActiveSupport::TestCase
       with(body: '{"some":"message"}',
         headers: {
           'Content-Type' => 'application/json; charset=utf-8',
-          'Host'=>'localhost:80'
+          'Host'=>'localhost'
         }
       ).
       to_return(:status => 200, :body => "", :headers => {})

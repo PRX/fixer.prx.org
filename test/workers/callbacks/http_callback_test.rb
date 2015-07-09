@@ -23,7 +23,7 @@ class HttpCallbackTest < ActiveSupport::TestCase
   it 'can call an http callback' do
     stub_request(:post, 'https://thisisatest.com/callback').
       with(body: '{"result":"success"}',
-           headers: { 'Content-Type' => 'application/json; charset=utf-8', 'Host' => 'thisisatest.com:443' } ).
+           headers: { 'Content-Type' => 'application/json; charset=utf-8', 'Host' => 'thisisatest.com' } ).
       to_return(status: 200, body: 'Processed', headers: {} )
 
     response = callback.http_callback(web_hook)

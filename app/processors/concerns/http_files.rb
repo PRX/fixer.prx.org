@@ -38,6 +38,7 @@ module HttpFiles
         Excon.get(uri.to_s, {
           idempotent: false,
           retry_limit: 0,
+          omit_default_port: true,
           ssl_verify_peer: ENV['SSL_VERIFY_PEER'],
           response_block: streamer,
           middlewares: Excon.defaults[:middlewares] + [Excon::Middleware::RedirectFollower]
