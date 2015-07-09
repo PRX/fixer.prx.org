@@ -31,12 +31,6 @@ class WebHookWorkerTest < ActiveSupport::TestCase
 
   it 'calls worker perform' do
     stub_request(:post, 'http://localhost/audio/transcoded').
-      with(body: web_hook.message,
-        headers: {
-          'Content-Type' => 'application/json; charset=utf-8',
-          'Host'=>'localhost:80'
-        }
-      ).
       to_return(status: 200, body: "", headers: {})
 
     log = worker.perform(msg)
@@ -45,12 +39,6 @@ class WebHookWorkerTest < ActiveSupport::TestCase
 
   it 'schedules retry on failure' do
     stub_request(:post, 'http://localhost/audio/transcoded').
-      with(body: web_hook.message,
-        headers: {
-          'Content-Type' => 'application/json; charset=utf-8',
-          'Host'=>'localhost:80'
-        }
-      ).
       to_return(status: 500, body: 'error will robinson', headers: {})
 
     log = worker.perform(msg)
@@ -60,12 +48,6 @@ class WebHookWorkerTest < ActiveSupport::TestCase
   it 'can make an http call' do
 
     stub_request(:post, 'http://localhost/audio/transcoded').
-      with(body: '{"some":"message"}',
-        headers: {
-          'Content-Type' => 'application/json; charset=utf-8',
-          'Host'=>'localhost:80'
-        }
-      ).
       to_return(:status => 200, :body => "", :headers => {})
 
     worker.http_execute('http://localhost/audio/transcoded', '{"some":"message"}')

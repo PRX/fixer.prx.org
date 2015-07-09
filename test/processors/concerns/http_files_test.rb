@@ -26,10 +26,9 @@ class HttpFilesTest < ActiveSupport::TestCase
   let(:small_uri) { URI.parse('http://test.prx.org/test/small.txt') }
 
   it 'can download from http url' do
-
+    fi = File.open(in_file('test_short.mp2'))
     stub_request(:get, http_uri.to_s).
-      with(headers: { 'Host' => 'test.prx.org:80' } ).
-      to_return(status: 200, headers: {}, body: File.open(in_file('test_short.mp2')))
+      to_return(status: 200, headers: {}, body: fi)
 
     tmp = processor.http_download_file(http_uri)
     tmp.must_be_instance_of File
@@ -37,7 +36,6 @@ class HttpFilesTest < ActiveSupport::TestCase
 
   it 'can download a small file' do
     stub_request(:get, small_uri.to_s).
-      with(headers: { 'Host' => 'test.prx.org:80' } ).
       to_return(status: 200, headers: {}, body: "so very small")
 
     tmp = processor.http_download_file(small_uri)
@@ -45,9 +43,9 @@ class HttpFilesTest < ActiveSupport::TestCase
   end
 
   it 'can download from https url' do
+    fi = File.open(in_file('test_short.mp2'))
     stub_request(:get, https_uri.to_s).
-      with(:headers => { 'Host' => 'test.prx.org:443' } ).
-      to_return(status: 200, headers: {}, body: File.open(in_file('test_short.mp2')))
+      to_return(status: 200, headers: {}, body: fi)
 
     tmp = processor.https_download_file(https_uri)
     tmp.must_be_instance_of File
