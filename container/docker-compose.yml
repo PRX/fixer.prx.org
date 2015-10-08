@@ -1,17 +1,17 @@
 master:
-  build: build/master
+  build: master
   env_file: .env.compose
   ports:
     - "80:80"
   links:
     - db
 masterprocessor:
-  build: build/master_processor
+  build: master_processor
   env_file: .env.compose
   links:
     - db
 worker:
-  build: build/worker
+  build: worker
   env_file: .env.compose
 db:
   image: postgres
