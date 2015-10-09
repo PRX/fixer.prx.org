@@ -1,7 +1,7 @@
 # From https://github.com/phusion/passenger-docker
 # Ruby 2.2
-# passenger-docker image version 0.9.15
-FROM phusion/passenger-ruby22:0.9.15
+# passenger-docker image version 0.9.17
+FROM phusion/passenger-ruby22:0.9.17
 MAINTAINER PRX <sysadmin@prx.org>
 
 ### Initialize

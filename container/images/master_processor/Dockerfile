@@ -1,6 +1,6 @@
 # From https://github.com/phusion/baseimage
-# baseimage image version 0.9.15
-FROM phusion/baseimage:0.9.15
+# baseimage image version 0.9.17
+FROM phusion/baseimage:0.9.17
 MAINTAINER PRX <sysadmin@prx.org>
 
 # Set correct environment variables.

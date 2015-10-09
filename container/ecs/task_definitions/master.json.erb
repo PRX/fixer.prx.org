@@ -1,0 +1,22 @@
+{
+  "family": "fixer_master",
+  "containerDefinitions": [{
+    "name": "fixer_master",
+    "image": "publicradioexchange/fixer_master",
+    "cpu": 500,
+    "memory": 500,
+    "links": [],
+    "portMappings": [{
+      "containerPort": 80,
+      "hostPort": 80,
+      "protocol": "tcp"
+    }],
+    "essential": true,
+    "entryPoint": [],
+    "command": [],
+    "environment": <%= env_json %>,
+    "mountPoints": [],
+    "volumesFrom": []
+  }],
+  "volumes": []
+}

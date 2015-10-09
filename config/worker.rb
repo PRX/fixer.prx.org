@@ -21,7 +21,10 @@ ActiveJob::Base.queue_name_prefix = ENV['RAILS_ENV'] || 'development'
 ActiveJob::Base.queue_name_delimiter = '_'
 
 # load the code
-['lib', 'app/processors', 'app/workers'].each do |path|
+[ 'lib',
+  'app/processors/concerns', 'app/processors',
+  'app/workers/callbacks', 'app/workers/concerns', 'app/workers'
+].each do |path|
   ruby_path = File.join(app_root, path)
   $:.unshift(ruby_path)
   Dir["#{ruby_path}/**/*.rb"].each {|file| require file }
