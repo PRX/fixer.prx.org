@@ -42,4 +42,25 @@ class FileProcessorTest < ActiveSupport::TestCase
       processor.result_details[:info][:format].must_equal 'wav'
     end
   end
+
+  describe 'delete_file' do
+
+    let(:msg) {
+      {
+        task: {
+          id: 'guid1',
+          task_type: 'delete',
+          label: 'whiteout',
+          job: { id: 'guid1', job_type: 'file', status: 'created', original: "file://#{in_file('test_long.wav')}" },
+          options: {}
+        }
+      }.with_indifferent_access
+    }
+
+    it "should delete file" do
+      processor.on_message(msg)
+      processor.result_details[:status].must_equal :complete
+      processor.result_details[:message].must_equal "Delete file complete."
+    end
+  end
 end

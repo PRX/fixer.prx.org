@@ -7,6 +7,10 @@ require 'system_information'
 
 module FtpFiles
 
+  def ftp_delete_file(uri, options={})
+    raise NotImplementedError.new('Delete via ftp not available.')
+  end
+
   def ftp_download_file(uri, options={})
     retry_max = options[:retry_max] || 5
     retry_wait = options[:retry_wait] || 10

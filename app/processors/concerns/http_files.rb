@@ -6,8 +6,18 @@ require 'excon'
 
 module HttpFiles
 
-  def http_upload_file(uri, local_file, options={})
-    raise NotImplementedError.new('Upload via http not available yet.')
+  def http_upload_file(uri, local_file, options = {})
+    raise NotImplementedError.new('Upload via http not available.')
+  end
+
+  def http_delete_file(uri, options = {})
+    Excon.delete(uri.to_s, {
+      idempotent: true,
+      retry_limit: 5,
+      omit_default_port: true,
+      ssl_verify_peer: ENV['SSL_VERIFY_PEER'],
+      middlewares: Excon.defaults[:middlewares] + [Excon::Middleware::RedirectFollower]
+    })
   end
 
   alias_method :https_upload_file, :http_upload_file

@@ -4,7 +4,16 @@ require 'audio_monster'
 
 module S3Files
 
-  def s3_upload_file(uri, file, options={})
+  def s3_delete_file(uri, options = {})
+    bucket = uri.host
+    key = uri.path[1..-1]
+    opts = { key: key }
+    directory = storage_connection(uri).directories.get(bucket)
+    file = directory.files.new(opts)
+    file.destroy
+  end
+
+  def s3_upload_file(uri, file, options = {})
     bucket = uri.host
     key = uri.path[1..-1]
     file_name = key.split("/").last

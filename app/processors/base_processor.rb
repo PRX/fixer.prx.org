@@ -71,7 +71,7 @@ class BaseProcessor
   rescue Exception => err
     begin
       on_error(err)
-    rescue Object=>ex
+    rescue Object => ex
       logger.error "Processor:process! - error in on_error, will propagate no further: #{ex.message}\n\t#{ex.backtrace.join("\n\t")}"
       raise ex
     end
@@ -208,6 +208,11 @@ class BaseProcessor
     send("#{uri.scheme}_upload_file", uri, file, opts)
   end
 
+  def delete_file_by_url(uri, opts)
+    raise "#{uri.scheme} not supported." if !file_schemes.include?(uri.scheme)
+    send("#{uri.scheme}_delete_file", uri, opts)
+  end
+
   def notify_task_processing
     logged_at = Time.now
     logger.info "notify_task_processing: #{logged_at}, task: #{task['id']}"
@@ -287,6 +292,10 @@ class BaseProcessor
     FileUtils.mkdir_p(File.dirname(local_file_path))
     FileUtils.cp(file.path, local_file_path)
     local_file_path
+  end
+
+  def file_delete_file(uri, options = {})
+    # noop, don't actually delete the file
   end
 
   def temp_directory

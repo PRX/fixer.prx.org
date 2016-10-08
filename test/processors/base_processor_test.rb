@@ -190,6 +190,13 @@ class BaseProcessorTest < ActiveSupport::TestCase
     processor.upload_file(uri, file, {}).must_equal 'uploaded!'
   end
 
+  it 'deletes a file based on url scheme' do
+    def processor.s3_delete_file(u,o = {}); 'uploaded!'; end
+
+    uri = URI.parse('s3://bucket/file.txt')
+    processor.delete_file_by_url(uri, {}).must_equal 'uploaded!'
+  end
+
   it 'updates when processing starts' do
     processor.task = { id: '123' }
 

@@ -4,6 +4,15 @@ require 'audio_monster'
 
 module IaFiles
 
+  def ia_delete_file(uri, options = {})
+    bucket = uri.host
+    key = uri.path[1..-1]
+    opts = { key: key }
+    directory = storage_connection(uri).directories.get(bucket)
+    file = directory.files.new(opts)
+    file.destroy
+  end
+
   # refactor this and s3 upload - tres similar except default options
   def ia_upload_file(uri, file, options={})
     bucket = uri.host
