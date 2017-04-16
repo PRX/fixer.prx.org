@@ -112,7 +112,7 @@ class AudioProcessor < BaseProcessor
   def cut_audio
     source_wav = get_wav_from_source
     task_tmp = audio_monster.create_temp_file(File.basename(source.path))
-    audio_monster.cut_wav(source_wav.path, task_tmp.path, options['length'], options['fade'] || 5 )
+    audio_monster.cut_wav(source_wav.path, task_tmp.path, options['length'].to_i, (options['fade'] || 5).to_i )
 
     self.destination_format = 'wav'
     self.destination = task_tmp
@@ -124,7 +124,7 @@ class AudioProcessor < BaseProcessor
     source_wav = get_wav_from_source
     task_tmp = audio_monster.create_temp_file(File.basename(source.path))
     finish = options['finish'].blank? ? '' : "=#{options['finish']}"
-    audio_monster.slice_wav(source_wav.path, task_tmp.path, options['start'], (options['length'] || finish))
+    audio_monster.slice_wav(source_wav.path, task_tmp.path, options['start'].to_i, (options['length'] || finish).to_i)
 
     self.destination_format = 'wav'
     self.destination = task_tmp
