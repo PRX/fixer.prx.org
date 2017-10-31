@@ -1,6 +1,6 @@
 # Fixer
 
-[![License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/PRX/fixer.prx.org.svg?branch=master)](https://travis-ci.org/PRX/fixer.prx.org)
 [![Code Climate](https://codeclimate.com/github/PRX/fixer.prx.org/badges/gpa.svg)](https://codeclimate.com/github/PRX/fixer.prx.org)
 [![Coverage Status](https://coveralls.io/repos/PRX/fixer.prx.org/badge.svg?branch=master)](https://coveralls.io/r/PRX/fixer.prx.org?branch=master)
@@ -210,4 +210,4 @@ bundle exec rake user:create FIXER_USER_EMAIL=user@domain.com FIXER_USER_PASSWOR
 &copy; Copyright PRX, Public Radio Exchange https://www.prx.org
 
 ## License
-Fixer is offered under the [AGPL 3.0](http://opensource.org/licenses/AGPL-3.0)
+Fixer is offered under the [MIT license](https://opensource.org/licenses/MIT)
