@@ -6,11 +6,11 @@ require 'google_speech'
 class AudioProcessor < BaseProcessor
 
   SUPPORTED_FORMATS = ['aac', 'aif', 'aiff', 'alac', 'flac', 'm4a', 'm4p', 'mp2', 'mp3', 'mp4', 'ogg', 'raw', 'spx', 'wav', 'wma']
-  WAVEFORM_WIDTH_MIN = 1800
+  # WAVEFORM_WIDTH_MIN = 1800
 
   attr_accessor :wav_pcm_tempfile
 
-  task_types ['transcode', 'copy', 'analyze', 'validate', 'cut', 'wrap', 'transcribe', 'waveformjson', 'tone_detect', 'silence_detect', 'slice']
+  task_types ['transcode', 'copy', 'analyze', 'validate', 'cut', 'wrap', 'transcribe', 'tone_detect', 'silence_detect', 'slice']
 
   # make sure to handle 64 kb limit on transcripts
   # perhaps put the transcript/metadata as a result file rather than a response?
@@ -46,39 +46,39 @@ class AudioProcessor < BaseProcessor
     GoogleSpeech::Transcriber.new(File.open(wav.path), symbolize_options(opts)).transcribe
   end
 
-  def waveformjson_audio
-    source_wav = get_wav_from_source
+  # def waveformjson_audio
+  #   source_wav = get_wav_from_source
+  #
+  #   if options['width_per_second']
+  #     min = options['width_minimum'] && options['width_minimum'].to_i > 0 ? options['width_minimum'].to_i : WAVEFORM_WIDTH_MIN
+  #     width_per_second = options['width_per_second'].to_i
+  #     duration = audio_monster.audio_file_duration(source_wav.path)
+  #     options['width'] = [(duration * width_per_second), min].max
+  #   end
+  #
+  #   wf = waveformjson(source_wav, options)
+  #   base_file_name = File.basename(source.path) + '.json'
+  #   temp_file = audio_monster.create_temp_file(base_file_name, false)
+  #   temp_file.write wf.to_json
+  #   temp_file.fsync
+  #
+  #   self.destination = temp_file
+  #   self.destination_format = 'json'
+  #
+  #   completed_with info_for_waveform(wf)
+  # end
+  #
+  # def waveformjson(wav, opts={})
+  #   Waveformjson.generate(wav, symbolize_options(opts))
+  # end
+  #
+  # def info_for_waveform(data)
+  #   { data_count: data.size }
+  # end
 
-    if options['width_per_second']
-      min = options['width_minimum'] && options['width_minimum'].to_i > 0 ? options['width_minimum'].to_i : WAVEFORM_WIDTH_MIN
-      width_per_second = options['width_per_second'].to_i
-      duration = audio_monster.audio_file_duration(source_wav.path)
-      options['width'] = [(duration * width_per_second), min].max
-    end
-
-    wf = waveformjson(source_wav, options)
-    base_file_name = File.basename(source.path) + '.json'
-    temp_file = audio_monster.create_temp_file(base_file_name, false)
-    temp_file.write wf.to_json
-    temp_file.fsync
-
-    self.destination = temp_file
-    self.destination_format = 'json'
-
-    completed_with info_for_waveform(wf)
-  end
-
-  def waveformjson(wav, opts={})
-    Waveformjson.generate(wav, symbolize_options(opts))
-  end
-
-  def info_for_waveform(data)
-    { data_count: data.size }
-  end
-
-  def loudness_audio
-    completed_with audio_monster.loudness_info(source.path)
-  end
+  # def loudness_audio
+  #   completed_with audio_monster.loudness_info(source.path)
+  # end
 
   # task methods of "#{task_type}_#{job_type}" naming standard
   def transcode_audio
@@ -199,7 +199,7 @@ class AudioProcessor < BaseProcessor
   # helper methods
   def audio_info(format=destination_format, file=destination)
     info = audio_monster.send("info_for_#{format}".to_sym, file.path) || {}
-    info[:loudness] = audio_monster.loudness_info(file.path)
+    # info[:loudness] = audio_monster.loudness_info(file.path)
     info
   end
 
