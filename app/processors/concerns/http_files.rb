@@ -19,14 +19,19 @@ module HttpFiles
 
     prior_remaining, prior_total = 0
     streamer = lambda do |chunk, remaining_bytes, total_bytes|
-      if (remaining_bytes.to_i > prior_remaining) || (total_bytes.to_i != prior_total) || !temp_file
+      if (remaining_bytes && remaining_bytes.to_i > prior_remaining) || (total_bytes.to_i != prior_total) || !temp_file
         close_temp_file(temp_file)
         temp_file = AudioMonster.create_temp_file(uri.to_s)
       end
 
+      temp_file.write(chunk)
+
+      # edge case for small response sizes
+      if !remaining_bytes && !total_bytes
+        total_bytes = temp_file.size
+
       prior_remaining = remaining_bytes.to_i
       prior_total = total_bytes.to_i
-      temp_file.write(chunk)
     end
 
     while !file_downloaded && try_count < limit
