@@ -40,8 +40,8 @@ GEM
     acts_as_list (0.7.2)
       activerecord (>= 3.0)
     addressable (2.3.8)
-    ansi (1.5.0)
     arel (6.0.0)
+    ast (2.4.0)
     audio_monster (1.2.3)
       activesupport
       mimemagic
@@ -56,8 +56,6 @@ GEM
       jmespath (~> 1.0)
       multi_json (~> 1.0)
     bcrypt (3.1.10)
-    binding_of_caller (0.7.2)
-      debug_inspector (>= 0.0.1)
     bootstrap-kaminari-views (0.0.5)
       kaminari (>= 0.13)
       rails (>= 3.1)
@@ -65,12 +63,9 @@ GEM
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
     builder (3.2.2)
-    byebug (5.0.0)
-      columnize (= 0.9.0)
+    byebug (10.0.0)
     celluloid (0.16.0)
       timers (~> 4.0.0)
-    codeclimate-test-reporter (0.4.7)
-      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -79,8 +74,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1.1)
-    columnize (0.9.0)
-    connection_pool (2.2.0)
     coveralls (0.8.2)
       json (~> 1.8)
       rest-client (>= 1.6.8, < 2)
@@ -89,7 +82,6 @@ GEM
       thor (~> 0.19.1)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
-    debug_inspector (0.0.2)
     devise (3.5.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -217,8 +209,6 @@ GEM
     fog-xml (0.1.2)
       fog-core
       nokogiri (~> 1.5, >= 1.5.11)
-    foreman (0.78.0)
-      thor (~> 0.19.1)
     formatador (0.2.5)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
@@ -275,7 +265,6 @@ GEM
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
-    kgio (2.9.3)
     language_list (1.1.0)
     libyajl2 (1.2.0)
     listen (3.0.2)
@@ -294,11 +283,6 @@ GEM
     mini_magick (4.2.7)
     mini_portile (0.6.2)
     minitest (5.7.0)
-    minitest-reporters (1.0.18)
-      ansi
-      builder
-      minitest (>= 5.0)
-      ruby-progressbar
     minitest-spec-rails (5.2.2)
       minitest (~> 5.0)
       rails (~> 4.1)
@@ -342,15 +326,23 @@ GEM
       multi_json
       multi_xml
     orm_adapter (0.5.0)
+    parallel (1.12.1)
+    parser (2.5.0.3)
+      ast (~> 2.4.0)
     pg (0.18.2)
+    powerpack (0.1.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-byebug (3.6.0)
+      byebug (~> 10.0)
+      pry (~> 0.10)
+    pry-rails (0.3.5)
+      pry (>= 0.9.10)
     ptools (1.3.2)
+    puma (3.11.3)
     rack (1.6.4)
-    rack-protection (1.5.3)
-      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.3)
@@ -382,24 +374,29 @@ GEM
       activesupport (= 4.2.3)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    raindrops (0.14.0)
+    rainbow (3.0.0)
     rake (10.4.2)
     rb-fsevent (0.9.5)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
-    rdoc (4.2.0)
-    redis (3.2.1)
-    redis-namespace (1.5.2)
-      redis (~> 3.0, >= 3.0.4)
+    rdoc (4.3.0)
+    redis (4.0.1)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rubocop (0.53.0)
+      parallel (~> 1.10)
+      parser (>= 2.5)
+      powerpack (~> 0.1)
+      rainbow (>= 2.2.2, < 4.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-audio (1.6.1)
     ruby-mp3info (0.8.6)
-    ruby-progressbar (1.7.5)
+    ruby-progressbar (1.9.0)
     ruby_parser (3.7.0)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
@@ -420,22 +417,12 @@ GEM
     shoryuken (1.0.2)
       aws-sdk-core (~> 2.0.21)
       celluloid (~> 0.16.0)
-    sidekiq (3.4.1)
-      celluloid (~> 0.16.0)
-      connection_pool (>= 2.1.1)
-      json
-      redis (>= 3.0.6)
-      redis-namespace (>= 1.3.1)
     simple_oauth (0.3.1)
     simplecov (0.10.0)
       docile (~> 1.1.0)
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
-    sinatra (1.4.6)
-      rack (~> 1.4)
-      rack-protection (~> 1.4)
-      tilt (>= 1.3, < 3)
     slop (3.6.0)
     spring (1.3.6)
     sprockets (3.2.0)
@@ -464,21 +451,11 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
-    unicorn (4.9.0)
-      kgio (~> 2.6)
-      rack
-      raindrops (~> 0.7)
+    unicode-display_width (1.3.0)
     uuid (2.3.8)
       macaddr (~> 1.0)
     warden (1.2.3)
       rack (>= 1.0)
-    waveformjson (0.0.2)
-      ruby-audio
-    web-console (2.1.3)
-      activemodel (>= 4.0)
-      binding_of_caller (>= 0.7.2)
-      railties (>= 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
     webmock (1.21.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -504,8 +481,6 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootstrap-kaminari-views
   bootstrap-sass
-  byebug
-  codeclimate-test-reporter
   coffee-rails (~> 4.1.0)
   coveralls
   devise
@@ -513,7 +488,6 @@ DEPENDENCIES
   dotenv-rails
   factory_girl_rails
   fog
-  foreman
   google_speech (~> 0.4.1)
   guard
   guard-bundler
@@ -524,28 +498,30 @@ DEPENDENCIES
   kaminari
   mimemagic
   mini_magick
-  minitest-reporters
   minitest-spec-rails
   ohai
   open_calais (~> 0.1)
   pg
-  rails (~> 4.2)
+  pry-byebug
+  pry-rails
+  puma
+  rails (~> 4.2.0)
   rails_12factor
   rake
+  redis
+  rubocop
   ruby-audio
   sass-rails (~> 5.0)
-  say_when (~> 1.0)
+  say_when (~> 1.0.0)
   sdoc (~> 0.4.0)
   shoryuken
-  sidekiq
   simplecov
-  sinatra
   spring
   stringex
   turbolinks
   uglifier (>= 1.3.0)
-  unicorn
-  waveformjson
-  web-console (~> 2.0)
   webmock
   yahoo_content_analysis (~> 0.1)
+
+BUNDLED WITH
+   1.16.1
