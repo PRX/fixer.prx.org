@@ -164,7 +164,7 @@ class BaseProcessorTest < ActiveSupport::TestCase
       uri.wont_be_nil
       options.wont_be_nil
       options.keys.count.must_equal 0
-      uri.query.must_equal nil
+      uri.query.must_be_nil
       uri.to_s.must_equal "ftp://foo.bar.com/"
     end
 
