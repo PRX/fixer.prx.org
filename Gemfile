@@ -61,8 +61,6 @@ gem 'stringex'
 
 gem 'ruby-audio'
 
-# gem 'waveformjson'
-
 gem 'mimemagic'
 
 gem 'mini_magick'

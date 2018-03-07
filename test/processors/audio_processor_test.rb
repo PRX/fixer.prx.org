@@ -216,59 +216,6 @@ class AudioProcessorTest < ActiveSupport::TestCase
     end
   end
 
-  # describe "wave form json" do
-  #
-  #   let(:msg) {
-  #     {
-  #       task: {
-  #         id: 'guid4',
-  #         task_type: 'waveformjson',
-  #         label: 'waveformjson',
-  #         job: { id: 1, job_type: 'audio', status: 'created', original: "file://#{in_file('test_short.mp2')}" },
-  #         options: {}
-  #       }
-  #     }.with_indifferent_access
-  #   }
-  #
-  #   it "should generate waveform" do
-  #     if travis?
-  #       audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
-  #       audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
-  #       audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
-  #       audio_monster.expect(:info_for, { format: 'mp2' }, [String])
-  #     end
-  #
-  #     processor.stub(:waveformjson, { foo: 'bar'} ) do
-  #       processor.on_message(msg)
-  #       processor.destination.wont_be_nil
-  #       processor.destination_format.must_equal 'json'
-  #       processor.result_details[:info].keys.sort.must_equal [:data_count]
-  #       processor.result_details[:message].wont_be :blank?
-  #     end
-  #   end
-  #
-  #   it "should use with per second option" do
-  #     if travis?
-  #       audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
-  #       audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
-  #       audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
-  #       audio_monster.expect(:audio_file_duration, 5.616, [String])
-  #       audio_monster.expect(:info_for, { format: 'mp2' }, [String])
-  #     end
-  #
-  #     result = {}
-  #     2800.times { |i| result[i] = i }
-  #     processor.stub(:waveformjson, result ) do
-  #       msg[:task][:options] = { width_per_second: 500 }
-  #       processor.on_message(msg)
-  #       processor.destination.wont_be_nil
-  #       processor.destination_format.must_equal 'json'
-  #       processor.result_details[:info].keys.sort.must_equal [:data_count]
-  #       processor.result_details[:info][:data_count].must_be :>=, 2800
-  #     end
-  #   end
-  # end
-
   describe 'transcribe_audio' do
     let(:msg) {
       {
