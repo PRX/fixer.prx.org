@@ -49,9 +49,13 @@ ApplicationRun () {
     CMD="bundle exec shoryuken --rails --config config/shoryuken.yml"
   elif [ "$PROCESS" = "console" ] ; then
     CMD="bundle exec rails console"
+  elif [ "$PROCESS" = "testsetup" ] ; then
+    CMD="bundle exec rake db:create db:setup RAILS_ENV=test"
   elif [ "$PROCESS" = "test" ] ; then
      # TEST=test/lib/weblog_pinger_test.rb
     CMD="bundle exec rake db:create test RAILS_ENV=test"
+  elif [ "$PROCESS" = "setup" ] ; then
+    CMD="bundle exec rake -vt db:setup"
   elif [ "$PROCESS" = "guard" ] ; then
     CMD="bundle exec guard"
   elif [ "$PROCESS" = "migrate" ] ; then
