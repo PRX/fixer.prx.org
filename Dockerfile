@@ -22,8 +22,6 @@ RUN apk --no-cache add \
     imagemagick \
     lame \
     sox \
-    # madplay \
-    # twolame \
     flac \
     && pip --no-cache-dir install awscli
 
@@ -64,6 +62,17 @@ RUN apk --update add --virtual build-dependencies \
     cd .. && \
     rm -rf mp3val-0.1.8-src && \
     rm mp3val-0.1.8-src.tar.gz && \
+    curl -o twolame-0.3.13.tar.gz https://prx-tech.s3.amazonaws.com/archives/twolame-0.3.13.tar.gz && \
+    tar xfz twolame-0.3.13.tar.gz && \
+    cd twolame-0.3.13 && \
+    ./configure \
+        --prefix=/usr \
+        --disable-static \
+        --datarootdir=/tmp/twolame-share \
+        && \
+    make install && \
+    cd .. && \
+    rm -rf twolame-0.3.13* && \
     curl -o ffmpeg-release-64bit-static.tar.xz https://prx-tech.s3.amazonaws.com/archives/ffmpeg-release-64bit-static.tar.xz && \
     tar xJf ffmpeg-release-64bit-static.tar.xz && \
     mv ffmpeg-*-64bit-static/ffmpeg /usr/local/bin/ && \
