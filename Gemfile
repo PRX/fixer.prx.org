@@ -29,7 +29,7 @@ gem 'bootstrap-kaminari-views'
 gem 'haml-rails'
 
 # Processing
-gem 'audio_monster'
+gem 'audio_monster', git: 'https://github.com/PRX/audio_monster'
 
 # For lists of tasks
 gem 'acts_as_list'
