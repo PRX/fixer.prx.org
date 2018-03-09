@@ -18,7 +18,6 @@ RUN apk --no-cache add \
     tzdata \
     sqlite \
     libsndfile \
-    libsndfile-dev \
     file \
     imagemagick \
     lame \
