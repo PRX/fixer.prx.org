@@ -5,7 +5,7 @@ check:
 	rubocop
 
 clean:
-	sudo rm -rf log/*log
+	sudo rm -rf log/*log && chmod 777 log
 	sudo rm -rf tmp/ && mkdir -p tmp/audio_monster && chmod -R 777 tmp
 	sudo rm -rf coverage && mkdir coverage && chmod 777 coverage
 
