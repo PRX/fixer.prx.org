@@ -4,6 +4,6 @@ services:
   - docker
 before_install:
   - cp .env.travis .env
-  - docker-compose build
+  - make build
 script:
-  - docker-compose run fixer testsetup test
+  - make test
