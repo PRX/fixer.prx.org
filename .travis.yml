@@ -3,8 +3,7 @@ language: ruby
 services:
   - docker
 before_install:
+  - cp .env.travis .env
   - docker-compose build
-env:
-  - DB_ENV_POSTGRES_USER=postgres DB_ENV_POSTGRES_DATABASE=postgres DB_ENV_POSTGRES_PASSWORD=password DB_PORT_5432_TCP_ADDR=db MAIL_FROM=fixer@prx.org
 script:
   - docker-compose run fixer testsetup test
