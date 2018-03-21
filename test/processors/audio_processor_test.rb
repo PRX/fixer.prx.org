@@ -72,8 +72,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
 
     it 'should return sliced duration' do
       if travis?
-        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
-        # audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
+        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
         audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
         audio_monster.expect(:slice_wav, "/tmp/audio_monster/test_long.wav20150528-43657-18y5zb.wav", [String, String, String, String])
         audio_monster.expect(:info_for_wav, {:size=>441044, :content_type=>"audio/vnd.wave", :channel_mode=>"Mono", :bit_rate=>705, :length=>5, :sample_rate=>44100}, [String])
@@ -185,8 +184,7 @@ class AudioProcessorTest < ActiveSupport::TestCase
 
     it "should set destination format" do
       if travis?
-        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
-        # audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
+        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
         audio_monster.expect(:create_wav_wrapped_mp2, true, [String, String, Hash])
         audio_monster.expect(:info_for_wav, {:size=>4277159, :content_type=>"audio/vnd.wave", :channel_mode=>"Mono", :bit_rate=>705, :length=>48, :sample_rate=>44100}, [String])
         audio_monster.expect(:loudness_info, {:integrated_loudness=>{:i=>-18.5, :threshold=>-28.6}, :loudness_range=>{:lra=>7.1, :threshold=>-38.7, :lra_low=>-23.6, :lra_high=>-16.5}, :true_peak=>{:peak=>-2.1}}, [String])
@@ -214,59 +212,6 @@ class AudioProcessorTest < ActiveSupport::TestCase
         wave.chunks[:cart].end_date.must_equal "2010/06/25"
         wave.chunks[:cart].end_time.must_equal "00:00:00"
         wave.chunks[:cart].producer_app_id.must_equal "PRX"
-      end
-    end
-  end
-
-  describe "wave form json" do
-
-    let(:msg) {
-      {
-        task: {
-          id: 'guid4',
-          task_type: 'waveformjson',
-          label: 'waveformjson',
-          job: { id: 1, job_type: 'audio', status: 'created', original: "file://#{in_file('test_short.mp2')}" },
-          options: {}
-        }
-      }.with_indifferent_access
-    }
-
-    it "should generate waveform" do
-      if travis?
-        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
-        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
-        audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
-        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
-      end
-
-      processor.stub(:waveformjson, { foo: 'bar'} ) do
-        processor.on_message(msg)
-        processor.destination.wont_be_nil
-        processor.destination_format.must_equal 'json'
-        processor.result_details[:info].keys.sort.must_equal [:data_count]
-        processor.result_details[:message].wont_be :blank?
-      end
-    end
-
-    it "should use with per second option" do
-      if travis?
-        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
-        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String, false])
-        audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
-        audio_monster.expect(:audio_file_duration, 5.616, [String])
-        audio_monster.expect(:info_for, { format: 'mp2' }, [String])
-      end
-
-      result = {}
-      2800.times { |i| result[i] = i }
-      processor.stub(:waveformjson, result ) do
-        msg[:task][:options] = { width_per_second: 500 }
-        processor.on_message(msg)
-        processor.destination.wont_be_nil
-        processor.destination_format.must_equal 'json'
-        processor.result_details[:info].keys.sort.must_equal [:data_count]
-        processor.result_details[:info][:data_count].must_be :>=, 2800
       end
     end
   end
@@ -321,7 +266,6 @@ class AudioProcessorTest < ActiveSupport::TestCase
 
     before {
       if travis?
-        audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
         audio_monster.expect(:create_temp_file, Tempfile.new('test'), [String])
         audio_monster.expect(:encode_wav_pcm_from_mp2, ["0\n", ""], [String, String])
         audio_monster.expect(:encode_mp3_from_wav, true, [String, String, Hash])

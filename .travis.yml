@@ -1,11 +1,9 @@
-language: ruby
-rvm:
-  - "2.2.1"
-bundler_args: --without development
+sudo: required
+language: generic
+services:
+  - docker
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libsndfile1-dev
-before_script:
-  - psql -c 'create database fixer_prx_org_test;' -U postgres
-env:
-  - DB_ENV_POSTGRES_USER=postgres TRAVIS=true MAIL_FROM=fixer@prx.org MAIL_HOST=fixer.prx.dev
+  - cp .env.travis .env
+  - make build
+script:
+  - make test

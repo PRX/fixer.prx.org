@@ -4,13 +4,12 @@ require 'base_worker'
 require 'service_options'
 require 'excon'
 
-%W(http mailto redis sns sqs).each{|f| require "callbacks/#{f}_callback" }
+%w(http mailto sns sqs).each { |f| require "callbacks/#{f}_callback" }
 
 class WebHookWorker < BaseWorker
 
   include HttpCallback
   include MailtoCallback
-  include RedisCallback
   include SnsCallback
   include SqsCallback
 

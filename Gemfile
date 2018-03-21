@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 4.2.10'
 # Use postgresql as the database for Active Record
 gem 'pg'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 5.0.6'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -44,15 +44,6 @@ gem 'doorkeeper'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-# Use Unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
-# trying to use sidekiq, will abstract to use shoryken too
-gem 'sidekiq'
-
 gem 'shoryuken'
 
 # gems for media processors
@@ -70,28 +61,24 @@ gem 'stringex'
 
 gem 'ruby-audio'
 
-gem 'waveformjson'
-
 gem 'mimemagic'
 
 gem 'mini_magick'
 
-gem 'say_when', '~> 1.0'
+gem 'say_when', '~> 1.0.0'
+
+# env vars for config and credentials
+gem 'dotenv-rails'
+
+gem 'rake'
 
 group :development, :test do
-  gem 'rake'
-  # env vars for config and credentials
-  gem 'dotenv-rails'
-
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
-
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'pry-rails'
+  gem 'pry-byebug'
   gem 'spring'
+end
 
+group :development do
   gem 'guard'
   gem 'guard-minitest'
   gem 'guard-bundler'
@@ -100,19 +87,15 @@ end
 group :test do
   gem 'minitest-spec-rails'
   gem 'factory_girl_rails'
-  gem 'webmock'
-  gem 'minitest-reporters', require: false
-  gem "codeclimate-test-reporter", require: false
   gem 'simplecov', require: false
   gem 'coveralls', require: false
+  gem 'webmock'
+  gem 'rubocop', require: false
 end
 
-group :production do
+group :development, :staging, :production do
   gem 'rails_12factor'
-end
 
-group :development, :production, :staging do
-  gem 'sinatra' # for sidekiq
-  gem 'foreman'
-  gem 'unicorn'
+  # Use puma as the HTTP server
+  gem 'puma'
 end

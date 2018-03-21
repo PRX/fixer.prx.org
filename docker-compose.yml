@@ -1,0 +1,37 @@
+fixer:
+  build: .
+  volumes:
+    - .:/app
+  env_file:
+    - .env
+  links:
+    - db
+  ports:
+    - "3000:3000"
+  command: web
+  environment:
+    VIRTUAL_HOST: fixer.prx.docker
+masterworker:
+  image: fixerprxorg_fixer
+  volumes:
+    - .:/app
+  env_file:
+    - .env
+  links:
+    - db
+  command: worker
+worker:
+  image: fixerprxorg_fixer
+  volumes:
+    - .:/app
+  env_file:
+    - .env
+  links:
+    - db
+  command: worker
+db:
+  image: postgres
+  env_file:
+    - .env
+  expose:
+    - "5432"
