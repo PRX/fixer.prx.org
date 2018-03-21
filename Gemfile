@@ -29,7 +29,7 @@ gem 'bootstrap-kaminari-views'
 gem 'haml-rails'
 
 # Processing
-gem 'audio_monster', git: 'https://github.com/PRX/audio_monster'
+gem 'audio_monster'
 
 # For lists of tasks
 gem 'acts_as_list'
@@ -71,8 +71,6 @@ gem 'say_when', '~> 1.0.0'
 gem 'dotenv-rails'
 
 gem 'rake'
-
-gem 'redis'
 
 group :development, :test do
   gem 'pry-rails'
