@@ -4,7 +4,7 @@ require 'base_worker'
 require 'service_options'
 require 'excon'
 
-%W(http mailto sns sqs).each{|f| require "callbacks/#{f}_callback" }
+%w(http mailto sns sqs).each { |f| require "callbacks/#{f}_callback" }
 
 class WebHookWorker < BaseWorker
 
